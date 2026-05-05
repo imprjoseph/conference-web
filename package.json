@@ -1,0 +1,42 @@
+{
+  "name": "conference-website-system",
+  "version": "1.0.0",
+  "description": "會議活動官方網站系統 - 前台展示 + 後台管理",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p 8080",
+    "dev": "npx http-server . -p 8080 -o",
+    "build": "echo 'No build step required for static files'",
+    "deploy": "echo 'Deploy to GitHub Pages manually via repository settings'"
+  },
+  "keywords": [
+    "conference",
+    "website",
+    "management",
+    "bilingual",
+    "responsive",
+    "google-apps-script",
+    "google-sheets"
+  ],
+  "author": "Conference System",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/conference-website-system.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/conference-website-system/issues"
+  },
+  "homepage": "https://your-username.github.io/conference-website-system/",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "> 1%",
+    "not ie 11"
+  ]
+}
