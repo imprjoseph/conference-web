@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 // 設定 Google Sheets ID（部署時請更換為您的試算表ID）
-const SHEET_ID = 'YOUR_GOOGLE_SHEETS_ID_HERE';
+const SHEET_ID = '12RUMRu1mcjI8xEjq1ajWKxZkblrCvRkuTmNpgM9ewH4';
 
 // 工作表名稱定義
 const SHEETS = {
