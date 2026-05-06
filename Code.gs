@@ -108,7 +108,7 @@ function createOrGetSheet(spreadsheet, sheetName) {
 // Web App 主入口
 // ═══════════════════════════════════════════════════════════════
 function doGet(e) {
-  const action = e.parameter.action || 'home';
+  const action = (e.parameter && e.parameter.action) || 'home';
 
   if (action === 'admin') {
     return HtmlService.createHtmlOutputFromFile('admin')
@@ -116,9 +116,66 @@ function doGet(e) {
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   }
 
-  return HtmlService.createHtmlOutputFromFile('index')
-    .setTitle('會議活動官方網站')
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  if (action === 'home') {
+    return HtmlService.createHtmlOutputFromFile('index')
+      .setTitle('會議活動官方網站')
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  }
+
+  return jsonOutput(handleApiAction(action, e.parameter));
+}
+
+function doOptions(e) {
+  return ContentService.createTextOutput('')
+    .setMimeType(ContentService.MimeType.JSON)
+    .setHeader('Access-Control-Allow-Origin', '*')
+    .setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+    .setHeader('Access-Control-Allow-Headers', 'Content-Type');
+}
+
+function jsonOutput(payload) {
+  return ContentService.createTextOutput(JSON.stringify(payload))
+    .setMimeType(ContentService.MimeType.JSON)
+    .setHeader('Access-Control-Allow-Origin', '*')
+    .setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+    .setHeader('Access-Control-Allow-Headers', 'Content-Type');
+}
+
+function handleApiAction(action, data) {
+  switch (action) {
+    case 'getSettings':
+      return { success: true, data: getSettings() };
+    case 'getAbout':
+      return { success: true, data: getAboutSections() };
+    case 'getSpeakers':
+      return { success: true, data: getSpeakers() };
+    case 'getAgenda':
+      return { success: true, data: getAgenda() };
+    case 'getTraffic':
+      return { success: true, data: getTraffic() };
+    case 'getPrivacy':
+      return { success: true, data: getPrivacy() };
+    case 'getPastEvents':
+      return { success: true, data: getPastEvents() };
+    case 'adminLogin':
+      return adminLogin(data.username, data.password);
+    case 'saveSettings':
+      return saveSettings(data.settings);
+    case 'saveAbout':
+      return saveAbout(data.about);
+    case 'saveSpeakers':
+      return saveSpeakers(data.speakers);
+    case 'saveAgenda':
+      return saveAgenda(data.agenda);
+    case 'saveTraffic':
+      return saveTraffic(data.traffic);
+    case 'savePrivacy':
+      return savePrivacy(data.privacy);
+    case 'savePastEvents':
+      return savePastEvents(data.pastEvents);
+    default:
+      return { success: false, error: '未知的動作' };
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -129,42 +186,9 @@ function doPost(e) {
   const action = data.action;
 
   try {
-    switch (action) {
-      case 'getSettings':
-        return { success: true, data: getSettings() };
-      case 'getAbout':
-        return { success: true, data: getAboutSections() };
-      case 'getSpeakers':
-        return { success: true, data: getSpeakers() };
-      case 'getAgenda':
-        return { success: true, data: getAgenda() };
-      case 'getTraffic':
-        return { success: true, data: getTraffic() };
-      case 'getPrivacy':
-        return { success: true, data: getPrivacy() };
-      case 'getPastEvents':
-        return { success: true, data: getPastEvents() };
-      case 'adminLogin':
-        return adminLogin(data.username, data.password);
-      case 'saveSettings':
-        return saveSettings(data.settings);
-      case 'saveAbout':
-        return saveAbout(data.about);
-      case 'saveSpeakers':
-        return saveSpeakers(data.speakers);
-      case 'saveAgenda':
-        return saveAgenda(data.agenda);
-      case 'saveTraffic':
-        return saveTraffic(data.traffic);
-      case 'savePrivacy':
-        return savePrivacy(data.privacy);
-      case 'savePastEvents':
-        return savePastEvents(data.pastEvents);
-      default:
-        return { success: false, error: '未知的動作' };
-    }
+    return jsonOutput(handleApiAction(action, data));
   } catch (error) {
-    return { success: false, error: error.toString() };
+    return jsonOutput({ success: false, error: error.toString() });
   }
 }
 
