@@ -933,7 +933,42 @@
         let editType = null;
 
         // API 基礎 URL（請更換為您的 Apps Script Web App URL）
-        const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbwBcXiRx_0ylBkRqjrQ_96moYWDWuK9d8wClnOjeTosT9TOIBV7SWI72pBAFJtU0uF_fA/exec';
+        const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbw_RE3C83F-LjOXqvB0sRoJbsC4B_bcdclucEfMWROUOiyM5XmS2EdmlnoeeA0HP2z_3Q/exec';
+        const API_FALLBACK_URLS = [
+            'https://script.google.com/macros/s/AKfycbwBcXiRx_0ylBkRqjrQ_96moYWDWuK9d8wClnOjeTosT9TOIBV7SWI72pBAFJtU0uF_fA/exec'
+        ];
+        let activeApiBaseUrl = API_BASE_URL;
+
+        async function apiFetch(action, init = {}) {
+            const candidates = [activeApiBaseUrl, ...API_FALLBACK_URLS.filter(url => url !== activeApiBaseUrl)];
+            let lastError = null;
+
+            for (const baseUrl of candidates) {
+                const url = `${baseUrl}?action=${action}`;
+                try {
+                    const response = await fetch(url, init);
+                    if (!response.ok) {
+                        lastError = new Error(`API ${action} failed: ${response.status} ${response.statusText} @ ${baseUrl}`);
+                        continue;
+                    }
+
+                    const data = await response.json();
+                    if (data && data.success) {
+                        if (baseUrl !== activeApiBaseUrl) {
+                            activeApiBaseUrl = baseUrl;
+                            console.warn(`已切換 API 端點至：${baseUrl}`);
+                        }
+                        return data;
+                    }
+
+                    lastError = new Error(data && data.error ? data.error : `API ${action} 回傳格式錯誤 @ ${baseUrl}`);
+                } catch (error) {
+                    lastError = error;
+                }
+            }
+
+            throw lastError;
+        }
 
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
@@ -953,15 +988,13 @@
                 const password = document.getElementById('password').value;
 
                 try {
-                    const response = await fetch(`${API_BASE_URL}?action=adminLogin`, {
+                    const data = await apiFetch('adminLogin', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({ username, password })
                     });
-
-                    const data = await response.json();
 
                     if (data.success) {
                         currentUser = data.user;
@@ -1069,9 +1102,7 @@
         // 載入設定
         async function loadSettings() {
             try {
-                const response = await fetch(`${API_BASE_URL}?action=getSettings`);
-                const data = await response.json();
-
+                const data = await apiFetch('getSettings');
                 if (data.success) {
                     populateSettingsForm(data.data);
                 }
@@ -1093,9 +1124,7 @@
         // 載入會議介紹
         async function loadAbout() {
             try {
-                const response = await fetch(`${API_BASE_URL}?action=getAbout`);
-                const data = await response.json();
-
+                const data = await apiFetch('getAbout');
                 if (data.success) {
                     renderAboutList(data.data);
                 }
@@ -1136,9 +1165,7 @@
         // 載入講師
         async function loadSpeakers() {
             try {
-                const response = await fetch(`${API_BASE_URL}?action=getSpeakers`);
-                const data = await response.json();
-
+                const data = await apiFetch('getSpeakers');
                 if (data.success) {
                     renderSpeakersList(data.data);
                 }
@@ -1178,9 +1205,7 @@
         // 載入議程
         async function loadAgenda() {
             try {
-                const response = await fetch(`${API_BASE_URL}?action=getAgenda`);
-                const data = await response.json();
-
+                const data = await apiFetch('getAgenda');
                 if (data.success) {
                     renderAgendaList(data.data);
                 }
@@ -1221,9 +1246,7 @@
         // 載入交通資訊
         async function loadTraffic() {
             try {
-                const response = await fetch(`${API_BASE_URL}?action=getTraffic`);
-                const data = await response.json();
-
+                const data = await apiFetch('getTraffic');
                 if (data.success) {
                     renderTrafficList(data.data);
                 }
@@ -1262,8 +1285,7 @@
         // 載入個資宣告
         async function loadPrivacy() {
             try {
-                const response = await fetch(`${API_BASE_URL}?action=getPrivacy`);
-                const data = await response.json();
+                const data = await apiFetch('getPrivacy');
 
                 if (data.success && data.data) {
                     populatePrivacyForm(data.data);
@@ -1286,8 +1308,7 @@
         // 載入歷年會議
         async function loadPastEvents() {
             try {
-                const response = await fetch(`${API_BASE_URL}?action=getPastEvents`);
-                const data = await response.json();
+                const data = await apiFetch('getPastEvents');
 
                 if (data.success) {
                     renderPastEventsList(data.data);
@@ -1369,15 +1390,13 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE_URL}?action=saveSettings`, {
+                const data = await apiFetch('saveSettings', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ settings })
                 });
-
-                const data = await response.json();
 
                 if (data.success) {
                     showMessage('設定已儲存', 'success');
@@ -1402,15 +1421,13 @@
             };
 
             try {
-                const response = await fetch(`${API_BASE_URL}?action=savePrivacy`, {
+                const data = await apiFetch('savePrivacy', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ privacy })
                 });
-
-                const data = await response.json();
 
                 if (data.success) {
                     showMessage('個資宣告已儲存', 'success');
@@ -1451,15 +1468,10 @@
             // 載入現有資料
             if (id) {
                 try {
-                    const response = await fetch(`${API_BASE_URL}?action=get${type.charAt(0).toUpperCase() + type.slice(1)}`);
-                    const data = await response.json();
+                    const data = await apiFetch(`get${type.charAt(0).toUpperCase() + type.slice(1)}`);
 
                     if (data.success) {
-                        if (type === 'past-events') {
-                            editData = data.data.find(item => item.id === id);
-                        } else {
-                            editData = data.data.find(item => item.id === id);
-                        }
+                        editData = data.data.find(item => item.id === id);
                     }
                 } catch (error) {
                     console.error('載入資料失敗:', error);
@@ -1851,15 +1863,13 @@
                         break;
                 }
 
-                const response = await fetch(`${API_BASE_URL}?action=${action}`, {
+                const result = await apiFetch(action, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(payload)
                 });
-
-                const result = await response.json();
 
                 if (result.success) {
                     showMessage('資料已儲存', 'success');

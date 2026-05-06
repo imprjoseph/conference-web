@@ -1150,7 +1150,42 @@
         let countdownInterval;
 
         // API 基礎 URL（請更換為您的 Apps Script Web App URL）
-        const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbwBcXiRx_0ylBkRqjrQ_96moYWDWuK9d8wClnOjeTosT9TOIBV7SWI72pBAFJtU0uF_fA/exec';
+        const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbw_RE3C83F-LjOXqvB0sRoJbsC4B_bcdclucEfMWROUOiyM5XmS2EdmlnoeeA0HP2z_3Q/exec';
+        const API_FALLBACK_URLS = [
+            'https://script.google.com/macros/s/AKfycbwBcXiRx_0ylBkRqjrQ_96moYWDWuK9d8wClnOjeTosT9TOIBV7SWI72pBAFJtU0uF_fA/exec'
+        ];
+        let activeApiBaseUrl = API_BASE_URL;
+
+        async function apiFetch(action, init = {}) {
+            const candidates = [activeApiBaseUrl, ...API_FALLBACK_URLS.filter(url => url !== activeApiBaseUrl)];
+            let lastError = null;
+
+            for (const baseUrl of candidates) {
+                const url = `${baseUrl}?action=${action}`;
+                try {
+                    const response = await fetch(url, init);
+                    if (!response.ok) {
+                        lastError = new Error(`API ${action} failed: ${response.status} ${response.statusText} @ ${baseUrl}`);
+                        continue;
+                    }
+
+                    const data = await response.json();
+                    if (data && data.success) {
+                        if (baseUrl !== activeApiBaseUrl) {
+                            activeApiBaseUrl = baseUrl;
+                            console.warn(`已切換 API 端點至：${baseUrl}`);
+                        }
+                        return data;
+                    }
+
+                    lastError = new Error(data && data.error ? data.error : `API ${action} 回傳格式錯誤 @ ${baseUrl}`);
+                } catch (error) {
+                    lastError = error;
+                }
+            }
+
+            throw lastError;
+        }
 
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
@@ -1165,13 +1200,7 @@
                 showLoading(true);
 
                 // 載入設定
-                const settingsResponse = await fetch(`${API_BASE_URL}?action=getSettings`);
-                const settingsData = await settingsResponse.json();
-
-                if (!settingsData.success) {
-                    throw new Error('無法載入設定資料');
-                }
-
+                const settingsData = await apiFetch('getSettings');
                 siteData.settings = settingsData.data;
 
                 // 檢查網站狀態
@@ -1382,13 +1411,9 @@
         // 載入會議介紹
         async function loadAbout() {
             try {
-                const response = await fetch(`${API_BASE_URL}?action=getAbout`);
-                const data = await response.json();
-
-                if (data.success) {
-                    siteData.about = data.data;
-                    renderAbout();
-                }
+                const data = await apiFetch('getAbout');
+            siteData.about = data.data;
+            renderAbout();
             } catch (error) {
                 console.error('載入會議介紹失敗:', error);
             }
@@ -1416,13 +1441,9 @@
         // 載入講師資料
         async function loadSpeakers() {
             try {
-                const response = await fetch(`${API_BASE_URL}?action=getSpeakers`);
-                const data = await response.json();
-
-                if (data.success) {
-                    siteData.speakers = data.data;
-                    renderSpeakers();
-                }
+                const data = await apiFetch('getSpeakers');
+            siteData.speakers = data.data;
+            renderSpeakers();
             } catch (error) {
                 console.error('載入講師資料失敗:', error);
             }
@@ -1459,13 +1480,9 @@
         // 載入議程
         async function loadAgenda() {
             try {
-                const response = await fetch(`${API_BASE_URL}?action=getAgenda`);
-                const data = await response.json();
-
-                if (data.success) {
-                    siteData.agenda = data.data;
-                    renderAgenda();
-                }
+                const data = await apiFetch('getAgenda');
+            siteData.agenda = data.data;
+            renderAgenda();
             } catch (error) {
                 console.error('載入議程失敗:', error);
             }
@@ -1507,13 +1524,9 @@
         // 載入交通資訊
         async function loadTraffic() {
             try {
-                const response = await fetch(`${API_BASE_URL}?action=getTraffic`);
-                const data = await response.json();
-
-                if (data.success) {
-                    siteData.traffic = data.data;
-                    renderTraffic();
-                }
+                const data = await apiFetch('getTraffic');
+            siteData.traffic = data.data;
+            renderTraffic();
             } catch (error) {
                 console.error('載入交通資訊失敗:', error);
             }
@@ -1545,12 +1558,8 @@
         // 載入個資宣告
         async function loadPrivacy() {
             try {
-                const response = await fetch(`${API_BASE_URL}?action=getPrivacy`);
-                const data = await response.json();
-
-                if (data.success) {
-                    siteData.privacy = data.data;
-                }
+                const data = await apiFetch('getPrivacy');
+            siteData.privacy = data.data;
             } catch (error) {
                 console.error('載入個資宣告失敗:', error);
             }
@@ -1559,13 +1568,9 @@
         // 載入歷年會議
         async function loadPastEvents() {
             try {
-                const response = await fetch(`${API_BASE_URL}?action=getPastEvents`);
-                const data = await response.json();
-
-                if (data.success) {
-                    siteData.pastEvents = data.data;
-                    renderPastEvents();
-                }
+                const data = await apiFetch('getPastEvents');
+            siteData.pastEvents = data.data;
+            renderPastEvents();
             } catch (error) {
                 console.error('載入歷年會議失敗:', error);
             }

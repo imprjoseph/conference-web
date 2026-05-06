@@ -108,18 +108,10 @@ function createOrGetSheet(spreadsheet, sheetName) {
 // Web App 主入口
 // ═══════════════════════════════════════════════════════════════
 function doGet(e) {
-  const action = (e.parameter && e.parameter.action) || 'home';
+  const action = (e.parameter && e.parameter.action) || '';
 
-  if (action === 'admin') {
-    return HtmlService.createHtmlOutputFromFile('admin')
-      .setTitle('會議網站管理後台')
-      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-  }
-
-  if (action === 'home') {
-    return HtmlService.createHtmlOutputFromFile('index')
-      .setTitle('會議活動官方網站')
-      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  if (!action) {
+    return jsonOutput({ success: false, error: '請提供 action 參數' });
   }
 
   return jsonOutput(handleApiAction(action, e.parameter));
