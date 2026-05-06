@@ -997,7 +997,7 @@
 
         // ── API URL 管理：優先讀 localStorage，再用 hardcoded 預設值 ──
         // 每次 GAS 重新部署後，只需在「系統設定」分頁貼上新 URL 儲存即可
-        const API_DEFAULT_URL = 'https://script.google.com/macros/s/AKfycbw_RE3C83F-LjOXqvB0sRoJbsC4B_bcdclucEfMWROUOiyM5XmS2EdmlnoeeA0HP2z_3Q/exec';
+        const API_DEFAULT_URL = 'https://script.google.com/macros/s/AKfycbwzAaIa9_lktbXQgFa353mKy2Mr0DM10bjmHbdS_nTpqNPqeFSHJE4CJWSPeUizSe_qpA/exec';
 
         function getApiUrl() {
           return localStorage.getItem('GAS_API_URL') || API_DEFAULT_URL;
