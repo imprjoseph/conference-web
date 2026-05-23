@@ -755,7 +755,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 32px;
-            align-items: start;
+            align-items: stretch;
         }
 
         @media (max-width: 768px) {
@@ -768,14 +768,16 @@
             box-shadow: var(--shadow-lg);
             background: var(--bg-gray);
             min-height: 380px;
+            height: 100%;
             display: flex;
-            align-items: center;
+            align-items: stretch;
             justify-content: center;
         }
 
         .traffic-map-container iframe {
             width: 100%;
-            height: 380px;
+            min-height: 380px;
+            height: 100%;
             border: 0;
             display: block;
         }
@@ -796,7 +798,8 @@
         .traffic-info-list {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
+            justify-content: flex-start;
         }
 
         .traffic-card {
@@ -3938,9 +3941,11 @@
                 const title = lang === 'zh' ? item.title_zh : item.title_en;
                 const text = lang === 'zh' ? item.content_zh : item.content_en;
                 // 若 type 為 address，加上開啟 Google Maps 按鈕
+                // 「在 Google Maps 開啟」按鈕：永遠用地址文字查詢，不帶 iframe 碼
+                const mapsHref = 'https://maps.google.com/?q=' + encodeURIComponent(text);
                 const mapsBtn = (item.type === 'address')
                     ? `<a class="traffic-open-map-btn"
-                          href="${mapsEmbed || ('https://maps.google.com/?q=' + encodeURIComponent(text))}"
+                          href="${mapsHref}"
                           target="_blank" rel="noopener">
                          <i class="fas fa-external-link-alt"></i>
                          ${lang === 'zh' ? '在 Google Maps 開啟' : 'Open in Google Maps'}
