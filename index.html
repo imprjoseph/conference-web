@@ -1263,11 +1263,11 @@
         .footer-brand p {
             font-size: 14px;
             line-height: 1.75;
-            color: #94a3b8;
+            color: #cbd5e1;
         }
 
         .footer-col h4 {
-            color: #e2e8f0;
+            color: #f1f5f9;
             font-size: 13px;
             font-weight: 700;
             text-transform: uppercase;
@@ -1286,7 +1286,7 @@
 
         .footer-col li {
             font-size: 14px;
-            color: #94a3b8;
+            color: #cbd5e1;
             display: flex;
             align-items: flex-start;
             gap: 8px;
@@ -1301,7 +1301,7 @@
         }
 
         .footer-col a {
-            color: #94a3b8;
+            color: #cbd5e1;
             text-decoration: none;
             transition: color 0.2s;
         }
@@ -2424,9 +2424,9 @@
             margin-bottom: 16px;
         }
 
-        .footer-col a { color: #94a3b8; text-decoration: none; transition: color 0.18s; }
+        .footer-col a { color: #cbd5e1; text-decoration: none; transition: color 0.18s; }
         .footer-col a:hover { color: #60a5fa; }
-        .footer-col li { font-size: 13.5px; padding: 4px 0; }
+        .footer-col li { font-size: 13.5px; padding: 4px 0; color: #cbd5e1; }
         .footer-col li i { color: #334155; width: 16px; }
 
         .footer-bottom {
@@ -2442,7 +2442,7 @@
         }
 
         .footer-bottom-left {
-            color: #475569;
+            color: #94a3b8;
             font-size: 12.5px;
         }
 
@@ -3016,7 +3016,7 @@
                     <div id="footer-organizer-logo-wrap" style="display:none;margin-bottom:20px;">
                         <img id="footer-organizer-logo"
                              src="" alt="主辦單位"
-                             style="height:40px;max-width:200px;object-fit:contain;display:block;">
+                             style="object-fit:contain;display:block;">
                     </div>
                     <h3 id="footer-conf-title">會議名稱</h3>
                     <div class="footer-divider"></div>
@@ -3488,18 +3488,24 @@
             const ftLogoImg  = document.getElementById('footer-organizer-logo');
             if (ftLogoWrap && ftLogoImg) {
                 if (orgLogoUrl) {
-                    ftLogoImg.src = orgLogoUrl;
-                    ftLogoImg.alt = s.organizer_zh || s.organizer_en || '主辦單位';
-                    // 可在 Settings 控制尺寸
-                    const logoH = parseInt(s.organizer_logo_height) || 40;
-                    const logoW = parseInt(s.organizer_logo_width)  || 200;
+                    const logoH = parseInt(s.organizer_logo_height) || 80;
+                    const logoW = parseInt(s.organizer_logo_width)  || 240;
+                    const invert = s.organizer_logo_invert === 'true';
+
+                    // 先設好所有樣式再設 src，避免 onload 前尺寸跑掉
                     ftLogoImg.style.height   = logoH + 'px';
                     ftLogoImg.style.maxWidth = logoW + 'px';
-                    // 可控制是否反白（深色背景用）
-                    const invert = s.organizer_logo_invert === 'true';
-                    ftLogoImg.style.filter = invert ? 'brightness(0) invert(1)' : 'none';
-                    ftLogoImg.onload  = () => { ftLogoWrap.style.display = 'block'; };
+                    ftLogoImg.style.filter   = invert ? 'brightness(0) invert(1)' : 'none';
+                    ftLogoImg.alt = s.organizer_zh || s.organizer_en || '主辦單位';
+
+                    ftLogoImg.onload = () => {
+                        // onload 後確保尺寸正確（部分瀏覽器會 reset）
+                        ftLogoImg.style.height   = logoH + 'px';
+                        ftLogoImg.style.maxWidth = logoW + 'px';
+                        ftLogoWrap.style.display = 'block';
+                    };
                     ftLogoImg.onerror = () => { ftLogoWrap.style.display = 'none'; };
+                    ftLogoImg.src = orgLogoUrl; // src 最後設，觸發 onload
                 } else {
                     ftLogoWrap.style.display = 'none';
                 }
