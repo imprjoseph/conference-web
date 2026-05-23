@@ -3016,7 +3016,7 @@
                     <div id="footer-organizer-logo-wrap" style="display:none;margin-bottom:20px;">
                         <img id="footer-organizer-logo"
                              src="" alt="主辦單位"
-                             style="object-fit:contain;display:block;">
+                             style="width:auto;object-fit:contain;display:block;">
                     </div>
                     <h3 id="footer-conf-title">會議名稱</h3>
                     <div class="footer-divider"></div>
@@ -3493,13 +3493,14 @@
                     const invert = s.organizer_logo_invert === 'true';
 
                     // 先設好所有樣式再設 src，避免 onload 前尺寸跑掉
+                    ftLogoImg.style.width    = 'auto';
                     ftLogoImg.style.height   = logoH + 'px';
                     ftLogoImg.style.maxWidth = logoW + 'px';
                     ftLogoImg.style.filter   = invert ? 'brightness(0) invert(1)' : 'none';
                     ftLogoImg.alt = s.organizer_zh || s.organizer_en || '主辦單位';
 
                     ftLogoImg.onload = () => {
-                        // onload 後確保尺寸正確（部分瀏覽器會 reset）
+                        ftLogoImg.style.width    = 'auto';
                         ftLogoImg.style.height   = logoH + 'px';
                         ftLogoImg.style.maxWidth = logoW + 'px';
                         ftLogoWrap.style.display = 'block';
@@ -4076,8 +4077,8 @@
         // ── 下載專區：直接開 Google Drive 連結 ──
         function openDownloads() {
             const s = siteData.settings || {};
-            const url = s.downloads_url || s.registration_form_url || '';
-            // 從 downloads sheet 抓第一筆 file_url（若有）
+            // show_downloads = 'false' 時不動作
+            if (s.show_downloads === 'false') return;
             const items = siteData.downloads || [];
             if (items.length === 1) {
                 window.open(items[0].file_url, '_blank', 'noopener');
@@ -4378,6 +4379,19 @@
             // 報名表單：語言切換時重繪（含欄位 label 和按鈕文字）
             initRegisterForm();
 
+            // ── 可控制顯示的 section 開關 ──
+            const _s = siteData.settings || {};
+            // 下載專區
+            const showDl = _s.show_downloads !== 'false';
+            document.querySelectorAll('[data-section="downloads"], [onclick*="openDownloads"]').forEach(el => {
+                el.style.display = showDl ? '' : 'none';
+            });
+            // 歷年會議（nav + footer）
+            const showPast = _s.show_past_events !== 'false';
+            document.querySelectorAll('[data-section="past_events"], [onclick*="openPastEventsAlbum"], [data-zh="歷年會議"]').forEach(el => {
+                el.style.display = showPast ? '' : 'none';
+            });
+
             // 導航選單、section 標題、UI 文字
             updateTitles();
         }
@@ -4561,8 +4575,16 @@
             if (!container) return;
             const sponsors = siteData.sponsors || [];
             const lang = currentLang;
-            if (sponsors.length === 0) { document.getElementById('sponsors-section').classList.add('hidden'); return; }
+            // show_sponsors = 'false' 時隱藏整個 section（含導覽列）
+            const showSponsors = (siteData.settings || {}).show_sponsors !== 'false';
+            if (!showSponsors || sponsors.length === 0) {
+                document.getElementById('sponsors-section').classList.add('hidden');
+                // 隱藏導覽列連結
+                document.querySelectorAll('[data-section="sponsors"]').forEach(el => el.style.display = 'none');
+                return;
+            }
             document.getElementById('sponsors-section').classList.remove('hidden');
+            document.querySelectorAll('[data-section="sponsors"]').forEach(el => el.style.display = '');
             const tierNames = { platinum:{zh:'白金贊助',en:'Platinum'}, gold:{zh:'金級贊助',en:'Gold'}, silver:{zh:'銀級贊助',en:'Silver'}, bronze:{zh:'銅級贊助',en:'Bronze'}, supporter:{zh:'支持單位',en:'Supporter'} };
             const tierColors = { platinum:'tier-platinum', gold:'tier-gold', silver:'tier-silver', bronze:'tier-bronze', supporter:'tier-supporter' };
             const grouped = {};
