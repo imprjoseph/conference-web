@@ -2711,6 +2711,12 @@
             <div class="hero-body-wrap">
             <div class="hero-body">
                 <div class="hero-left">
+                    <!-- 主辦單位 Logo -->
+                    <div id="hero-organizer-logo-wrap" style="display:none;margin-bottom:16px;">
+                        <img id="hero-organizer-logo"
+                             src="" alt="主辦單位"
+                             style="height:44px;max-width:200px;object-fit:contain;filter:brightness(0) invert(1);opacity:0.85;">
+                    </div>
                     <h1 class="hero-title" id="hero-title">會議名稱</h1>
                     <p class="hero-subtitle" id="hero-subtitle">會議副標題</p>
                     <div class="hero-meta">
@@ -3342,7 +3348,17 @@
                 settings.conference_subtitle_zh || '會議副標題' :
                 settings.conference_subtitle_en || 'Conference Subtitle';
 
-            document.getElementById('hero-date').textContent = settings.conference_date || '-';
+            // 日期顯示：解析 conference_date，自動處理 UTC datetime 格式
+            const rawDate = settings.conference_date || '';
+            const parsedDate = rawDate ? parseLocalDate(rawDate) : null;
+            if (parsedDate && !isNaN(parsedDate)) {
+                const locale = currentLang === 'zh' ? 'zh-TW' : 'en-US';
+                document.getElementById('hero-date').textContent = parsedDate.toLocaleDateString(locale, {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                });
+            } else {
+                document.getElementById('hero-date').textContent = rawDate || '-';
+            }
             document.getElementById('hero-location').textContent = currentLang === 'zh' ?
                 settings.conference_location_zh || '-' :
                 settings.conference_location_en || '-';
@@ -3362,6 +3378,20 @@
                 };
                 img.onerror = () => {}; // 失敗時保留 placeholder icon
                 img.src = heroImgUrl;
+            }
+
+            // ── 主辦單位 Logo ──
+            const orgLogoUrl = driveToImgUrl(settings.organizer_logo_url || '');
+            const orgLogoWrap = document.getElementById('hero-organizer-logo-wrap');
+            const orgLogoImg  = document.getElementById('hero-organizer-logo');
+            if (orgLogoUrl && orgLogoWrap && orgLogoImg) {
+                orgLogoImg.src = orgLogoUrl;
+                orgLogoImg.alt = settings.organizer_zh || settings.organizer_en || '主辦單位';
+                orgLogoImg.onload  = () => { orgLogoWrap.style.display = 'block'; };
+                orgLogoImg.onerror = () => { orgLogoWrap.style.display = 'none';  };
+                orgLogoWrap.style.display = 'block'; // 先顯示，onerror 時再隱藏
+            } else {
+                if (orgLogoWrap) orgLogoWrap.style.display = 'none';
             }
 
             // 更新報名按鈕狀態
@@ -3386,7 +3416,13 @@
             const dateLoc = document.getElementById('footer-conf-date-loc');
             if (titleEl) titleEl.textContent = title || (isEn ? 'Conference' : '會議名稱');
             if (subEl) subEl.textContent = subtitle || '';
-            if (dateLoc) dateLoc.textContent = [s.conference_date, loc].filter(Boolean).join('  ·  ');
+            // footer 日期顯示
+            const footerRawDate = s.conference_date || '';
+            const footerDate = footerRawDate ? parseLocalDate(footerRawDate) : null;
+            const footerDateStr = (footerDate && !isNaN(footerDate))
+                ? footerDate.toLocaleDateString(isEn ? 'en-US' : 'zh-TW', { year:'numeric', month:'long', day:'numeric' })
+                : footerRawDate;
+            if (dateLoc) dateLoc.textContent = [footerDateStr, loc].filter(Boolean).join('  ·  ');
 
             // 主辦 / 協辦
             const setSpan = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '-'; };
@@ -4702,9 +4738,54 @@
             document.getElementById('speaker-modal').classList.add('show');
         }
 
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString(currentLang === 'zh' ? 'zh-TW' : 'en-US', {
+        // 解析日期，自動處理多種格式與時區問題
+        function parseLocalDate(str) {
+            if (!str) return null;
+            const s = String(str).trim();
+
+            // ISO 格式含 T 或 Z（Google Sheets 存的 UTC datetime）
+            // Google Sheets 將台灣時間轉 UTC 儲存（-8h），顯示時需轉回台灣時間（+8h）
+            if (/T|Z/.test(s)) {
+                // e.g. "2026-09-14T16:00:00.000Z"（= 台灣 2026-09-15 00:00）
+                const utcDate = new Date(s);
+                // 轉為台灣時區（UTC+8）
+                const twOffset = 8 * 60 * 60 * 1000;
+                const twDate = new Date(utcDate.getTime() + twOffset);
+                return new Date(twDate.getUTCFullYear(), twDate.getUTCMonth(), twDate.getUTCDate());
+            }
+
+            // 斜線格式：2026/9/15 或 2026/09/15
+            if (s.includes('/')) {
+                const [y, m, d] = s.split('/').map(Number);
+                return new Date(y, m - 1, d);
+            }
+
+            // 破折號格式（純日期，無時間）：2026-09-15
+            // 注意：直接 new Date("2026-09-15") 會被當 UTC，用 split 強制本地時間
+            const dashOnly = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+            if (dashOnly) {
+                return new Date(Number(dashOnly[1]), Number(dashOnly[2]) - 1, Number(dashOnly[3]));
+            }
+
+            // 其他格式：讓瀏覽器自行解析
+            return new Date(s);
+        }
+
+        function formatDate(dateString, includeTime) {
+            const date = parseLocalDate(dateString);
+            if (!date || isNaN(date)) return String(dateString || '-');
+
+            const locale = currentLang === 'zh' ? 'zh-TW' : 'en-US';
+
+            if (includeTime && /T|:/.test(String(dateString))) {
+                // 如果原始字串含時間，從 ISO 取出時間部分顯示
+                const timePart = String(dateString).match(/T(\d{2}:\d{2})/);
+                const timeStr = timePart ? timePart[1] : '';
+                const dateStr = date.toLocaleDateString(locale, { year:'numeric', month:'long', day:'numeric' });
+                return timeStr ? `${dateStr} ${timeStr}` : dateStr;
+            }
+
+            return date.toLocaleDateString(locale, {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
