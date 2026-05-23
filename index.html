@@ -1192,16 +1192,66 @@
         @media(max-width:560px){ .subscribe-form{flex-direction:column; align-items:stretch;} }
         @media(max-width:768px){ .subscribe-qr-grid{ grid-template-columns:1fr !important; } }
 
-        /* ══ QR Code ══ */
-        .qr-box {
-            display:flex; align-items:center; gap:32px; background:#fff;
-            border-radius:20px; padding:32px; border:1px solid var(--border-color);
-            box-shadow:var(--shadow); max-width:480px; margin:0 auto;
+        /* ══ 訂閱 + 活動提示 layout ══ */
+        .subscribe-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.6fr;
+            gap: 40px;
+            align-items: start;
         }
-        .qr-box img { width:120px; height:120px; border-radius:12px; flex-shrink:0; }
-        .qr-box-text h4 { font-size:17px; font-weight:700; margin-bottom:8px; }
-        .qr-box-text p  { font-size:13px; color:#6b7280; }
-        @media(max-width:480px){ .qr-box{flex-direction:column; text-align:center;} }
+
+        @media (max-width: 768px) {
+            .subscribe-layout { grid-template-columns: 1fr; }
+        }
+
+        /* ══ 活動重要提示卡 ══ */
+        .notice-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+        }
+
+        .notice-card {
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            padding: 22px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: transform 0.22s, box-shadow 0.22s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notice-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .notice-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+        .notice-card.accent-blue::before  { background: var(--primary-color); }
+        .notice-card.accent-amber::before { background: var(--accent-color); }
+        .notice-card.accent-green::before { background: var(--success-color); }
+        .notice-card.accent-red::before   { background: var(--danger-color); }
+
+        .notice-icon {
+            width: 40px; height: 40px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; flex-shrink: 0;
+        }
+
+        .notice-icon.blue  { background: #eff6ff; color: var(--primary-color); }
+        .notice-icon.amber { background: #fffbeb; color: var(--accent-color); }
+        .notice-icon.green { background: #f0fdf4; color: var(--success-color); }
+        .notice-icon.red   { background: #fef2f2; color: var(--danger-color); }
+
+        .notice-card-title { font-size: 13px; font-weight: 700; color: var(--text-color); line-height: 1.4; }
+        .notice-card-body  { font-size: 13px; color: var(--text-light); line-height: 1.65; }
 
         /* ══ Cookie Banner ══ */
         #cookie-banner {
@@ -2965,12 +3015,13 @@
             </div>
         </section>
 
-        <!-- ══ Email 訂閱 + QR Code ══ -->
+        <!-- ══ Email 訂閱 + 活動提示 ══ -->
         <section id="subscribe-section" class="section hidden">
             <div class="container">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;--subscribe-cols:1fr 1fr;" class="subscribe-qr-grid">
+                <div class="subscribe-layout">
+                    <!-- 左欄：Email 訂閱 -->
                     <div class="subscribe-box">
-                        <i class="fas fa-bell" style="font-size:32px;color:var(--primary-color);margin-bottom:12px;display:block;"></i>
+                        <i class="fas fa-bell" style="font-size:28px;color:var(--primary-color);margin-bottom:12px;display:block;"></i>
                         <h3 id="subscribe-title">訂閱最新消息</h3>
                         <p id="subscribe-desc">輸入 Email，第一時間收到會議最新公告</p>
                         <div class="subscribe-form">
@@ -2979,25 +3030,9 @@
                         </div>
                         <p id="subscribe-result" style="margin-top:12px;font-size:13px;color:var(--primary-color);min-height:18px;"></p>
                     </div>
-                    <div style="padding:32px 0;">
-                        <div class="section-title" style="text-align:left;margin-bottom:24px;">
-                            <h2 id="qr-title" style="font-size:22px;">掃碼報名</h2>
-                            <p id="qr-subtitle">使用手機掃描 QR Code 快速進入報名頁</p>
-                        </div>
-                        <div class="qr-box" id="qr-box">
-                            <div id="qr-image-wrap">
-                                <div style="width:120px;height:120px;background:#f1f5f9;border-radius:12px;display:flex;align-items:center;justify-content:center;">
-                                    <i class="fas fa-qrcode" style="font-size:48px;color:#cbd5e1;"></i>
-                                </div>
-                            </div>
-                            <div class="qr-box-text">
-                                <h4 id="qr-label">立即報名</h4>
-                                <p id="qr-desc">掃描左方 QR Code<br>或點擊下方按鈕</p>
-                                <button class="speaker-detail-btn" style="margin-top:12px;" onclick="showPrivacyModal()">
-                                    <i class="fas fa-pen-alt"></i> <span id="qr-reg-text">前往報名</span>
-                                </button>
-                            </div>
-                        </div>
+                    <!-- 右欄：活動重要提示卡 -->
+                    <div class="notice-cards" id="notice-cards">
+                        <!-- 由 JS 動態產生 -->
                     </div>
                 </div>
             </div>
@@ -4107,6 +4142,69 @@
             }
         }
 
+
+        // ── 活動提示卡：從 Settings 動態產生 ──
+        function renderNoticeCards() {
+            const wrap = document.getElementById('notice-cards');
+            if (!wrap) return;
+            const s = siteData.settings || {};
+            const isZh = currentLang === 'zh';
+
+            // 預設三張卡（可由 Settings notice_N_* 覆蓋）
+            const defaults = [
+                {
+                    icon: 'fas fa-calendar-check', color: 'amber',
+                    title_zh: '報名截止日期', title_en: 'Registration Deadline',
+                    body_zh: s.registration_end_at
+                        ? formatDate(s.registration_end_at)
+                        : '請密切留意官網公告',
+                    body_en: s.registration_end_at
+                        ? formatDate(s.registration_end_at)
+                        : 'Please check the official website'
+                },
+                {
+                    icon: 'fas fa-info-circle', color: 'blue',
+                    title_zh: '注意事項', title_en: 'Important Notes',
+                    body_zh: s.notice_2_body_zh || '請攜帶名片，現場備有茶點，敬請準時出席',
+                    body_en: s.notice_2_body_en || 'Please bring business cards. Light refreshments will be served.'
+                },
+                {
+                    icon: 'fas fa-headset', color: 'green',
+                    title_zh: '聯絡窗口', title_en: 'Contact',
+                    body_zh: s.contact_email
+                        ? (s.contact_phone ? s.contact_email + '\n' + s.contact_phone : s.contact_email)
+                        : (s.notice_3_body_zh || '請來信洽詢主辦單位'),
+                    body_en: s.contact_email
+                        ? (s.contact_phone ? s.contact_email + '\n' + s.contact_phone : s.contact_email)
+                        : (s.notice_3_body_en || 'Please contact the organizer')
+                }
+            ];
+
+            // 允許 Settings 覆蓋任一卡片
+            const cards = defaults.map((d, i) => {
+                const n = i + 1;
+                return {
+                    icon:  s[`notice_${n}_icon`]    || d.icon,
+                    color: s[`notice_${n}_color`]   || d.color,
+                    title: isZh
+                        ? (s[`notice_${n}_title_zh`] || d.title_zh)
+                        : (s[`notice_${n}_title_en`] || d.title_en),
+                    body:  isZh
+                        ? (s[`notice_${n}_body_zh`]  || d.body_zh)
+                        : (s[`notice_${n}_body_en`]  || d.body_en)
+                };
+            });
+
+            wrap.innerHTML = cards.map(c => `
+                <div class="notice-card accent-${c.color}">
+                    <div class="notice-icon ${c.color}">
+                        <i class="${c.icon}"></i>
+                    </div>
+                    <div class="notice-card-title">${c.title}</div>
+                    <div class="notice-card-body" style="white-space:pre-line;">${c.body}</div>
+                </div>`).join('');
+        }
+
         function scrollToRegForm() {
             const sec = document.getElementById('register-section');
             if (!sec) return;
@@ -4376,6 +4474,7 @@
             if (siteData.speakers)   renderSpeakers();
             if (siteData.agenda)     renderAgenda();
             if (siteData.traffic)    renderTraffic();
+            renderNoticeCards();
             // 報名表單：語言切換時重繪（含欄位 label 和按鈕文字）
             initRegisterForm();
 
