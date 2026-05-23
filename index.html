@@ -212,9 +212,9 @@
 
         /* 資訊列：深色但與 Banner 有明確區隔 */
         .hero-body-wrap {
-            background: #0f1e3d;
-            border-top: 3px solid rgba(255,255,255,0.08);
-            box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+            background: #1a2f5e;
+            border-top: 2px solid rgba(255,255,255,0.12);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
         }
 
         .hero-body {
@@ -2430,6 +2430,56 @@
             padding: 20px 0;
             font-size: 12.5px;
             color: #475569;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .footer-bottom-left {
+            color: #475569;
+            font-size: 12.5px;
+        }
+
+        .footer-bottom-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* 社群連結圓形 icon */
+        .social-icon-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 13px;
+            text-decoration: none;
+            transition: transform 0.2s, opacity 0.2s;
+            flex-shrink: 0;
+        }
+
+        .social-icon-btn:hover {
+            transform: translateY(-3px);
+            opacity: 0.85;
+        }
+
+        /* footer 主欄社群連結（更大更顯眼）*/
+        .footer-social-col {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer-social-col .social-icon-btn {
+            width: 38px;
+            height: 38px;
+            font-size: 15px;
         }
 
         /* ── Modal 升級 ── */
@@ -2711,12 +2761,6 @@
             <div class="hero-body-wrap">
             <div class="hero-body">
                 <div class="hero-left">
-                    <!-- 主辦單位 Logo -->
-                    <div id="hero-organizer-logo-wrap" style="display:none;margin-bottom:16px;">
-                        <img id="hero-organizer-logo"
-                             src="" alt="主辦單位"
-                             style="height:44px;max-width:200px;object-fit:contain;filter:brightness(0) invert(1);opacity:0.85;">
-                    </div>
                     <h1 class="hero-title" id="hero-title">會議名稱</h1>
                     <p class="hero-subtitle" id="hero-subtitle">會議副標題</p>
                     <div class="hero-meta">
@@ -2964,10 +3008,19 @@
 
                 <!-- 主辦單位 -->
                 <div class="footer-brand">
+                    <!-- 主辦單位 Logo -->
+                    <div id="footer-organizer-logo-wrap" style="display:none;margin-bottom:16px;">
+                        <img id="footer-organizer-logo"
+                             src="" alt="主辦單位"
+                             style="height:48px;max-width:220px;object-fit:contain;
+                                    filter:brightness(0) invert(1);opacity:0.9;">
+                    </div>
                     <h3 id="footer-conf-title">會議名稱</h3>
                     <div class="footer-divider"></div>
                     <p id="footer-conf-subtitle">會議副標題</p>
                     <p style="margin-top:12px;" id="footer-conf-date-loc"></p>
+                    <!-- 社群連結（主欄顯示，較顯眼）-->
+                    <div class="footer-social-col" id="footer-social-main"></div>
                 </div>
 
                 <!-- 主辦 / 協辦單位 -->
@@ -3263,24 +3316,40 @@
         // 社群媒體連結
         function updateSocialLinks() {
             const s = siteData.settings || {};
-            const wrap = document.getElementById('footer-social-links');
-            if (!wrap) return;
             const platforms = [
-                { key:'social_facebook', icon:'fab fa-facebook-f', color:'#1877f2' },
-                { key:'social_linkedin', icon:'fab fa-linkedin-in', color:'#0a66c2' },
-                { key:'social_twitter',  icon:'fab fa-x-twitter',  color:'#000' },
-                { key:'social_youtube',  icon:'fab fa-youtube',    color:'#ff0000' },
-                { key:'social_line',     icon:'fab fa-line',       color:'#00c300' },
+                { key:'social_facebook', icon:'fab fa-facebook-f', color:'#1877f2', label:'Facebook' },
+                { key:'social_linkedin', icon:'fab fa-linkedin-in', color:'#0a66c2', label:'LinkedIn' },
+                { key:'social_twitter',  icon:'fab fa-x-twitter',  color:'#1a1a1a', label:'X / Twitter' },
+                { key:'social_youtube',  icon:'fab fa-youtube',    color:'#ff0000', label:'YouTube' },
+                { key:'social_line',     icon:'fab fa-line',       color:'#00b900', label:'LINE' },
+                { key:'social_instagram',icon:'fab fa-instagram',  color:'#e1306c', label:'Instagram' },
             ];
-            wrap.innerHTML = platforms.filter(p=>s[p.key]).map(p=>
-                `<a href="${s[p.key]}" target="_blank" rel="noopener"
-                    style="width:32px;height:32px;border-radius:50%;background:${p.color};
-                           display:flex;align-items:center;justify-content:center;
-                           color:#fff;font-size:13px;text-decoration:none;
-                           transition:opacity 0.2s;" onmouseover="this.style.opacity=.7" onmouseout="this.style.opacity=1">
-                    <i class="${p.icon}"></i>
-                </a>`
-            ).join('');
+            const active = platforms.filter(p => s[p.key]);
+
+            // 主欄（footer brand 區，較大圖示）
+            const mainWrap = document.getElementById('footer-social-main');
+            if (mainWrap) {
+                mainWrap.innerHTML = active.map(p =>
+                    `<a href="${s[p.key]}" target="_blank" rel="noopener"
+                        class="social-icon-btn" title="${p.label}"
+                        style="background:${p.color};">
+                        <i class="${p.icon}"></i>
+                    </a>`
+                ).join('');
+                mainWrap.style.display = active.length ? 'flex' : 'none';
+            }
+
+            // Bottom bar（小圖示，保留向下相容）
+            const bottomWrap = document.getElementById('footer-social-links');
+            if (bottomWrap) {
+                bottomWrap.innerHTML = active.map(p =>
+                    `<a href="${s[p.key]}" target="_blank" rel="noopener"
+                        class="social-icon-btn" title="${p.label}"
+                        style="background:${p.color};width:28px;height:28px;font-size:12px;">
+                        <i class="${p.icon}"></i>
+                    </a>`
+                ).join('');
+            }
         }
 
         // 載入所有資料
@@ -3380,20 +3449,6 @@
                 img.src = heroImgUrl;
             }
 
-            // ── 主辦單位 Logo ──
-            const orgLogoUrl = driveToImgUrl(settings.organizer_logo_url || '');
-            const orgLogoWrap = document.getElementById('hero-organizer-logo-wrap');
-            const orgLogoImg  = document.getElementById('hero-organizer-logo');
-            if (orgLogoUrl && orgLogoWrap && orgLogoImg) {
-                orgLogoImg.src = orgLogoUrl;
-                orgLogoImg.alt = settings.organizer_zh || settings.organizer_en || '主辦單位';
-                orgLogoImg.onload  = () => { orgLogoWrap.style.display = 'block'; };
-                orgLogoImg.onerror = () => { orgLogoWrap.style.display = 'none';  };
-                orgLogoWrap.style.display = 'block'; // 先顯示，onerror 時再隱藏
-            } else {
-                if (orgLogoWrap) orgLogoWrap.style.display = 'none';
-            }
-
             // 更新報名按鈕狀態
             updateRegisterButton();
             // 同步更新 Footer
@@ -3423,6 +3478,21 @@
                 ? footerDate.toLocaleDateString(isEn ? 'en-US' : 'zh-TW', { year:'numeric', month:'long', day:'numeric' })
                 : footerRawDate;
             if (dateLoc) dateLoc.textContent = [footerDateStr, loc].filter(Boolean).join('  ·  ');
+
+            // ── 主辦單位 Logo（頁尾）──
+            const orgLogoUrl = driveToImgUrl(s.organizer_logo_url || '');
+            const ftLogoWrap = document.getElementById('footer-organizer-logo-wrap');
+            const ftLogoImg  = document.getElementById('footer-organizer-logo');
+            if (ftLogoWrap && ftLogoImg) {
+                if (orgLogoUrl) {
+                    ftLogoImg.src = orgLogoUrl;
+                    ftLogoImg.alt = s.organizer_zh || s.organizer_en || '主辦單位';
+                    ftLogoImg.onload  = () => { ftLogoWrap.style.display = 'block'; };
+                    ftLogoImg.onerror = () => { ftLogoWrap.style.display = 'none'; };
+                } else {
+                    ftLogoWrap.style.display = 'none';
+                }
+            }
 
             // 主辦 / 協辦
             const setSpan = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '-'; };
@@ -3810,14 +3880,55 @@
                 default: 'fas fa-info-circle'
             };
 
-            const mapHtml = mapsEmbed
+            // 將各種 Google Maps 輸入轉為 embed iframe URL
+            function toMapsEmbedUrl(url) {
+                if (!url) return '';
+                url = url.trim();
+
+                // 1. 已是 embed 格式 → 直接用
+                if (url.includes('google.com/maps/embed')) return url;
+
+                // 2. 長網址含 CID (cid=)
+                const cid = url.match(/[?&]cid=(\d+)/);
+                if (cid) return `https://maps.google.com/maps?cid=${cid[1]}&output=embed&hl=zh-TW`;
+
+                // 3. 長網址含座標 @lat,lng,zoom
+                const coord = url.match(/@([-0-9.]+),([-0-9.]+)/);
+                if (coord) {
+                    return `https://maps.google.com/maps?q=${coord[1]},${coord[2]}&output=embed&hl=zh-TW&z=17`;
+                }
+
+                // 4. 長網址含 place 名稱（/maps/place/NAME/...）
+                const place = url.match(/maps\/place\/([^/@?&]+)/);
+                if (place) {
+                    const q = decodeURIComponent(place[1].replace(/\+/g, ' '));
+                    return `https://maps.google.com/maps?q=${encodeURIComponent(q)}&output=embed&hl=zh-TW`;
+                }
+
+                // 5. 短網址 maps.app.goo.gl 或 goo.gl → 無法直接 embed
+                //    改為顯示連結按鈕，並用地址欄位（contact_address_zh）做備用 embed
+                if (url.includes('goo.gl') || url.includes('maps.app')) {
+                    const addr = (siteData.settings && siteData.settings.contact_address_zh) || '';
+                    if (addr) return `https://maps.google.com/maps?q=${encodeURIComponent(addr)}&output=embed&hl=zh-TW`;
+                    return ''; // 無法轉換，回傳空值
+                }
+
+                // 6. 純地址或地點名稱（如「政大公企中心」）→ 直接查詢
+                return `https://maps.google.com/maps?q=${encodeURIComponent(url)}&output=embed&hl=zh-TW`;
+            }
+
+            const embedUrl = toMapsEmbedUrl(mapsEmbed);
+            const mapHtml = embedUrl
                 ? `<div class="traffic-map-container">
-                     <iframe src="${mapsEmbed}" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                     <iframe src="${embedUrl}"
+                             allowfullscreen="" loading="lazy"
+                             referrerpolicy="no-referrer-when-downgrade"
+                             title="Google Maps"></iframe>
                    </div>`
                 : `<div class="traffic-map-container">
                      <div class="traffic-map-placeholder">
                        <i class="fas fa-map-marked-alt"></i>
-                       <p>${lang === 'zh' ? '地圖載入中，請至後台設定 Google Maps 嵌入碼' : 'Set Google Maps embed code in admin panel'}</p>
+                       <p>${lang === 'zh' ? '請至後台 Settings 設定 google_maps_embed 欄位' : 'Set google_maps_embed in Settings'}</p>
                      </div>
                    </div>`;
 
@@ -3826,8 +3937,10 @@
                 const title = lang === 'zh' ? item.title_zh : item.title_en;
                 const text = lang === 'zh' ? item.content_zh : item.content_en;
                 // 若 type 為 address，加上開啟 Google Maps 按鈕
-                const mapsBtn = (item.type === 'address' && mapsEmbed)
-                    ? `<a class="traffic-open-map-btn" href="https://maps.google.com/?q=${encodeURIComponent(text)}" target="_blank" rel="noopener">
+                const mapsBtn = (item.type === 'address')
+                    ? `<a class="traffic-open-map-btn"
+                          href="${mapsEmbed || ('https://maps.google.com/?q=' + encodeURIComponent(text))}"
+                          target="_blank" rel="noopener">
                          <i class="fas fa-external-link-alt"></i>
                          ${lang === 'zh' ? '在 Google Maps 開啟' : 'Open in Google Maps'}
                        </a>`
