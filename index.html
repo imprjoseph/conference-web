@@ -2718,6 +2718,18 @@
 
         .section { animation: fadeInUp 0.55s ease both; }
 
+        
+        /* ── Footer organizer logo 強制尺寸（防止繼承覆蓋）── */
+        #footer-organizer-logo {
+            display: block !important;
+            width: auto !important;
+            object-fit: contain !important;
+        }
+
+        #footer-organizer-logo-wrap {
+            line-height: 0;
+        }
+
         </style>
 </head>
 <body>
@@ -3528,20 +3540,36 @@
                     const invert = s.organizer_logo_invert === 'true';
 
                     // 先設好所有樣式再設 src，避免 onload 前尺寸跑掉
-                    ftLogoImg.style.width    = 'auto';
-                    ftLogoImg.style.height   = logoH + 'px';
-                    ftLogoImg.style.maxWidth = logoW + 'px';
-                    ftLogoImg.style.filter   = invert ? 'brightness(0) invert(1)' : 'none';
                     ftLogoImg.alt = s.organizer_zh || s.organizer_en || '主辦單位';
 
-                    ftLogoImg.onload = () => {
-                        ftLogoImg.style.width    = 'auto';
-                        ftLogoImg.style.height   = logoH + 'px';
-                        ftLogoImg.style.maxWidth = logoW + 'px';
+                    // 強制套用尺寸函式（解決快取圖片 onload 不觸發問題）
+                    function applyLogoSize() {
+                        ftLogoImg.setAttribute('width', 'auto');
+                        ftLogoImg.setAttribute('height', logoH);
+                        ftLogoImg.style.cssText = [
+                            'width: auto',
+                            'height: ' + logoH + 'px',
+                            'max-width: ' + logoW + 'px',
+                            'min-height: ' + logoH + 'px',
+                            'object-fit: contain',
+                            'display: block',
+                            'filter: ' + (invert ? 'brightness(0) invert(1)' : 'none')
+                        ].join(' !important;') + ' !important';
                         ftLogoWrap.style.display = 'block';
-                    };
+                    }
+
+                    ftLogoImg.onload  = applyLogoSize;
                     ftLogoImg.onerror = () => { ftLogoWrap.style.display = 'none'; };
-                    ftLogoImg.src = orgLogoUrl; // src 最後設，觸發 onload
+
+                    // src 設定前先清空（強制觸發 onload，即使快取）
+                    ftLogoImg.src = '';
+                    setTimeout(() => {
+                        ftLogoImg.src = orgLogoUrl;
+                        // 雙保險：src 設定後立即也套用一次（快取命中時 onload 可能已錯過）
+                        if (ftLogoImg.complete && ftLogoImg.naturalHeight > 0) {
+                            applyLogoSize();
+                        }
+                    }, 0);
                 } else {
                     ftLogoWrap.style.display = 'none';
                 }
