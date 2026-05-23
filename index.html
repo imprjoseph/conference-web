@@ -212,9 +212,9 @@
 
         /* 資訊列：深色但與 Banner 有明確區隔 */
         .hero-body-wrap {
-            background: #1a2f5e;
-            border-top: 2px solid rgba(255,255,255,0.12);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+            background: #f0f4ff;
+            border-top: 3px solid #dbeafe;
+            box-shadow: 0 4px 16px rgba(30,64,175,0.08);
         }
 
         .hero-body {
@@ -228,7 +228,7 @@
         }
 
         .hero-left {
-            border-left: 3px solid var(--accent-color);
+            border-left: 4px solid var(--primary-color);
             padding-left: 24px;
         }
 
@@ -238,14 +238,14 @@
             margin-bottom: 6px;
             line-height: 1.2;
             letter-spacing: -0.3px;
-            color: #fff;
+            color: #1e3a8a;
         }
 
         .hero-subtitle {
             font-size: clamp(13px, 1.3vw, 16px);
             font-weight: 400;
             margin-bottom: 20px;
-            color: rgba(255,255,255,0.6);
+            color: #475569;
         }
 
         .hero-meta {
@@ -264,13 +264,13 @@
         .hero-meta-icon {
             width: 32px;
             height: 32px;
-            background: rgba(255,255,255,0.08);
+            background: #dbeafe;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 13px;
-            color: var(--accent-color);
+            color: var(--primary-color);
             flex-shrink: 0;
         }
 
@@ -282,7 +282,7 @@
 
         .hero-meta-label {
             font-size: 10px;
-            color: rgba(255,255,255,0.45);
+            color: #64748b;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             font-weight: 500;
@@ -291,7 +291,7 @@
         .hero-meta-value {
             font-size: 14px;
             font-weight: 600;
-            color: rgba(255,255,255,0.92);
+            color: #1e3a8a;
         }
 
         .hero-actions {
@@ -342,30 +342,31 @@
 
         /* ══ 倒數計時 / 狀態卡片 ══ */
         .countdown {
-            background: rgba(255,255,255,0.05);
+            background: #fff;
             border-radius: 16px;
             padding: 24px 28px 22px;
-            border: 1px solid rgba(255,255,255,0.10);
+            border: 1px solid #dbeafe;
             min-width: 260px;
             text-align: center;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 16px rgba(30,64,175,0.08);
         }
 
-        /* 左側亮邊裝飾 */
+        /* 左側主色邊裝飾 */
         .countdown::before {
             content: '';
             position: absolute;
             left: 0; top: 20%; bottom: 20%;
             width: 3px;
-            background: linear-gradient(180deg, transparent, var(--accent-color), transparent);
+            background: linear-gradient(180deg, transparent, var(--primary-color), transparent);
             border-radius: 0 3px 3px 0;
         }
 
         .countdown-title {
             font-size: 10px;
             margin-bottom: 16px;
-            color: rgba(255,255,255,0.45);
+            color: #64748b;
             text-transform: uppercase;
             letter-spacing: 2px;
             font-weight: 600;
@@ -380,8 +381,8 @@
 
         .countdown-item {
             text-align: center;
-            background: rgba(255,255,255,0.07);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: #f0f4ff;
+            border: 1px solid #dbeafe;
             border-radius: 10px;
             padding: 12px 10px 8px;
             min-width: 56px;
@@ -398,7 +399,7 @@
             padding-bottom: 8px;
             font-size: 20px;
             font-weight: 800;
-            color: rgba(255,255,255,0.25);
+            color: #cbd5e1;
             flex-shrink: 0;
         }
 
@@ -408,12 +409,12 @@
             display: block;
             line-height: 1;
             letter-spacing: -1px;
-            color: #fff;
+            color: var(--primary-dark);
         }
 
         .countdown-label {
             font-size: 9px;
-            color: rgba(255,255,255,0.45);
+            color: #94a3b8;
             margin-top: 5px;
             text-transform: uppercase;
             letter-spacing: 1.2px;
@@ -444,7 +445,7 @@
         .countdown-status-text {
             font-size: 14px;
             font-weight: 600;
-            color: rgba(255,255,255,0.85);
+            color: #1e3a8a;
             letter-spacing: 0.5px;
         }
 
@@ -2093,14 +2094,14 @@
 
         .btn-outline {
             background: transparent;
-            color: #fff;
-            border: 1.5px solid rgba(255,255,255,0.45);
-            backdrop-filter: blur(4px);
+            color: var(--primary-color);
+            border: 1.5px solid var(--primary-color);
         }
 
         .btn-outline:hover {
-            background: rgba(255,255,255,0.12);
-            border-color: rgba(255,255,255,0.7);
+            background: #eff6ff;
+            border-color: var(--primary-dark);
+            color: var(--primary-dark);
         }
 
         /* ── 最新消息 升級 ── */
@@ -3009,11 +3010,10 @@
                 <!-- 主辦單位 -->
                 <div class="footer-brand">
                     <!-- 主辦單位 Logo -->
-                    <div id="footer-organizer-logo-wrap" style="display:none;margin-bottom:16px;">
+                    <div id="footer-organizer-logo-wrap" style="display:none;margin-bottom:20px;">
                         <img id="footer-organizer-logo"
                              src="" alt="主辦單位"
-                             style="height:48px;max-width:220px;object-fit:contain;
-                                    filter:brightness(0) invert(1);opacity:0.9;">
+                             style="height:40px;max-width:200px;object-fit:contain;display:block;">
                     </div>
                     <h3 id="footer-conf-title">會議名稱</h3>
                     <div class="footer-divider"></div>
@@ -3487,6 +3487,14 @@
                 if (orgLogoUrl) {
                     ftLogoImg.src = orgLogoUrl;
                     ftLogoImg.alt = s.organizer_zh || s.organizer_en || '主辦單位';
+                    // 可在 Settings 控制尺寸
+                    const logoH = parseInt(s.organizer_logo_height) || 40;
+                    const logoW = parseInt(s.organizer_logo_width)  || 200;
+                    ftLogoImg.style.height   = logoH + 'px';
+                    ftLogoImg.style.maxWidth = logoW + 'px';
+                    // 可控制是否反白（深色背景用）
+                    const invert = s.organizer_logo_invert === 'true';
+                    ftLogoImg.style.filter = invert ? 'brightness(0) invert(1)' : 'none';
                     ftLogoImg.onload  = () => { ftLogoWrap.style.display = 'block'; };
                     ftLogoImg.onerror = () => { ftLogoWrap.style.display = 'none'; };
                 } else {
@@ -3880,41 +3888,34 @@
                 default: 'fas fa-info-circle'
             };
 
-            // 將各種 Google Maps 輸入轉為 embed iframe URL
-            function toMapsEmbedUrl(url) {
-                if (!url) return '';
-                url = url.trim();
+            // Google Maps embed：支援 iframe 完整碼、embed src、地址/地點名稱
+            function toMapsEmbedUrl(raw) {
+                if (!raw) return '';
+                raw = raw.trim();
 
-                // 1. 已是 embed 格式 → 直接用
-                if (url.includes('google.com/maps/embed')) return url;
+                // 完整 <iframe ...> 碼 → 直接抽出 src
+                const srcMatch = raw.match(/src=["']([^"']+)["']/);
+                if (srcMatch) return srcMatch[1];
 
-                // 2. 長網址含 CID (cid=)
-                const cid = url.match(/[?&]cid=(\d+)/);
-                if (cid) return `https://maps.google.com/maps?cid=${cid[1]}&output=embed&hl=zh-TW`;
+                // 已是 embed URL → 直接用
+                if (raw.includes('google.com/maps/embed')) return raw;
 
-                // 3. 長網址含座標 @lat,lng,zoom
-                const coord = url.match(/@([-0-9.]+),([-0-9.]+)/);
-                if (coord) {
-                    return `https://maps.google.com/maps?q=${coord[1]},${coord[2]}&output=embed&hl=zh-TW&z=17`;
-                }
+                // 含座標 @lat,lng
+                const coord = raw.match(/@([-0-9.]+),([-0-9.]+)/);
+                if (coord) return `https://maps.google.com/maps?q=${coord[1]},${coord[2]}&output=embed&hl=zh-TW&z=17`;
 
-                // 4. 長網址含 place 名稱（/maps/place/NAME/...）
-                const place = url.match(/maps\/place\/([^/@?&]+)/);
-                if (place) {
-                    const q = decodeURIComponent(place[1].replace(/\+/g, ' '));
-                    return `https://maps.google.com/maps?q=${encodeURIComponent(q)}&output=embed&hl=zh-TW`;
-                }
+                // 含 place 名稱
+                const place = raw.match(/maps\/place\/([^/@?&]+)/);
+                if (place) return `https://maps.google.com/maps?q=${encodeURIComponent(decodeURIComponent(place[1].replace(/\+/g,' ')))}&output=embed&hl=zh-TW`;
 
-                // 5. 短網址 maps.app.goo.gl 或 goo.gl → 無法直接 embed
-                //    改為顯示連結按鈕，並用地址欄位（contact_address_zh）做備用 embed
-                if (url.includes('goo.gl') || url.includes('maps.app')) {
+                // 短網址 → 用聯絡地址備用
+                if (raw.includes('goo.gl') || raw.includes('maps.app')) {
                     const addr = (siteData.settings && siteData.settings.contact_address_zh) || '';
-                    if (addr) return `https://maps.google.com/maps?q=${encodeURIComponent(addr)}&output=embed&hl=zh-TW`;
-                    return ''; // 無法轉換，回傳空值
+                    return addr ? `https://maps.google.com/maps?q=${encodeURIComponent(addr)}&output=embed&hl=zh-TW` : '';
                 }
 
-                // 6. 純地址或地點名稱（如「政大公企中心」）→ 直接查詢
-                return `https://maps.google.com/maps?q=${encodeURIComponent(url)}&output=embed&hl=zh-TW`;
+                // 純地址 / 地點名稱
+                return `https://maps.google.com/maps?q=${encodeURIComponent(raw)}&output=embed&hl=zh-TW`;
             }
 
             const embedUrl = toMapsEmbedUrl(mapsEmbed);
