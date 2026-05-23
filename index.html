@@ -7,7 +7,8 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
     <!-- imPR-conf-v7 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+TC:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* CSS 樣式 */
@@ -39,7 +40,7 @@
         }
 
         body {
-            font-family: 'Noto Sans TC', sans-serif;
+            font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--bg-color);
@@ -180,10 +181,9 @@
         .hero {
             margin-top: 58px;
             color: white;
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
         }
 
-        /* Banner 圖片區：獨立全寬，不疊文字 */
+        /* Banner 圖片區：獨立全寬 */
         .hero-banner {
             width: 100%;
             height: 340px;
@@ -210,58 +210,88 @@
             background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
         }
 
-        /* 資訊列：Banner 正下方，雙欄 */
+        /* 資訊列：深色但與 Banner 有明確區隔 */
+        .hero-body-wrap {
+            background: #0f1e3d;
+            border-top: 3px solid rgba(255,255,255,0.08);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+        }
+
         .hero-body {
             display: grid;
             grid-template-columns: 1fr auto;
-            gap: 40px;
+            gap: 48px;
             align-items: center;
             max-width: 1280px;
             margin: 0 auto;
-            padding: 36px 32px 40px;
+            padding: 32px 40px 36px;
         }
 
-        .hero-left {}
+        .hero-left {
+            border-left: 3px solid var(--accent-color);
+            padding-left: 24px;
+        }
 
         .hero-title {
-            font-size: clamp(22px, 2.8vw, 40px);
+            font-size: clamp(20px, 2.6vw, 36px);
             font-weight: 800;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             line-height: 1.2;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.3px;
+            color: #fff;
         }
 
         .hero-subtitle {
-            font-size: clamp(14px, 1.4vw, 18px);
+            font-size: clamp(13px, 1.3vw, 16px);
             font-weight: 400;
-            margin-bottom: 24px;
-            opacity: 0.85;
+            margin-bottom: 20px;
+            color: rgba(255,255,255,0.6);
         }
 
         .hero-meta {
             display: flex;
-            gap: 36px;
-            margin-bottom: 28px;
+            gap: 32px;
+            margin-bottom: 24px;
             flex-wrap: wrap;
         }
 
         .hero-meta-item {
             display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hero-meta-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: var(--accent-color);
+            flex-shrink: 0;
+        }
+
+        .hero-meta-text {
+            display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 1px;
         }
 
         .hero-meta-label {
             font-size: 10px;
-            opacity: 0.6;
+            color: rgba(255,255,255,0.45);
             text-transform: uppercase;
-            letter-spacing: 1.8px;
+            letter-spacing: 1.5px;
             font-weight: 500;
         }
 
         .hero-meta-value {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
+            color: rgba(255,255,255,0.92);
         }
 
         .hero-actions {
@@ -310,41 +340,51 @@
             border-color: rgba(255, 255, 255, 0.5);
         }
 
-        /* ══ 倒數計時：右欄卡片版 ══ */
+        /* ══ 倒數計時 / 狀態卡片 ══ */
         .countdown {
-            background: rgba(255, 255, 255, 0.10);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-radius: 20px;
-            padding: 28px 32px 24px;
-            border: 1px solid rgba(255,255,255,0.18);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.15);
-            min-width: 280px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 24px 28px 22px;
+            border: 1px solid rgba(255,255,255,0.10);
+            min-width: 260px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 左側亮邊裝飾 */
+        .countdown::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 20%; bottom: 20%;
+            width: 3px;
+            background: linear-gradient(180deg, transparent, var(--accent-color), transparent);
+            border-radius: 0 3px 3px 0;
         }
 
         .countdown-title {
-            font-size: 11px;
-            margin-bottom: 20px;
-            opacity: 0.75;
+            font-size: 10px;
+            margin-bottom: 16px;
+            color: rgba(255,255,255,0.45);
             text-transform: uppercase;
             letter-spacing: 2px;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .countdown-timer {
             display: flex;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: nowrap;
         }
 
         .countdown-item {
             text-align: center;
-            background: rgba(255,255,255,0.08);
-            border-radius: 12px;
-            padding: 14px 12px 10px;
-            min-width: 62px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 12px 10px 8px;
+            min-width: 56px;
             flex: 1;
         }
 
@@ -355,28 +395,57 @@
         .countdown-sep {
             display: flex;
             align-items: center;
-            padding-bottom: 10px;
-            font-size: 24px;
+            padding-bottom: 8px;
+            font-size: 20px;
             font-weight: 800;
-            opacity: 0.5;
+            color: rgba(255,255,255,0.25);
             flex-shrink: 0;
         }
 
         .countdown-number {
-            font-size: 38px;
+            font-size: 32px;
             font-weight: 900;
             display: block;
             line-height: 1;
             letter-spacing: -1px;
+            color: #fff;
         }
 
         .countdown-label {
-            font-size: 10px;
-            opacity: 0.6;
-            margin-top: 6px;
+            font-size: 9px;
+            color: rgba(255,255,255,0.45);
+            margin-top: 5px;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1.2px;
             display: block;
+        }
+
+        /* 會議結束 / 狀態訊息的特殊樣式 */
+        .countdown-status-msg {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+        }
+
+        .countdown-status-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(16,185,129,0.15);
+            border: 1.5px solid rgba(16,185,129,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .countdown-status-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.85);
+            letter-spacing: 0.5px;
         }
 
         /* 區塊標題 */
@@ -1560,8 +1629,12 @@
 
             .hero-body {
                 grid-template-columns: 1fr;
-                gap: 24px;
-                padding: 28px 20px 36px;
+                gap: 20px;
+                padding: 24px 20px 28px;
+            }
+
+            .hero-left {
+                padding-left: 16px;
             }
 
             .hero-right { width: 100%; }
@@ -1571,9 +1644,9 @@
                 width: 100%;
             }
 
-            .hero-title { font-size: clamp(20px, 5.5vw, 28px); }
-            .hero-subtitle { font-size: 14px; }
-            .hero-meta { gap: 20px; }
+            .hero-title { font-size: clamp(18px, 5.5vw, 26px); }
+            .hero-subtitle { font-size: 13px; }
+            .hero-meta { gap: 16px; }
 
             .hero-actions {
                 flex-direction: column;
@@ -1849,6 +1922,698 @@
             .reg-field-group { grid-template-columns: 1fr; }
         }
 
+        
+        /* ═══════════════════════════════════════════════════
+           DESIGN UPGRADE v2  ─  全站美學重設計
+           設計語言：Modern Professional  清晰層次 精緻細節
+        ═══════════════════════════════════════════════════ */
+
+        /* ── 全域改善 ── */
+
+        /* 指定交替背景（用 ID 精確控制，避免 hidden 影響 nth-child） */
+        #about-section,
+        #agenda-section,
+        #register-section,
+        #faq-section,
+        #stats-section {
+            background: var(--bg-light);
+        }
+
+        #news-section,
+        #speakers-section,
+        #traffic-section,
+        #subscribe-section,
+        #sponsors-section {
+            background: var(--bg-color);
+        }
+
+        :root {
+            --primary-color:  #1e40af;
+            --primary-light:  #3b82f6;
+            --primary-dark:   #1e3a8a;
+            --accent-color:   #f59e0b;
+            --accent-dark:    #d97706;
+            --success-color:  #10b981;
+            --danger-color:   #ef4444;
+            --text-color:     #111827;
+            --text-light:     #6b7280;
+            --text-muted:     #9ca3af;
+            --bg-color:       #ffffff;
+            --bg-light:       #f8fafc;
+            --bg-gray:        #f1f5f9;
+            --border-color:   #e5e7eb;
+            --shadow-sm:      0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow:         0 4px 16px rgba(0,0,0,0.07);
+            --shadow-md:      0 8px 24px rgba(0,0,0,0.09);
+            --shadow-lg:      0 16px 40px rgba(0,0,0,0.12);
+            --shadow-blue:    0 8px 24px rgba(30,64,175,0.18);
+            --border-radius:  10px;
+            --border-radius-lg: 16px;
+            --border-radius-xl: 24px;
+            --transition:     all 0.25s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.65;
+            color: var(--text-color);
+            background: var(--bg-color);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Navbar 升級 ── */
+        .navbar {
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
+        }
+
+        .navbar-brand {
+            font-size: clamp(14px, 1.5vw, 18px);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.3px;
+        }
+
+        .navbar-link {
+            font-size: 13px;
+            font-weight: 500;
+            color: #374151;
+            padding: 6px 11px;
+            border-radius: 7px;
+            letter-spacing: 0.1px;
+            transition: color 0.18s, background 0.18s;
+        }
+
+        .navbar-link:hover { color: var(--primary-color); background: #eff6ff; }
+        .navbar-link.active { color: var(--primary-color); background: #eff6ff; font-weight: 600; }
+
+        .lang-btn {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 5px 11px;
+            letter-spacing: 0.2px;
+        }
+
+        .lang-btn.active {
+            background: var(--primary-color);
+            color: #fff;
+        }
+
+        /* ── Section 共用 ── */
+        .section { padding: 88px 0; }
+
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 56px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: clamp(26px, 3vw, 36px);
+            font-weight: 800;
+            color: var(--text-color);
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-title h2::after {
+            content: '';
+            display: block;
+            width: 48px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+            margin: 14px auto 0;
+        }
+
+        .section-title p {
+            font-size: 16px;
+            color: var(--text-light);
+            max-width: 560px;
+            margin: 16px auto 0;
+            line-height: 1.7;
+        }
+
+        /* ── Buttons 升級 ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 28px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 0.2px;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-dark));
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(245,158,11,0.35);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(245,158,11,0.45);
+            filter: brightness(1.05);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #fff;
+            border: 1.5px solid rgba(255,255,255,0.45);
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.7);
+        }
+
+        /* ── 最新消息 升級 ── */
+        .news-card {
+            background: #fff;
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            padding: 22px 28px;
+            display: flex;
+            gap: 22px;
+            align-items: flex-start;
+            transition: transform 0.22s, box-shadow 0.22s;
+        }
+
+        .news-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: #dbeafe;
+        }
+
+        .news-date-block {
+            background: linear-gradient(145deg, var(--primary-color), var(--primary-dark));
+            border-radius: 10px;
+            padding: 10px 14px;
+            min-width: 56px;
+            box-shadow: 0 4px 12px rgba(30,64,175,0.2);
+        }
+
+        .news-date-day { font-size: 22px; font-weight: 900; }
+        .news-date-mon { font-size: 10px; letter-spacing: 1px; opacity: 0.85; }
+
+        .news-badge { border-radius: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; padding: 2px 9px; }
+        .news-title { font-size: 15px; font-weight: 700; color: #111827; line-height: 1.5; }
+        .news-content { font-size: 13.5px; color: var(--text-light); line-height: 1.75; }
+
+        /* ── 講師卡片 升級 ── */
+        .speakers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 28px;
+        }
+
+        .speaker-card {
+            background: #fff;
+            border-radius: var(--border-radius-xl);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.25s, box-shadow 0.25s;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 32px 24px 24px;
+            text-align: center;
+            position: relative;
+        }
+
+        .speaker-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+
+        .speaker-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-blue);
+            border-color: #bfdbfe;
+        }
+
+        .speaker-card:hover::before { opacity: 1; }
+
+        .speaker-avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: linear-gradient(135deg, #dbeafe, #e0e7ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            color: var(--primary-color);
+            margin-bottom: 18px;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 3px #dbeafe, 0 4px 12px rgba(30,64,175,0.15);
+            flex-shrink: 0;
+        }
+
+        .speaker-name { font-size: 16px; font-weight: 800; color: #111827; margin-bottom: 4px; }
+        .speaker-title { font-size: 12.5px; color: var(--primary-color); font-weight: 600; margin-bottom: 3px; }
+        .speaker-org { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+
+        .speaker-bio {
+            font-size: 12.5px;
+            color: var(--text-light);
+            line-height: 1.65;
+            margin-bottom: 18px;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            display: -webkit-box;
+            text-align: left;
+        }
+
+        .speaker-detail-btn {
+            background: var(--primary-color);
+            color: #fff;
+            border-radius: 8px;
+            padding: 8px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.18s, transform 0.18s;
+        }
+
+        .speaker-detail-btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+        /* ── 議程 升級 ── */
+        .agenda-container {
+            background: #fff;
+            border-radius: var(--border-radius-xl);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .agenda-item {
+            display: flex;
+            gap: 0;
+            padding: 0;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.18s;
+        }
+
+        .agenda-item:last-child { border-bottom: none; }
+        .agenda-item:hover { background: #f8faff; }
+
+        .agenda-time {
+            min-width: 120px;
+            padding: 24px 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 14px;
+            background: linear-gradient(180deg, #f0f6ff, #e8f1ff);
+            border-right: 2px solid #dbeafe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.4;
+            flex-shrink: 0;
+        }
+
+        .agenda-content {
+            flex: 1;
+            padding: 22px 28px;
+        }
+
+        .agenda-title { font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 8px; }
+        .agenda-speaker { font-size: 13px; color: var(--primary-color); font-weight: 500; margin-bottom: 4px; }
+        .agenda-location { font-size: 13px; color: var(--text-muted); }
+        .agenda-notes { font-size: 13px; color: var(--text-muted); margin-top: 6px; font-style: italic; }
+
+        /* ── About 卡片 升級 ── */
+        .about-grid { gap: 28px; }
+
+        .about-card {
+            border-radius: var(--border-radius-xl);
+            border: 1px solid var(--border-color);
+            padding: 36px 32px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.22s, box-shadow 0.22s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s;
+        }
+
+        .about-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+        .about-card:hover::after { transform: scaleX(1); }
+
+        .about-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 14px;
+        }
+
+        .about-card p { font-size: 14.5px; color: var(--text-light); line-height: 1.8; }
+
+        /* ── FAQ 升級 ── */
+        .faq-list { gap: 10px; }
+
+        .faq-item {
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            box-shadow: none;
+            transition: border-color 0.18s, box-shadow 0.18s;
+        }
+
+        .faq-item:hover { border-color: #bfdbfe; box-shadow: 0 2px 12px rgba(30,64,175,0.07); }
+
+        .faq-question {
+            padding: 18px 22px;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .faq-question:hover { background: #f8faff; }
+        .faq-question.open { background: #eff6ff; color: var(--primary-color); }
+        .faq-answer { font-size: 14px; color: #4b5563; padding: 0 22px; }
+        .faq-answer.open { padding: 2px 22px 18px; }
+
+        /* ── 交通資訊 升級 ── */
+        .traffic-card {
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            padding: 18px 22px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .traffic-card:hover { transform: translateX(3px); border-color: #bfdbfe; }
+
+        .traffic-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            font-size: 16px;
+            color: var(--primary-color);
+        }
+
+        .traffic-card-body h3 { font-size: 14px; font-weight: 700; }
+        .traffic-card-body p { font-size: 13.5px; line-height: 1.7; }
+
+        /* ── 贊助單位 升級 ── */
+        .sponsor-logo-card {
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            padding: 18px 28px;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+
+        .sponsor-logo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: #bfdbfe;
+        }
+
+        .sponsor-tier-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            padding: 4px 18px;
+            border-radius: 20px;
+        }
+
+        /* ── 數據統計 升級 ── */
+        .stat-card {
+            border-radius: var(--border-radius-xl);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            padding: 28px 20px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        }
+
+        .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-blue); }
+
+        /* ── Footer 升級 ── */
+        .site-footer {
+            background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%);
+            color: #94a3b8;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .footer-brand h3 {
+            font-size: 18px;
+            font-weight: 800;
+            color: #f1f5f9;
+            letter-spacing: -0.3px;
+        }
+
+        .footer-col h4 {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #64748b;
+            margin-bottom: 16px;
+        }
+
+        .footer-col a { color: #94a3b8; text-decoration: none; transition: color 0.18s; }
+        .footer-col a:hover { color: #60a5fa; }
+        .footer-col li { font-size: 13.5px; padding: 4px 0; }
+        .footer-col li i { color: #334155; width: 16px; }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding: 20px 0;
+            font-size: 12.5px;
+            color: #475569;
+        }
+
+        /* ── Modal 升級 ── */
+        .modal-content {
+            border-radius: var(--border-radius-xl);
+            box-shadow: 0 24px 64px rgba(0,0,0,0.2);
+            border: none;
+        }
+
+        .modal-title { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--bg-gray);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--text-light);
+            transition: background 0.18s, color 0.18s;
+        }
+
+        .modal-close:hover { background: #fee2e2; color: #dc2626; }
+
+        /* ── 浮動報名鈕 升級 ── */
+        .floating-btn {
+            border-radius: 16px;
+            background: linear-gradient(145deg, #f59e0b, #d97706);
+            box-shadow: 0 8px 24px rgba(245,158,11,0.45), inset 0 1px 0 rgba(255,255,255,0.25);
+        }
+
+        .floating-btn:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 14px 32px rgba(245,158,11,0.55), inset 0 1px 0 rgba(255,255,255,0.25);
+        }
+
+        .floating-btn-label {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            padding: 7px 18px 9px;
+            background: rgba(0,0,0,0.15);
+        }
+
+        /* ── 報名表單 升級 ── */
+        .reg-form-wrap {
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            padding: 44px 48px;
+        }
+
+        .reg-form-title { font-size: 22px; font-weight: 800; letter-spacing: -0.3px; }
+
+        .reg-field input,
+        .reg-field select,
+        .reg-field textarea {
+            border: 1.5px solid #d1d5db;
+            border-radius: 9px;
+            font-size: 14px;
+            padding: 11px 14px;
+            transition: border-color 0.18s, box-shadow 0.18s;
+        }
+
+        .reg-field input:focus,
+        .reg-field select:focus,
+        .reg-field textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(30,64,175,0.1);
+            outline: none;
+        }
+
+        .reg-submit-btn {
+            padding: 13px 36px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-blue);
+            transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+        }
+
+        .reg-submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(30,64,175,0.3);
+            filter: brightness(1.07);
+        }
+
+        .reg-submit-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* ── Cookie Banner ── */
+        #cookie-banner {
+            border-radius: 14px 14px 0 0;
+            background: #1e293b;
+            border-top: none;
+            box-shadow: 0 -4px 24px rgba(0,0,0,0.15);
+            padding: 16px 24px;
+        }
+
+        /* ── Loading 精緻化 ── */
+        .loading-spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid #e5e7eb;
+            border-top: 3px solid var(--primary-color);
+        }
+
+        /* ── 訂閱區 升級 ── */
+        .subscribe-box {
+            background: #fff;
+            border-radius: var(--border-radius-xl);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            padding: 40px;
+        }
+
+        .subscribe-input {
+            border: 1.5px solid #d1d5db;
+            border-radius: 9px;
+            padding: 11px 16px;
+            font-size: 14px;
+            transition: border-color 0.18s, box-shadow 0.18s;
+        }
+
+        .subscribe-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(30,64,175,0.1);
+            outline: none;
+        }
+
+        .subscribe-btn {
+            border-radius: 9px;
+            padding: 11px 24px;
+            font-weight: 700;
+            font-size: 14px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            box-shadow: var(--shadow-blue);
+            transition: transform 0.2s, filter 0.2s;
+        }
+
+        .subscribe-btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+
+        /* ── Status Page ── */
+        .status-page {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .status-icon { font-size: 72px; margin-bottom: 24px; }
+
+        .status-title {
+            font-size: clamp(28px, 4vw, 42px);
+            font-weight: 900;
+            color: #111827;
+            letter-spacing: -0.8px;
+            margin-bottom: 12px;
+        }
+
+        .status-message {
+            font-size: 17px;
+            color: var(--text-light);
+            line-height: 1.7;
+            max-width: 480px;
+            text-align: center;
+        }
+
+        /* ── 捲動進場動畫 ── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .section { animation: fadeInUp 0.55s ease both; }
+
         </style>
 </head>
 <body>
@@ -1943,18 +2708,25 @@
                 </div>
             </div>
             <!-- ② 資訊列：Banner 正下方，左欄文字 + 右欄倒數 -->
+            <div class="hero-body-wrap">
             <div class="hero-body">
                 <div class="hero-left">
                     <h1 class="hero-title" id="hero-title">會議名稱</h1>
                     <p class="hero-subtitle" id="hero-subtitle">會議副標題</p>
                     <div class="hero-meta">
                         <div class="hero-meta-item">
-                            <div class="hero-meta-label">📅 日期</div>
-                            <div class="hero-meta-value" id="hero-date">-</div>
+                            <div class="hero-meta-icon"><i class="fas fa-calendar-alt"></i></div>
+                            <div class="hero-meta-text">
+                                <div class="hero-meta-label">DATE</div>
+                                <div class="hero-meta-value" id="hero-date">-</div>
+                            </div>
                         </div>
                         <div class="hero-meta-item">
-                            <div class="hero-meta-label">📍 地點</div>
-                            <div class="hero-meta-value" id="hero-location">-</div>
+                            <div class="hero-meta-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="hero-meta-text">
+                                <div class="hero-meta-label">VENUE</div>
+                                <div class="hero-meta-value" id="hero-location">-</div>
+                            </div>
                         </div>
                     </div>
                     <div class="hero-actions">
@@ -1991,6 +2763,7 @@
                     </div>
                 </div>
             </div>
+            </div><!-- end hero-body-wrap -->
         </section>
 
 
@@ -2724,13 +3497,23 @@
                 titleText = currentLang === 'zh' ? '距離會議開始還有' : 'Event starts in';
             } else if (now < (eventEnd || new Date())) {
                 // 活動進行中
-                document.getElementById('countdown-title').textContent = currentLang === 'zh' ? '會議進行中' : 'Event in progress';
-                document.getElementById('countdown-timer').innerHTML = '<div style="font-size: 24px; color: var(--success-color);">🎉</div>';
+                const isZhP = currentLang === 'zh';
+                document.getElementById('countdown-title').textContent = isZhP ? '活動狀態' : 'EVENT STATUS';
+                document.getElementById('countdown-timer').innerHTML = `
+                    <div class="countdown-status-msg">
+                        <div class="countdown-status-icon" style="background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.4);">▶</div>
+                        <div class="countdown-status-text">${isZhP ? '會議進行中' : 'In Progress'}</div>
+                    </div>`;
                 return;
             } else {
-                // 活動結束
-                document.getElementById('countdown-title').textContent = currentLang === 'zh' ? '會議已圓滿結束' : 'Event has ended successfully';
-                document.getElementById('countdown-timer').innerHTML = '<div style="font-size: 24px; color: var(--success-color);">✅</div>';
+                // 活動結束：精緻 status card
+                const isZh = currentLang === 'zh';
+                document.getElementById('countdown-title').textContent = isZh ? '活動狀態' : 'EVENT STATUS';
+                document.getElementById('countdown-timer').innerHTML = `
+                    <div class="countdown-status-msg">
+                        <div class="countdown-status-icon">✓</div>
+                        <div class="countdown-status-text">${isZh ? '會議已圓滿結束' : 'Event Concluded'}</div>
+                    </div>`;
                 return;
             }
 
