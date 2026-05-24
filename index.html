@@ -3539,7 +3539,8 @@
                     const logoH = parseInt(s.organizer_logo_height) || 80;
                     const logoW = parseInt(s.organizer_logo_width)  || 240;
                     // organizer_logo_invert: true=反白(黑色logo用), false=原色(彩色logo用)
-                    const invert = (s.organizer_logo_invert || 'true') === 'true';
+                    // 預設 false（顯示原色），除非明確設為 'true'
+                    const invert = s.organizer_logo_invert === 'true';
 
                     // 先設好所有樣式再設 src，避免 onload 前尺寸跑掉
                     ftLogoImg.alt = s.organizer_zh || s.organizer_en || '主辦單位';
@@ -4528,28 +4529,26 @@
         }
 
         function updateContent() {
-            // ── Section 顯示開關（settings 載入後立即執行，不依賴各 render）──
             if (siteData.settings) {
                 updateHero();
                 updateCountdown();
                 updateRegisterButton();
-                applySectionSwitches();
             }
             if (siteData.news)       renderNews();
-            if (siteData.sponsors)  renderSponsors();
-            if (siteData.downloads) renderDownloads();
-            if (siteData.faq)       renderFaq();
-            if (siteData.settings)  { renderLivestream(); renderStats(); renderQrCode(); updateSocialLinks(); }
+            if (siteData.sponsors)   renderSponsors();
+            if (siteData.downloads)  renderDownloads();
+            if (siteData.faq)        renderFaq();
+            if (siteData.settings)   { renderLivestream(); renderStats(); renderQrCode(); updateSocialLinks(); }
             if (siteData.about)      renderAbout();
             if (siteData.speakers)   renderSpeakers();
             if (siteData.agenda)     renderAgenda();
             if (siteData.traffic)    renderTraffic();
             renderNoticeCards();
-            // 報名表單：語言切換時重繪（含欄位 label 和按鈕文字）
             initRegisterForm();
-
-            // 導航選單、section 標題、UI 文字
             updateTitles();
+
+            // ── 最後執行：確保蓋過所有 render 函式的顯示邏輯 ──
+            if (siteData.settings) applySectionSwitches();
         }
 
         // 更新所有標題
@@ -4738,6 +4737,8 @@
                 document.getElementById('sponsors-section').classList.add('hidden');
                 return;
             }
+            // hidden 狀態由 applySectionSwitches 統一控制，不在這裡 remove
+            if ((siteData.settings || {}).show_sponsors === 'false') return;
             document.getElementById('sponsors-section').classList.remove('hidden');
             const tierNames = { platinum:{zh:'白金贊助',en:'Platinum'}, gold:{zh:'金級贊助',en:'Gold'}, silver:{zh:'銀級贊助',en:'Silver'}, bronze:{zh:'銅級贊助',en:'Bronze'}, supporter:{zh:'支持單位',en:'Supporter'} };
             const tierColors = { platinum:'tier-platinum', gold:'tier-gold', silver:'tier-silver', bronze:'tier-bronze', supporter:'tier-supporter' };
