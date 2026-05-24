@@ -3059,12 +3059,6 @@
 
                 <!-- 主辦單位 -->
                 <div class="footer-brand">
-                    <!-- 主辦單位 Logo -->
-                    <div id="footer-organizer-logo-wrap" style="display:none;margin-bottom:20px;">
-                        <img id="footer-organizer-logo"
-                             src="" alt="主辦單位"
-                             style="width:auto;object-fit:contain;display:block;">
-                    </div>
                     <h3 id="footer-conf-title">會議名稱</h3>
                     <div class="footer-divider"></div>
                     <p id="footer-conf-subtitle">會議副標題</p>
@@ -3076,6 +3070,13 @@
                 <!-- 主辦 / 協辦單位 -->
                 <div class="footer-col">
                     <h4 data-zh="主辦單位" data-en="Organizer">主辦單位</h4>
+                    <!-- Logo 顯示（有設定時取代文字）-->
+                    <div id="footer-organizer-logo-wrap" style="display:none;margin:10px 0 16px;">
+                        <img id="footer-organizer-logo"
+                             src="" alt="主辦單位"
+                             style="width:auto;object-fit:contain;display:block;">
+                    </div>
+                    <!-- 無 logo 時顯示文字 -->
                     <ul id="footer-organizer-list">
                         <li><i class="fas fa-building"></i><span id="footer-organizer">-</span></li>
                     </ul>
@@ -3537,7 +3538,8 @@
                 if (orgLogoUrl) {
                     const logoH = parseInt(s.organizer_logo_height) || 80;
                     const logoW = parseInt(s.organizer_logo_width)  || 240;
-                    const invert = s.organizer_logo_invert === 'true';
+                    // organizer_logo_invert: true=反白(黑色logo用), false=原色(彩色logo用)
+                    const invert = (s.organizer_logo_invert || 'true') === 'true';
 
                     // 先設好所有樣式再設 src，避免 onload 前尺寸跑掉
                     ftLogoImg.alt = s.organizer_zh || s.organizer_en || '主辦單位';
@@ -3556,10 +3558,18 @@
                             'filter: ' + (invert ? 'brightness(0) invert(1)' : 'none')
                         ].join(' !important;') + ' !important';
                         ftLogoWrap.style.display = 'block';
+                        // logo 顯示成功：隱藏文字列
+                        const orgList = document.getElementById('footer-organizer-list');
+                        if (orgList) orgList.style.display = 'none';
                     }
 
                     ftLogoImg.onload  = applyLogoSize;
-                    ftLogoImg.onerror = () => { ftLogoWrap.style.display = 'none'; };
+                    ftLogoImg.onerror = () => {
+                        ftLogoWrap.style.display = 'none';
+                        // logo 失敗時，顯示文字
+                        const orgList = document.getElementById('footer-organizer-list');
+                        if (orgList) orgList.style.display = '';
+                    };
 
                     // src 設定前先清空（強制觸發 onload，即使快取）
                     ftLogoImg.src = '';
@@ -3568,6 +3578,8 @@
                         // 雙保險：src 設定後立即也套用一次（快取命中時 onload 可能已錯過）
                         if (ftLogoImg.complete && ftLogoImg.naturalHeight > 0) {
                             applyLogoSize();
+                            const orgList = document.getElementById('footer-organizer-list');
+                            if (orgList) orgList.style.display = 'none';
                         }
                     }, 0);
                 } else {
