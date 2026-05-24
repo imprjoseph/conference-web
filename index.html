@@ -3075,6 +3075,10 @@
                         <img id="footer-organizer-logo"
                              src="" alt="主辦單位"
                              style="width:auto;object-fit:contain;display:block;">
+                        <!-- Logo 圖片下方顯示文字名稱 -->
+                        <span id="footer-organizer-logo-name"
+                              style="display:block;margin-top:8px;font-size:13px;
+                                     color:#cbd5e1;font-weight:500;line-height:1.4;"></span>
                     </div>
                     <!-- 無 logo 時顯示文字 -->
                     <ul id="footer-organizer-list">
@@ -3559,9 +3563,16 @@
                             'filter: ' + (invert ? 'brightness(0) invert(1)' : 'none')
                         ].join(' !important;') + ' !important';
                         ftLogoWrap.style.display = 'block';
-                        // logo 顯示成功：隱藏文字列
+                        // logo 顯示成功：隱藏文字列，顯示名稱
                         const orgList = document.getElementById('footer-organizer-list');
                         if (orgList) orgList.style.display = 'none';
+                        const nameSpan = document.getElementById('footer-organizer-logo-name');
+                        if (nameSpan) {
+                            const sett = siteData.settings || {};
+                            nameSpan.textContent = currentLang === 'zh'
+                                ? (sett.organizer_zh || '')
+                                : (sett.organizer_en || sett.organizer_zh || '');
+                        }
                     }
 
                     ftLogoImg.onload  = applyLogoSize;
@@ -4505,15 +4516,12 @@
         function applySectionSwitches() {
             const s = siteData.settings || {};
 
-            // 贊助單位
+            // 贊助單位：直接用 style.display 控制（最強力，不被 class 邏輯覆蓋）
             const showSponsors = s.show_sponsors !== 'false';
             const sponsorsSec = document.getElementById('sponsors-section');
-            if (sponsorsSec) {
-                sponsorsSec.classList.toggle('hidden', !showSponsors);
-            }
-            document.querySelectorAll(
-                '[data-section="sponsors"], [href="#sponsors"]'
-            ).forEach(el => { el.style.display = showSponsors ? '' : 'none'; });
+            if (sponsorsSec) sponsorsSec.style.display = showSponsors ? '' : 'none';
+            document.querySelectorAll('[data-section="sponsors"], [href="#sponsors"]')
+                .forEach(el => { el.style.display = showSponsors ? '' : 'none'; });
 
             // 下載專區
             const showDl = s.show_downloads !== 'false';
@@ -4728,18 +4736,16 @@
         function renderSponsors() {
             const container = document.getElementById('sponsors-content');
             if (!container) return;
+            const sec = document.getElementById('sponsors-section');
             const sponsors = siteData.sponsors || [];
             const lang = currentLang;
-            // show_sponsors = 'false' 時不渲染（開關已由 applySectionSwitches 統一控制）
             const showSponsors = (siteData.settings || {}).show_sponsors !== 'false';
-            if (!showSponsors) return;
-            if (sponsors.length === 0) {
-                document.getElementById('sponsors-section').classList.add('hidden');
+            // 不顯示 或 無資料 → 隱藏並返回
+            if (!showSponsors || sponsors.length === 0) {
+                if (sec) sec.style.display = 'none';
                 return;
             }
-            // hidden 狀態由 applySectionSwitches 統一控制，不在這裡 remove
-            if ((siteData.settings || {}).show_sponsors === 'false') return;
-            document.getElementById('sponsors-section').classList.remove('hidden');
+            if (sec) sec.style.display = '';
             const tierNames = { platinum:{zh:'白金贊助',en:'Platinum'}, gold:{zh:'金級贊助',en:'Gold'}, silver:{zh:'銀級贊助',en:'Silver'}, bronze:{zh:'銅級贊助',en:'Bronze'}, supporter:{zh:'支持單位',en:'Supporter'} };
             const tierColors = { platinum:'tier-platinum', gold:'tier-gold', silver:'tier-silver', bronze:'tier-bronze', supporter:'tier-supporter' };
             const grouped = {};
