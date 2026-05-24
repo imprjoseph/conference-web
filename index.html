@@ -2750,9 +2750,9 @@
                 <a href="#register-section" class="navbar-link" data-section="register" data-zh="線上報名" data-en="Register" onclick="scrollToRegForm();return false;">線上報名</a>
                 <a href="#traffic" class="navbar-link" data-section="traffic" data-zh="交通資訊" data-en="Transportation">交通資訊</a>
                 <a href="#sponsors" class="navbar-link" data-section="sponsors" data-zh="贊助單位" data-en="Sponsors">贊助單位</a>
-                <a href="#" class="navbar-link" data-zh="下載專區" data-en="Downloads" onclick="openDownloads();return false;">下載專區</a>
+                <a href="#" class="navbar-link" data-section="downloads" data-zh="下載專區" data-en="Downloads" onclick="openDownloads();return false;">下載專區</a>
                 <a href="#faq" class="navbar-link" data-section="faq" data-zh="常見問題" data-en="FAQ">常見問題</a>
-                <a href="#" class="navbar-link" id="past-events-nav-link" data-zh="歷年會議" data-en="Past Events" onclick="openPastEventsAlbum(event)">歷年會議</a>
+                <a href="#" class="navbar-link" id="past-events-nav-link" data-section="past_events" data-zh="歷年會議" data-en="Past Events" onclick="openPastEventsAlbum(event)">歷年會議</a>
                 <div class="language-switch">
                     <button class="lang-btn active" data-lang="zh">中文</button>
                     <button class="lang-btn" data-lang="en">English</button>
@@ -3106,8 +3106,8 @@
                         <li><i class="fas fa-calendar"></i><a href="#agenda" data-zh="會議議程" data-en="Agenda">會議議程</a></li>
                         <li><i class="fas fa-edit"></i><a href="#" onclick="scrollToRegForm();return false;" data-zh="線上報名" data-en="Register">線上報名</a></li>
                         <li><i class="fas fa-map"></i><a href="#traffic" data-zh="交通資訊" data-en="Transportation">交通資訊</a></li>
-                        <li><i class="fas fa-download"></i><a href="#" onclick="openDownloads();return false;" data-zh="下載專區" data-en="Downloads">下載專區</a></li>
-                        <li><i class="fas fa-images"></i><a href="#" onclick="openPastEventsAlbum(event)" data-zh="歷年會議" data-en="Past Events">歷年會議</a></li>
+                        <li><i class="fas fa-download"></i><a href="#" data-section="downloads" onclick="openDownloads();return false;" data-zh="下載專區" data-en="Downloads">下載專區</a></li>
+                        <li><i class="fas fa-images"></i><a href="#" data-section="past_events" onclick="openPastEventsAlbum(event)" data-zh="歷年會議" data-en="Past Events">歷年會議</a></li>
                     </ul>
                 </div>
             </div>
@@ -4516,15 +4516,15 @@
 
             // 下載專區
             const showDl = s.show_downloads !== 'false';
-            document.querySelectorAll(
-                '[data-section="downloads"], [onclick*="openDownloads"], [data-zh="下載專區"]'
-            ).forEach(el => { el.style.display = showDl ? '' : 'none'; });
+            document.querySelectorAll('[data-section="downloads"]')
+                .forEach(el => { el.style.display = showDl ? '' : 'none'; });
 
             // 歷年會議
             const showPast = s.show_past_events !== 'false';
-            document.querySelectorAll(
-                '[data-section="past_events"], [onclick*="openPastEventsAlbum"], [data-zh="歷年會議"]'
-            ).forEach(el => { el.style.display = showPast ? '' : 'none'; });
+            const pastNavLink = document.getElementById('past-events-nav-link');
+            if (pastNavLink) pastNavLink.style.display = showPast ? '' : 'none';
+            document.querySelectorAll('[data-section="past_events"]')
+                .forEach(el => { el.style.display = showPast ? '' : 'none'; });
         }
 
         function updateContent() {
