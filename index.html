@@ -4499,11 +4499,41 @@
         }
 
         // 更新內容語言（語言切換 & 資料載入後都會呼叫）
+
+        // ── Section 顯示開關：settings 載入後立即套用 ──
+        function applySectionSwitches() {
+            const s = siteData.settings || {};
+
+            // 贊助單位
+            const showSponsors = s.show_sponsors !== 'false';
+            const sponsorsSec = document.getElementById('sponsors-section');
+            if (sponsorsSec) {
+                sponsorsSec.classList.toggle('hidden', !showSponsors);
+            }
+            document.querySelectorAll(
+                '[data-section="sponsors"], [href="#sponsors"]'
+            ).forEach(el => { el.style.display = showSponsors ? '' : 'none'; });
+
+            // 下載專區
+            const showDl = s.show_downloads !== 'false';
+            document.querySelectorAll(
+                '[data-section="downloads"], [onclick*="openDownloads"], [data-zh="下載專區"]'
+            ).forEach(el => { el.style.display = showDl ? '' : 'none'; });
+
+            // 歷年會議
+            const showPast = s.show_past_events !== 'false';
+            document.querySelectorAll(
+                '[data-section="past_events"], [onclick*="openPastEventsAlbum"], [data-zh="歷年會議"]'
+            ).forEach(el => { el.style.display = showPast ? '' : 'none'; });
+        }
+
         function updateContent() {
+            // ── Section 顯示開關（settings 載入後立即執行，不依賴各 render）──
             if (siteData.settings) {
                 updateHero();
                 updateCountdown();
                 updateRegisterButton();
+                applySectionSwitches();
             }
             if (siteData.news)       renderNews();
             if (siteData.sponsors)  renderSponsors();
@@ -4517,19 +4547,6 @@
             renderNoticeCards();
             // 報名表單：語言切換時重繪（含欄位 label 和按鈕文字）
             initRegisterForm();
-
-            // ── 可控制顯示的 section 開關 ──
-            const _s = siteData.settings || {};
-            // 下載專區
-            const showDl = _s.show_downloads !== 'false';
-            document.querySelectorAll('[data-section="downloads"], [onclick*="openDownloads"]').forEach(el => {
-                el.style.display = showDl ? '' : 'none';
-            });
-            // 歷年會議（nav + footer）
-            const showPast = _s.show_past_events !== 'false';
-            document.querySelectorAll('[data-section="past_events"], [onclick*="openPastEventsAlbum"], [data-zh="歷年會議"]').forEach(el => {
-                el.style.display = showPast ? '' : 'none';
-            });
 
             // 導航選單、section 標題、UI 文字
             updateTitles();
@@ -4714,16 +4731,14 @@
             if (!container) return;
             const sponsors = siteData.sponsors || [];
             const lang = currentLang;
-            // show_sponsors = 'false' 時隱藏整個 section（含導覽列）
+            // show_sponsors = 'false' 時不渲染（開關已由 applySectionSwitches 統一控制）
             const showSponsors = (siteData.settings || {}).show_sponsors !== 'false';
-            if (!showSponsors || sponsors.length === 0) {
+            if (!showSponsors) return;
+            if (sponsors.length === 0) {
                 document.getElementById('sponsors-section').classList.add('hidden');
-                // 隱藏導覽列連結
-                document.querySelectorAll('[data-section="sponsors"]').forEach(el => el.style.display = 'none');
                 return;
             }
             document.getElementById('sponsors-section').classList.remove('hidden');
-            document.querySelectorAll('[data-section="sponsors"]').forEach(el => el.style.display = '');
             const tierNames = { platinum:{zh:'白金贊助',en:'Platinum'}, gold:{zh:'金級贊助',en:'Gold'}, silver:{zh:'銀級贊助',en:'Silver'}, bronze:{zh:'銅級贊助',en:'Bronze'}, supporter:{zh:'支持單位',en:'Supporter'} };
             const tierColors = { platinum:'tier-platinum', gold:'tier-gold', silver:'tier-silver', bronze:'tier-bronze', supporter:'tier-supporter' };
             const grouped = {};
