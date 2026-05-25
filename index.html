@@ -2728,12 +2728,10 @@
 
         #footer-organizer-logo-wrap {
             line-height: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
-        /* 頁尾深色背景，logo 預設反白；若 logo 本身是彩色請在 Settings 設 organizer_logo_invert=false */
-        .site-footer #footer-organizer-logo {
-            filter: brightness(0) invert(1) !important;
-        }
+
 
         </style>
 </head>
@@ -3076,11 +3074,13 @@
                 <div class="footer-col">
                     <h4 data-zh="主辦單位" data-en="Organizer">主辦單位</h4>
                     <!-- Logo 顯示（有設定時取代文字）-->
-                    <div id="footer-organizer-logo-wrap" style="display:none;margin:10px 0 16px;">
+                    <div id="footer-organizer-logo-wrap"
+                         style="display:none;margin:10px 0 20px;
+                                background:#ffffff;border-radius:10px;
+                                padding:10px 18px;width:fit-content;">
                         <img id="footer-organizer-logo"
                              src="" alt="主辦單位"
                              style="width:auto;object-fit:contain;display:block;">
-
                     </div>
                     <!-- 無 logo 時顯示文字 -->
                     <ul id="footer-organizer-list">
@@ -3546,10 +3546,9 @@
                 if (orgLogoUrl) {
                     const logoH = parseInt(s.organizer_logo_height) || 80;
                     const logoW = parseInt(s.organizer_logo_width)  || 240;
-                    // organizer_logo_invert: true=反白(預設), false=原色(彩色logo用)
-                    // 只有明確設為 'false' 才不反白，其他情況（含空值）都反白
+                    // organizer_logo_invert: true=反白, false=原色(預設)
                     const invertRaw = String(s.organizer_logo_invert || '').trim().toLowerCase();
-                    const invert = invertRaw !== 'false';
+                    const invert = invertRaw === 'true';
 
                     // 先設好所有樣式再設 src，避免 onload 前尺寸跑掉
                     ftLogoImg.alt = s.organizer_zh || s.organizer_en || '主辦單位';
