@@ -3075,10 +3075,7 @@
                         <img id="footer-organizer-logo"
                              src="" alt="主辦單位"
                              style="width:auto;object-fit:contain;display:block;">
-                        <!-- Logo 圖片下方顯示文字名稱 -->
-                        <span id="footer-organizer-logo-name"
-                              style="display:block;margin-top:8px;font-size:13px;
-                                     color:#cbd5e1;font-weight:500;line-height:1.4;"></span>
+
                     </div>
                     <!-- 無 logo 時顯示文字 -->
                     <ul id="footer-organizer-list">
@@ -3265,6 +3262,8 @@
                     // 成功
                     siteData.settings = settingsData.data;
                     checkSiteStatus();
+                    // settings 載入後立即套用開關（不等所有資料載入）
+                    applySectionSwitches();
                     if (siteData.settings.site_status === 'live') {
                         await loadAllData();
                     }
@@ -3566,13 +3565,7 @@
                         // logo 顯示成功：隱藏文字列，顯示名稱
                         const orgList = document.getElementById('footer-organizer-list');
                         if (orgList) orgList.style.display = 'none';
-                        const nameSpan = document.getElementById('footer-organizer-logo-name');
-                        if (nameSpan) {
-                            const sett = siteData.settings || {};
-                            nameSpan.textContent = currentLang === 'zh'
-                                ? (sett.organizer_zh || '')
-                                : (sett.organizer_en || sett.organizer_zh || '');
-                        }
+
                     }
 
                     ftLogoImg.onload  = applyLogoSize;
@@ -4513,27 +4506,32 @@
         // 更新內容語言（語言切換 & 資料載入後都會呼叫）
 
         // ── Section 顯示開關：settings 載入後立即套用 ──
+        // 判斷 setting 值是否為 false（支援字串 'false' 和布林 false）
+        function settingIsFalse(val) {
+            return val === false || val === 'false' || val === 'FALSE' || val === '0';
+        }
+
         function applySectionSwitches() {
             const s = siteData.settings || {};
 
-            // 贊助單位：直接用 style.display 控制（最強力，不被 class 邏輯覆蓋）
-            const showSponsors = s.show_sponsors !== 'false';
+            // 贊助單位
+            const showSponsors = !settingIsFalse(s.show_sponsors);
             const sponsorsSec = document.getElementById('sponsors-section');
-            if (sponsorsSec) sponsorsSec.style.display = showSponsors ? '' : 'none';
-            document.querySelectorAll('[data-section="sponsors"], [href="#sponsors"]')
-                .forEach(el => { el.style.display = showSponsors ? '' : 'none'; });
+            if (sponsorsSec) sponsorsSec.style.setProperty('display', showSponsors ? '' : 'none', 'important');
+            document.querySelectorAll('a[data-section="sponsors"], a[href="#sponsors"]')
+                .forEach(el => { el.style.setProperty('display', showSponsors ? '' : 'none', 'important'); });
 
             // 下載專區
-            const showDl = s.show_downloads !== 'false';
-            document.querySelectorAll('[data-section="downloads"]')
-                .forEach(el => { el.style.display = showDl ? '' : 'none'; });
+            const showDl = !settingIsFalse(s.show_downloads);
+            document.querySelectorAll('a[data-section="downloads"]')
+                .forEach(el => { el.style.setProperty('display', showDl ? '' : 'none', 'important'); });
 
             // 歷年會議
-            const showPast = s.show_past_events !== 'false';
+            const showPast = !settingIsFalse(s.show_past_events);
             const pastNavLink = document.getElementById('past-events-nav-link');
-            if (pastNavLink) pastNavLink.style.display = showPast ? '' : 'none';
-            document.querySelectorAll('[data-section="past_events"]')
-                .forEach(el => { el.style.display = showPast ? '' : 'none'; });
+            if (pastNavLink) pastNavLink.style.setProperty('display', showPast ? '' : 'none', 'important');
+            document.querySelectorAll('a[data-section="past_events"]')
+                .forEach(el => { el.style.setProperty('display', showPast ? '' : 'none', 'important'); });
         }
 
         function updateContent() {
