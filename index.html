@@ -2719,7 +2719,7 @@
         .section { animation: fadeInUp 0.55s ease both; }
 
         
-        /* ── Footer organizer logo 強制尺寸（防止繼承覆蓋）── */
+        /* ── Footer organizer logo ── */
         #footer-organizer-logo {
             display: block !important;
             width: auto !important;
@@ -2728,6 +2728,11 @@
 
         #footer-organizer-logo-wrap {
             line-height: 0;
+        }
+
+        /* 頁尾深色背景，logo 預設反白；若 logo 本身是彩色請在 Settings 設 organizer_logo_invert=false */
+        .site-footer #footer-organizer-logo {
+            filter: brightness(0) invert(1) !important;
         }
 
         </style>
@@ -3541,9 +3546,10 @@
                 if (orgLogoUrl) {
                     const logoH = parseInt(s.organizer_logo_height) || 80;
                     const logoW = parseInt(s.organizer_logo_width)  || 240;
-                    // organizer_logo_invert: true=反白(黑色logo用), false=原色(彩色logo用)
-                    // 預設 false（顯示原色），除非明確設為 'true'
-                    const invert = s.organizer_logo_invert === 'true';
+                    // organizer_logo_invert: true=反白(預設), false=原色(彩色logo用)
+                    // 只有明確設為 'false' 才不反白，其他情況（含空值）都反白
+                    const invertRaw = String(s.organizer_logo_invert || '').trim().toLowerCase();
+                    const invert = invertRaw !== 'false';
 
                     // 先設好所有樣式再設 src，避免 onload 前尺寸跑掉
                     ftLogoImg.alt = s.organizer_zh || s.organizer_en || '主辦單位';
@@ -3552,6 +3558,8 @@
                     function applyLogoSize() {
                         ftLogoImg.setAttribute('width', 'auto');
                         ftLogoImg.setAttribute('height', logoH);
+                        // invert=true(預設) → 反白; false → 原色
+                        const filterVal = invert ? 'brightness(0) invert(1)' : 'none';
                         ftLogoImg.style.cssText = [
                             'width: auto',
                             'height: ' + logoH + 'px',
@@ -3559,7 +3567,7 @@
                             'min-height: ' + logoH + 'px',
                             'object-fit: contain',
                             'display: block',
-                            'filter: ' + (invert ? 'brightness(0) invert(1)' : 'none')
+                            'filter: ' + filterVal
                         ].join(' !important;') + ' !important';
                         ftLogoWrap.style.display = 'block';
                         // logo 顯示成功：隱藏文字列，顯示名稱
