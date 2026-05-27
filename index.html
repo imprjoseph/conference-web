@@ -2734,18 +2734,13 @@
 
         .org-logo-card {
             display: inline-block;
-            background: #ffffff;
-            border-radius: 8px;
-            padding: 8px 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             line-height: 0;
-            max-width: 200px;
         }
 
         .org-logo-img {
-            height: 48px;
+            height: 64px;
             width: auto !important;
-            max-width: 180px;
+            max-width: 240px;
             object-fit: contain;
             display: block;
         }
@@ -3093,11 +3088,12 @@
                 <div class="footer-col">
                     <h4 data-zh="主辦單位" data-en="Organizer">主辦單位</h4>
                     <!-- Logo 顯示（有設定時取代文字）-->
-                    <div id="footer-organizer-logo-wrap" class="org-logo-wrap">
-                        <div class="org-logo-card">
-                            <img id="footer-organizer-logo" class="org-logo-img"
-                                 src="" alt="主辦單位">
-                        </div>
+                    <div id="footer-organizer-logo-wrap"
+                         style="display:none;margin:10px 0 18px;">
+                        <img id="footer-organizer-logo"
+                             src="" alt="主辦單位"
+                             style="height:64px;width:auto;max-width:240px;
+                                    object-fit:contain;display:block;">
                     </div>
                     <!-- 無 logo 時顯示文字 -->
                     <ul id="footer-organizer-list">
@@ -3561,40 +3557,17 @@
             const ftLogoImg  = document.getElementById('footer-organizer-logo');
             if (ftLogoWrap && ftLogoImg) {
                 if (orgLogoUrl) {
-                    const logoH = parseInt(s.organizer_logo_height) || 80;
-                    const logoW = parseInt(s.organizer_logo_width)  || 240;
-                    // organizer_logo_invert: true=反白, false=原色(預設)
-                    const invertRaw = String(s.organizer_logo_invert || '').trim().toLowerCase();
-                    const invert = invertRaw === 'true';
-
-                    ftLogoImg.alt = s.organizer_zh || s.organizer_en || '主辦單位';
-
-                    // 圖片載入前先隱藏，避免空白底板閃現
-                    ftLogoWrap.style.display = 'none';
-
-                    ftLogoImg.onload = function() {
-                        ftLogoImg.style.height   = logoH + 'px';
-                        ftLogoImg.style.width    = 'auto';
-                        ftLogoImg.style.maxWidth = logoW + 'px';
-                        ftLogoImg.style.filter   = invert ? 'brightness(0) invert(1)' : 'none';
-                        ftLogoWrap.style.display = 'block';
-                        const orgList = document.getElementById('footer-organizer-list');
-                        if (orgList) orgList.style.display = 'none';
-                    };
-                    ftLogoImg.onerror = function() {
-                        ftLogoWrap.style.display = 'none';
-                        const orgList = document.getElementById('footer-organizer-list');
-                        if (orgList) orgList.style.display = '';
-                    };
-
-                    // 直接設 src（不清空），瀏覽器自行處理快取
-                    if (ftLogoImg.src !== orgLogoUrl) {
-                        ftLogoImg.src = orgLogoUrl;
-                    }
-                    // 快取命中時 onload 已觸發，手動補呼叫
-                    if (ftLogoImg.complete && ftLogoImg.naturalHeight > 0) {
-                        ftLogoImg.onload();
-                    }
+                    const logoH  = (parseInt(s.organizer_logo_height) || 64) + 'px';
+                    const logoW  = (parseInt(s.organizer_logo_width)  || 240) + 'px';
+                    const invert = String(s.organizer_logo_invert || '').trim() === 'true';
+                    ftLogoImg.alt         = s.organizer_zh || s.organizer_en || '主辦單位';
+                    ftLogoImg.src         = orgLogoUrl;
+                    ftLogoImg.style.height    = logoH;
+                    ftLogoImg.style.maxWidth  = logoW;
+                    ftLogoImg.style.filter    = 'none'; // itri_white 已是白色，無需 filter
+                    ftLogoWrap.style.display  = 'block';
+                    const orgList = document.getElementById('footer-organizer-list');
+                    if (orgList) orgList.style.display = 'none';
                 } else {
                     ftLogoWrap.style.display = 'none';
                 }
