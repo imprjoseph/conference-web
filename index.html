@@ -2727,22 +2727,24 @@
         }
 
         .org-logo-wrap {
-            display: none;          /* JS 控制顯示 */
+            display: none;
             margin: 10px 0 20px;
+            line-height: 0;
         }
 
         .org-logo-card {
-            display: inline-block;  /* 縮到圖片大小 */
+            display: inline-block;
             background: #ffffff;
             border-radius: 8px;
             padding: 8px 14px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             line-height: 0;
+            max-width: 200px;
         }
 
         .org-logo-img {
-            height: 48px;           /* JS 會覆蓋這個值 */
-            width: auto;
+            height: 48px;
+            width: auto !important;
             max-width: 180px;
             object-fit: contain;
             display: block;
@@ -3092,8 +3094,10 @@
                     <h4 data-zh="主辦單位" data-en="Organizer">主辦單位</h4>
                     <!-- Logo 顯示（有設定時取代文字）-->
                     <div id="footer-organizer-logo-wrap" class="org-logo-wrap">
-                        <img id="footer-organizer-logo" class="org-logo-img"
-                             src="" alt="主辦單位">
+                        <div class="org-logo-card">
+                            <img id="footer-organizer-logo" class="org-logo-img"
+                                 src="" alt="主辦單位">
+                        </div>
                     </div>
                     <!-- 無 logo 時顯示文字 -->
                     <ul id="footer-organizer-list">
@@ -3569,24 +3573,12 @@
                     // 強制套用尺寸函式（解決快取圖片 onload 不觸發問題）
                     function applyLogoSize() {
                         // 設定圖片尺寸
-                        ftLogoImg.style.height    = logoH + 'px';
-                        ftLogoImg.style.width     = 'auto';
-                        ftLogoImg.style.maxWidth  = logoW + 'px';
-                        ftLogoImg.style.objectFit = 'contain';
-                        ftLogoImg.style.display   = 'block';
-                        ftLogoImg.style.filter    = invert ? 'brightness(0) invert(1)' : 'none';
-
-                        // 白色底板 card（若尚未包則建立）
-                        if (!ftLogoWrap.querySelector('.org-logo-card')) {
-                            const card = document.createElement('div');
-                            card.className = 'org-logo-card';
-                            ftLogoWrap.appendChild(card);
-                            card.appendChild(ftLogoImg);
-                        }
-
-                        // wrap 用 block，card 的 inline-block 自動收縮到圖片大小
+                        ftLogoImg.style.height   = logoH + 'px';
+                        ftLogoImg.style.width    = 'auto';
+                        ftLogoImg.style.maxWidth = logoW + 'px';
+                        ftLogoImg.style.filter   = invert ? 'brightness(0) invert(1)' : 'none';
+                        // 顯示 wrap（card 是 inline-block，自動收縮到圖片大小）
                         ftLogoWrap.style.display = 'block';
-
                         // 隱藏文字列
                         const orgList = document.getElementById('footer-organizer-list');
                         if (orgList) orgList.style.display = 'none';
