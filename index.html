@@ -3567,39 +3567,34 @@
                     const invertRaw = String(s.organizer_logo_invert || '').trim().toLowerCase();
                     const invert = invertRaw === 'true';
 
-                    // 先設好所有樣式再設 src，避免 onload 前尺寸跑掉
                     ftLogoImg.alt = s.organizer_zh || s.organizer_en || '主辦單位';
 
-                    // 強制套用尺寸函式（解決快取圖片 onload 不觸發問題）
-                    function applyLogoSize() {
-                        // 設定圖片尺寸
+                    // 圖片載入前先隱藏，避免空白底板閃現
+                    ftLogoWrap.style.display = 'none';
+
+                    ftLogoImg.onload = function() {
                         ftLogoImg.style.height   = logoH + 'px';
                         ftLogoImg.style.width    = 'auto';
                         ftLogoImg.style.maxWidth = logoW + 'px';
                         ftLogoImg.style.filter   = invert ? 'brightness(0) invert(1)' : 'none';
-                        // 顯示 wrap（card 是 inline-block，自動收縮到圖片大小）
                         ftLogoWrap.style.display = 'block';
-                        // 隱藏文字列
                         const orgList = document.getElementById('footer-organizer-list');
                         if (orgList) orgList.style.display = 'none';
-                    }
-                    ftLogoImg.onload  = applyLogoSize;
-                    ftLogoImg.onerror = () => {
+                    };
+                    ftLogoImg.onerror = function() {
                         ftLogoWrap.style.display = 'none';
-                        // logo 失敗時，顯示文字
                         const orgList = document.getElementById('footer-organizer-list');
                         if (orgList) orgList.style.display = '';
                     };
 
-                    // src 設定前先清空（強制觸發 onload，即使快取）
-                    ftLogoImg.src = '';
-                    setTimeout(() => {
+                    // 直接設 src（不清空），瀏覽器自行處理快取
+                    if (ftLogoImg.src !== orgLogoUrl) {
                         ftLogoImg.src = orgLogoUrl;
-                        // 雙保險：src 設定後立即也套用一次（快取命中時 onload 可能已錯過）
-                        if (ftLogoImg.complete && ftLogoImg.naturalHeight > 0) {
-                            applyLogoSize();
-                        }
-                    }, 0);
+                    }
+                    // 快取命中時 onload 已觸發，手動補呼叫
+                    if (ftLogoImg.complete && ftLogoImg.naturalHeight > 0) {
+                        ftLogoImg.onload();
+                    }
                 } else {
                     ftLogoWrap.style.display = 'none';
                 }
