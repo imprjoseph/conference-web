@@ -3077,10 +3077,14 @@
                     <div id="footer-organizer-logo-wrap"
                          style="display:none;margin:10px 0 20px;
                                 background:#ffffff;border-radius:10px;
-                                padding:10px 18px;width:fit-content;">
+                                padding:8px 14px;
+                                display:inline-flex;
+                                align-items:center;
+                                max-width:200px;">
                         <img id="footer-organizer-logo"
                              src="" alt="主辦單位"
-                             style="width:auto;object-fit:contain;display:block;">
+                             style="height:48px;width:auto;max-width:180px;
+                                    object-fit:contain;display:block;">
                     </div>
                     <!-- 無 logo 時顯示文字 -->
                     <ul id="footer-organizer-list">
@@ -3568,7 +3572,7 @@
                             'display: block',
                             'filter: ' + filterVal
                         ].join(' !important;') + ' !important';
-                        ftLogoWrap.style.display = 'block';
+                        ftLogoWrap.style.display = 'inline-flex';
                         // logo 顯示成功：隱藏文字列，顯示名稱
                         const orgList = document.getElementById('footer-organizer-list');
                         if (orgList) orgList.style.display = 'none';
