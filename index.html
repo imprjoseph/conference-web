@@ -4087,6 +4087,137 @@ body {
     }
 }
 
+
+
+/* ===== Traffic Section Layout Refinement：交通資訊並排優化 ===== */
+.traffic-layout {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr) !important;
+    gap: 22px !important;
+    align-items: stretch !important;
+}
+
+.traffic-map-container {
+    width: 100% !important;
+    min-height: 520px !important;
+    height: 100% !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    box-shadow: 0 10px 26px rgba(8, 36, 60, 0.12) !important;
+}
+
+.traffic-map-container iframe,
+.traffic-map {
+    width: 100% !important;
+    min-height: 520px !important;
+    height: 100% !important;
+    border-radius: 16px !important;
+}
+
+/* 右側資訊卡改為 2 欄，提升空間利用 */
+.traffic-info-list {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+    align-items: stretch !important;
+}
+
+/* 第一張會場地址跨兩欄 */
+.traffic-info-list .traffic-card:first-child {
+    grid-column: 1 / -1 !important;
+}
+
+/* 卡片更緊湊，但仍保留正式感 */
+.traffic-card {
+    height: 100% !important;
+    padding: 16px 18px !important;
+    border-radius: 14px !important;
+    gap: 13px !important;
+    align-items: flex-start !important;
+    box-shadow: 0 7px 18px rgba(8, 36, 60, 0.08) !important;
+}
+
+.traffic-icon {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 10px !important;
+    font-size: 15px !important;
+}
+
+.traffic-card-body h3,
+.traffic-card-body h4,
+.traffic-card-title {
+    font-size: 15px !important;
+    line-height: 1.35 !important;
+    margin-bottom: 6px !important;
+}
+
+.traffic-card-body p,
+.traffic-card-body li {
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+    margin-bottom: 3px !important;
+}
+
+/* 交通文字過長時，不要撐爆整張卡 */
+.traffic-card-body p {
+    white-space: pre-line !important;
+}
+
+.traffic-open-map-btn,
+.traffic-card .btn,
+.traffic-card .map-btn {
+    display: inline-flex !important;
+    width: auto !important;
+    margin-top: 8px !important;
+    padding: 7px 14px !important;
+    font-size: 13px !important;
+    border-radius: 8px !important;
+}
+
+/* 避免收合按鈕在交通卡內過度佔空間 */
+.impr-map-toggle {
+    margin-top: 6px !important;
+    padding: 5px 11px !important;
+    font-size: 12px !important;
+}
+
+/* 平板：地圖在上，資訊卡仍可兩欄 */
+@media (max-width: 992px) {
+    .traffic-layout {
+        grid-template-columns: 1fr !important;
+    }
+
+    .traffic-map-container,
+    .traffic-map-container iframe,
+    .traffic-map {
+        min-height: 420px !important;
+        height: 420px !important;
+    }
+
+    .traffic-info-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+/* 手機：全部單欄 */
+@media (max-width: 640px) {
+    .traffic-info-list {
+        grid-template-columns: 1fr !important;
+    }
+
+    .traffic-info-list .traffic-card:first-child {
+        grid-column: auto !important;
+    }
+
+    .traffic-map-container,
+    .traffic-map-container iframe,
+    .traffic-map {
+        min-height: 320px !important;
+        height: 320px !important;
+    }
+}
+
 </style>
 
 </head>
