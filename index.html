@@ -4237,6 +4237,46 @@ body {
     }
 }
 
+
+
+/* ===== Navbar Brand Refinement：放大頁首會議名稱 ===== */
+.navbar-brand {
+    font-size: clamp(20px, 1.75vw, 26px) !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.02em !important;
+    line-height: 1.15 !important;
+    max-width: 520px !important;
+}
+
+.navbar-content {
+    height: 64px !important;
+}
+
+/* 避免選單被擠壓 */
+.navbar-menu {
+    gap: 6px !important;
+}
+
+/* 小筆電以下稍微收斂，避免換行 */
+@media (max-width: 1200px) {
+    .navbar-brand {
+        font-size: clamp(18px, 1.55vw, 22px) !important;
+        max-width: 420px !important;
+    }
+
+    .navbar-link {
+        font-size: 12px !important;
+        padding: 7px 8px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 18px !important;
+        max-width: 280px !important;
+    }
+}
+
 </style>
 
 </head>
