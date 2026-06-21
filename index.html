@@ -4277,6 +4277,35 @@ body {
     }
 }
 
+/* ===== Hero Banner Final Guard：固定視窗裁切，避免高圖完整展開造成重覆 ===== */
+.hero-banner {
+    height: clamp(220px, 28vw, 560px) !important;
+    min-height: 0 !important;
+    max-height: 560px !important;
+    overflow: hidden !important;
+    line-height: 0 !important;
+}
+
+.hero-banner::before {
+    min-height: 0 !important;
+    height: 100% !important;
+}
+
+.hero-banner img,
+.hero-banner-img {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    object-position: top center !important;
+    display: block !important;
+}
+
+.hero-banner-placeholder {
+    height: 100% !important;
+    min-height: 0 !important;
+}
+
 </style>
 
 </head>
@@ -5002,6 +5031,107 @@ body {
             return url;
         }
 
+        function syncHeroBanner(heroImgUrl) {
+            const heroBanner = document.getElementById('hero-image');
+            if (!heroBanner) return;
+
+            const ensurePlaceholder = () => {
+                let ph = heroBanner.querySelector('.hero-banner-placeholder');
+                if (!ph) {
+                    ph = document.createElement('div');
+                    ph.className = 'hero-banner-placeholder';
+                    ph.innerHTML = '<i class="fas fa-calendar-alt"></i>';
+                    heroBanner.appendChild(ph);
+                }
+                return ph;
+            };
+
+            const normalizeImages = () => {
+                const images = Array.from(heroBanner.querySelectorAll('img'));
+                const keeper = images.find(img => img.classList.contains('hero-banner-img')) || images[0] || null;
+                images.forEach(img => {
+                    if (img !== keeper) img.remove();
+                });
+                if (keeper) keeper.classList.add('hero-banner-img');
+                return keeper;
+            };
+
+            let currentImg = normalizeImages();
+
+            if (!heroImgUrl) {
+                if (currentImg) currentImg.remove();
+                delete heroBanner.dataset.bannerSrc;
+                heroBanner.classList.remove('has-image-loaded', 'image-load-error');
+                ensurePlaceholder();
+                return;
+            }
+
+            if (currentImg && heroBanner.dataset.bannerSrc === heroImgUrl) {
+                if (currentImg.complete && currentImg.naturalWidth > 0) {
+                    const ph = heroBanner.querySelector('.hero-banner-placeholder');
+                    if (ph) ph.remove();
+                    heroBanner.classList.add('has-image-loaded');
+                    heroBanner.classList.remove('image-load-error');
+                }
+                return;
+            }
+
+            if (!currentImg) {
+                currentImg = document.createElement('img');
+                currentImg.className = 'hero-banner-img';
+                currentImg.alt = 'banner';
+                currentImg.decoding = 'async';
+                heroBanner.appendChild(currentImg);
+            }
+
+            heroBanner.dataset.bannerSrc = heroImgUrl;
+            heroBanner.classList.remove('has-image-loaded', 'image-load-error');
+            ensurePlaceholder();
+
+            currentImg.onload = () => {
+                const ph = heroBanner.querySelector('.hero-banner-placeholder');
+                if (ph) ph.remove();
+                normalizeImages();
+                heroBanner.classList.add('has-image-loaded');
+                heroBanner.classList.remove('image-load-error');
+            };
+
+            currentImg.onerror = () => {
+                currentImg.remove();
+                delete heroBanner.dataset.bannerSrc;
+                heroBanner.classList.add('has-image-loaded', 'image-load-error');
+                ensurePlaceholder();
+            };
+
+            currentImg.src = heroImgUrl;
+        }
+
+        function cleanupHeroBanner() {
+            const heroBanner = document.getElementById('hero-image');
+            if (!heroBanner) return;
+
+            const images = Array.from(heroBanner.querySelectorAll('img'));
+            if (!images.length) return;
+
+            const keeper = images.find(img => img.classList.contains('hero-banner-img')) || images[0];
+            keeper.classList.add('hero-banner-img');
+
+            images.forEach(img => {
+                if (img !== keeper) img.remove();
+            });
+
+            const placeholder = heroBanner.querySelector('.hero-banner-placeholder');
+            if (placeholder && keeper.complete && keeper.naturalWidth > 0) {
+                placeholder.remove();
+            }
+        }
+
+        function scheduleHeroBannerCleanup() {
+            cleanupHeroBanner();
+            requestAnimationFrame(cleanupHeroBanner);
+            window.setTimeout(cleanupHeroBanner, 250);
+        }
+
         // 更新 Hero 區塊
         function updateHero() {
             const settings = siteData.settings;
@@ -5033,22 +5163,8 @@ body {
                 settings.conference_location_zh || '-' :
                 settings.conference_location_en || '-';
 
-            // ── Hero Banner 圖片注入（Banner 獨立不壓字）──
-            const heroBanner = document.getElementById('hero-image');
-            const heroImgUrl = driveToImgUrl(settings.hero_image_url || '');
-            if (heroImgUrl && heroBanner) {
-                const img = document.createElement('img');
-                img.alt = 'banner';
-                img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
-                img.onload = () => {
-                    // 圖片載入成功，移除 placeholder
-                    const ph = heroBanner.querySelector('.hero-banner-placeholder');
-                    if (ph) ph.remove();
-                    heroBanner.appendChild(img);
-                };
-                img.onerror = () => {}; // 失敗時保留 placeholder icon
-                img.src = heroImgUrl;
-            }
+            // ── Hero Banner 圖片注入（可重複呼叫，不累積重覆圖片）──
+            syncHeroBanner(driveToImgUrl(settings.hero_image_url || ''));
 
             // 更新報名按鈕狀態
             updateRegisterButton();
@@ -5144,6 +5260,7 @@ body {
             const floatingWrap = document.getElementById('floating-register');
             const floatingLabel = document.getElementById('floating-btn-label');
             const floatingIcon = document.getElementById('floating-btn-icon');
+            const generatedFloating = document.querySelector('.impr-floating-register');
 
             // ── GIF 圖示：若後台有設定 floating_btn_gif_url 就顯示 GIF ──
             const gifUrl = driveToImgUrl(settings.floating_btn_gif_url || '');
@@ -5161,6 +5278,14 @@ body {
             const lang = currentLang;
             if (floatingLabel) {
                 floatingLabel.textContent = lang === 'zh' ? '立即報名' : 'Register Now';
+            }
+            if (generatedFloating) {
+                if (floatingWrap) {
+                    generatedFloating.remove();
+                } else {
+                    const span = generatedFloating.querySelector('span');
+                    if (span) span.textContent = lang === 'zh' ? '立即報名' : 'Register Now';
+                }
             }
 
             if (status === 'open' && !isExpired) {
@@ -6029,6 +6154,7 @@ body {
             localStorage.setItem('conference-lang', lang);
             updateLanguageUI();
             updateContent();
+            scheduleHeroBannerCleanup();
         }
 
         // 更新語言UI
@@ -6091,6 +6217,7 @@ body {
 
             // ── 最後執行：確保蓋過所有 render 函式的顯示邏輯 ──
             if (siteData.settings) applySectionSwitches();
+            scheduleHeroBannerCleanup();
         }
 
         // 更新所有標題
@@ -6715,8 +6842,9 @@ function initHeroBannerLoading() {
         return;
     }
 
-    img.style.objectFit = "contain";
-    img.style.height = "auto";
+    img.style.objectFit = "cover";
+    img.style.objectPosition = "top center";
+    img.style.height = "100%";
     img.style.maxHeight = "none";
 
     function markLoaded() {
@@ -6765,9 +6893,25 @@ function preventHeroInfoOverlap() {
  * 03. 恢復浮動立即報名按鈕
  */
 function ensureFloatingRegisterButton() {
+    const nativeFloating = document.querySelector(".floating-register");
+    const generatedFloating = document.querySelector(".impr-floating-register");
+    const activeLang =
+        document.querySelector(".lang-btn.active")?.dataset.lang ||
+        (typeof currentLang !== "undefined" ? currentLang : "zh");
+    const label = activeLang === "zh" ? "立即報名" : "Register Now";
+
+    if (nativeFloating) {
+        if (generatedFloating) generatedFloating.remove();
+        const nativeLabel = nativeFloating.querySelector("#floating-btn-label, .floating-btn-label");
+        if (nativeLabel) nativeLabel.textContent = label;
+        return;
+    }
+
     const existing = document.querySelector(".floating-register-btn, .impr-floating-register");
     if (existing) {
         existing.style.display = "inline-flex";
+        const span = existing.querySelector("span");
+        if (span) span.textContent = label;
         return;
     }
 
@@ -6781,7 +6925,7 @@ function ensureFloatingRegisterButton() {
     const btn = document.createElement("a");
     btn.className = "impr-floating-register";
     btn.href = "#" + registrationTarget.id;
-    btn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i><span>立即報名</span>';
+    btn.innerHTML = `<i class="fa-solid fa-pen-to-square"></i><span>${label}</span>`;
 
     document.body.appendChild(btn);
 }

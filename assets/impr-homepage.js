@@ -29,8 +29,9 @@ function initHeroBannerLoading() {
         return;
     }
 
-    img.style.objectFit = "contain";
-    img.style.height = "auto";
+    img.style.objectFit = "cover";
+    img.style.objectPosition = "top center";
+    img.style.height = "100%";
     img.style.maxHeight = "none";
 
     function markLoaded() {
@@ -79,9 +80,26 @@ function preventHeroInfoOverlap() {
  * 03. 恢復浮動立即報名按鈕
  */
 function ensureFloatingRegisterButton() {
+    const nativeFloating = document.querySelector(".floating-register");
+    const generatedFloating = document.querySelector(".impr-floating-register");
+    const activeLang =
+        document.querySelector(".lang-btn.active")?.dataset.lang ||
+        localStorage.getItem("conference-lang") ||
+        (typeof currentLang !== "undefined" ? currentLang : "zh");
+    const label = activeLang === "zh" ? "立即報名" : "Register Now";
+
+    if (nativeFloating) {
+        if (generatedFloating) generatedFloating.remove();
+        const nativeLabel = nativeFloating.querySelector("#floating-btn-label, .floating-btn-label");
+        if (nativeLabel) nativeLabel.textContent = label;
+        return;
+    }
+
     const existing = document.querySelector(".floating-register-btn, .impr-floating-register");
     if (existing) {
         existing.style.display = "inline-flex";
+        const span = existing.querySelector("span");
+        if (span) span.textContent = label;
         return;
     }
 
@@ -95,7 +113,7 @@ function ensureFloatingRegisterButton() {
     const btn = document.createElement("a");
     btn.className = "impr-floating-register";
     btn.href = "#" + registrationTarget.id;
-    btn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i><span>立即報名</span>';
+    btn.innerHTML = `<i class="fa-solid fa-pen-to-square"></i><span>${label}</span>`;
 
     document.body.appendChild(btn);
 }
