@@ -4340,6 +4340,58 @@ body.lang-en .hero-actions {
     min-height: 0 !important;
 }
 
+/* ===== Final Locale/UI Guards ===== */
+body.lang-zh #hero-location,
+html[lang="zh-TW"] #hero-location {
+    white-space: nowrap !important;
+    overflow: visible !important;
+    line-height: 1.35 !important;
+    max-width: none !important;
+}
+
+body.lang-zh .hero-meta-item:has(#hero-location),
+html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
+    min-width: 230px !important;
+    max-width: none !important;
+}
+
+.floating-register .floating-btn {
+    width: auto !important;
+    min-width: 96px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    display: inline-flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    overflow: visible !important;
+}
+
+.floating-register .floating-btn-icon {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    width: 72px !important;
+    height: 64px !important;
+    margin: 0 auto !important;
+}
+
+.floating-register .floating-btn-gif {
+    display: block !important;
+    width: 72px !important;
+    height: 64px !important;
+}
+
+.floating-register .floating-btn-label {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    min-height: 30px !important;
+    width: 100% !important;
+    padding: 7px 12px 9px !important;
+    line-height: 1.2 !important;
+    white-space: normal !important;
+    text-align: center !important;
+}
+
 </style>
 
 </head>
