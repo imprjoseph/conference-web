@@ -3990,6 +3990,40 @@ body {
     padding: 8px 11px !important;
 }
 
+.hero-meta-item:has(#hero-location) {
+    flex: 1 1 auto !important;
+    min-width: min(760px, 100%) !important;
+}
+
+#hero-location {
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+}
+
+html[lang="en"] .hero-left,
+body.lang-en .hero-left {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    grid-template-areas:
+        "title actions"
+        "subtitle actions"
+        "meta meta" !important;
+    align-items: center !important;
+}
+
+html[lang="en"] .hero-meta,
+body.lang-en .hero-meta {
+    display: grid !important;
+    grid-template-columns: max-content minmax(max-content, 1fr) !important;
+    align-items: stretch !important;
+    width: 100% !important;
+}
+
+html[lang="en"] .hero-actions,
+body.lang-en .hero-actions {
+    align-self: center !important;
+}
+
 .hero-right,
 .countdown,
 #countdown-section {
@@ -4429,7 +4463,7 @@ body {
                         </button>
                         <a href="#agenda-section" class="btn btn-outline">
                             <i class="fas fa-calendar"></i>
-                            查看議程
+                            <span id="agenda-link-text">查看議程</span>
                         </a>
                     </div>
                 </div>
@@ -5251,6 +5285,29 @@ body {
             if (poweredEl) poweredEl.textContent = 'Powered by imPR';
         }
 
+        function getRegisterLabels(status, isExpired, lang = currentLang) {
+            const isZh = lang === 'zh';
+
+            if (status === 'open' && !isExpired) {
+                return {
+                    main: isZh ? '立即報名' : 'Register Now',
+                    floating: isZh ? '立即報名' : 'Register Now'
+                };
+            }
+
+            if (status === 'coming_soon') {
+                return {
+                    main: isZh ? '報名尚未開放' : 'Registration Not Open Yet',
+                    floating: isZh ? '報名尚未開放' : 'Registration Not Open Yet'
+                };
+            }
+
+            return {
+                main: isZh ? '報名已截止' : 'Registration Closed',
+                floating: isZh ? '報名已截止' : 'Registration Closed'
+            };
+        }
+
         // 更新報名按鈕狀態
         function updateRegisterButton() {
             const settings = siteData.settings || {};
@@ -5276,36 +5333,47 @@ body {
 
             // ── 更新文字 ──
             const lang = currentLang;
+            const labels = getRegisterLabels(status, isExpired, lang);
             if (floatingLabel) {
-                floatingLabel.textContent = lang === 'zh' ? '立即報名' : 'Register Now';
+                floatingLabel.textContent = labels.floating;
             }
             if (generatedFloating) {
                 if (floatingWrap) {
                     generatedFloating.remove();
                 } else {
                     const span = generatedFloating.querySelector('span');
-                    if (span) span.textContent = lang === 'zh' ? '立即報名' : 'Register Now';
+                    if (span) span.textContent = labels.floating;
                 }
             }
 
             if (status === 'open' && !isExpired) {
                 // 報名開放中
-                btnText.textContent = lang === 'zh' ? '立即報名' : 'Register Now';
+                btnText.textContent = labels.main;
                 btn.disabled = false;
                 btn.style.opacity = '1';
-                floatingWrap.classList.remove('hidden');
+                if (floatingLabel) floatingLabel.textContent = labels.floating;
+                if (floatingWrap) floatingWrap.style.opacity = '1';
+                if (floatingWrap) floatingWrap.classList.remove('hidden');
             } else if (status === 'coming_soon') {
-                // 尚未開放：Hero 按鈕顯示但 disabled，浮動按鈕隱藏
-                btnText.textContent = lang === 'zh' ? '報名尚未開放' : 'Coming Soon';
+                // 尚未開放：Hero 按鈕 disabled，浮動按鈕保留提醒
+                btnText.textContent = labels.main;
                 btn.disabled = true;
                 btn.style.opacity = '0.7';
-                floatingWrap.classList.add('hidden');
+                if (floatingLabel) floatingLabel.textContent = labels.floating;
+                if (floatingWrap) {
+                    floatingWrap.style.opacity = '0.82';
+                    floatingWrap.classList.remove('hidden');
+                }
             } else {
                 // closed 或截止時間已過
-                btnText.textContent = lang === 'zh' ? '報名已截止' : 'Registration Closed';
+                btnText.textContent = labels.main;
                 btn.disabled = true;
                 btn.style.opacity = '0.6';
-                floatingWrap.classList.add('hidden');
+                if (floatingLabel) floatingLabel.textContent = labels.floating;
+                if (floatingWrap) {
+                    floatingWrap.style.opacity = '0.72';
+                    floatingWrap.classList.remove('hidden');
+                }
             }
 
             // ── 若報名中，每分鐘重新檢查是否到期 ──
@@ -6163,6 +6231,9 @@ body {
             langBtns.forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.lang === currentLang);
             });
+            document.documentElement.lang = currentLang === 'zh' ? 'zh-TW' : 'en';
+            document.body.classList.toggle('lang-en', currentLang !== 'zh');
+            document.body.classList.toggle('lang-zh', currentLang === 'zh');
         }
 
         // 更新內容語言（語言切換 & 資料載入後都會呼叫）
@@ -6274,8 +6345,16 @@ body {
             });
 
             // ── 浮動按鈕文字 ──
+            const agendaLinkText = document.getElementById('agenda-link-text');
+            if (agendaLinkText) agendaLinkText.textContent = isEn ? 'View Agenda' : '查看議程';
+
             const floatingLabel = document.getElementById('floating-btn-label');
-            if (floatingLabel) floatingLabel.textContent = isEn ? 'Register Now' : '立即報名';
+            if (floatingLabel) {
+                const s = siteData.settings || {};
+                const regEnd = s.registration_end_at ? new Date(s.registration_end_at) : null;
+                const isExpired = regEnd && new Date() > regEnd;
+                floatingLabel.textContent = getRegisterLabels(s.registration_status, isExpired, currentLang).floating;
+            }
 
             // ── 個資 Modal 按鈕文字 ──
             const privacyConfirm = document.getElementById('privacy-confirm');
