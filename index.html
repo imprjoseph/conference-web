@@ -4822,9 +4822,9 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                         </p>
                     </div>
                 </div>
-                <div style="margin-top:20px;padding:14px 16px;background:#f0f9ff;border-radius:10px;border:1px solid #bae6fd;font-size:13px;color:#0c4a6e;line-height:1.7;">
+                <div id="privacy-consent-notice" style="margin-top:20px;padding:14px 16px;background:#f0f9ff;border-radius:10px;border:1px solid #bae6fd;font-size:13px;color:#0c4a6e;line-height:1.7;">
                     <i class="fas fa-info-circle" style="margin-right:6px;color:#0284c7;"></i>
-                    點選「<strong>我已了解，前往報名</strong>」即表示您已閱讀並同意上述個人資料蒐集告知事項，本會將依法妥善保護您的個人資料。
+                    點選「<strong>前往報名表單</strong>」即表示您已閱讀並同意上述個人資料蒐集告知事項，本會將依法妥善保護您的個人資料。
                 </div>
             </div>
             <div class="modal-actions" style="margin-top:20px;">
@@ -6413,6 +6413,12 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             if (privacyConfirm) privacyConfirm.textContent = isEn ? 'Go to Registration Form' : '前往報名表單';
             const privacyCancel = document.getElementById('privacy-cancel');
             if (privacyCancel) privacyCancel.textContent = isEn ? 'Cancel' : '取消';
+            const privacyNotice = document.getElementById('privacy-consent-notice');
+            if (privacyNotice) {
+                privacyNotice.innerHTML = isEn
+                    ? '<i class="fas fa-info-circle" style="margin-right:6px;color:#0284c7;"></i> By clicking “<strong>Go to Registration Form</strong>,” you confirm that you have read and agree to the personal data collection notice above. The Organizer will protect your personal data in accordance with applicable laws.'
+                    : '<i class="fas fa-info-circle" style="margin-right:6px;color:#0284c7;"></i> 點選「<strong>前往報名表單</strong>」即表示您已閱讀並同意上述個人資料蒐集告知事項，本會將依法妥善保護您的個人資料。';
+            }
 
             // ── 倒數計時標籤 ──
             const cdLabels = document.querySelectorAll('.countdown-label');
