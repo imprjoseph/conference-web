@@ -1723,12 +1723,12 @@
             }
 
             .agenda-item {
-                flex-direction: column;
-                gap: 15px;
+                grid-template-columns: minmax(104px, 132px) minmax(0, 1fr);
             }
 
             .agenda-time {
                 min-width: auto;
+                padding: 18px 12px;
             }
 
             .floating-register {
@@ -2278,16 +2278,35 @@
 
         /* ── 議程 升級 ── */
         .agenda-container {
+            display: grid;
+            gap: 24px;
+        }
+
+        .agenda-day {
             background: #fff;
             border-radius: var(--border-radius-xl);
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-sm);
-            padding: 0;
             overflow: hidden;
         }
 
+        .agenda-date {
+            padding: 18px 24px;
+            background: linear-gradient(135deg, #f0f6ff, #e8f1ff);
+            border-bottom: 1px solid #dbeafe;
+            color: var(--primary-dark);
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 0;
+        }
+
+        .agenda-table {
+            display: grid;
+        }
+
         .agenda-item {
-            display: flex;
+            display: grid;
+            grid-template-columns: minmax(128px, 180px) minmax(0, 1fr);
             gap: 0;
             padding: 0;
             border-bottom: 1px solid var(--border-color);
@@ -2303,7 +2322,7 @@
             font-weight: 700;
             color: var(--primary-color);
             font-size: 14px;
-            background: linear-gradient(180deg, #f0f6ff, #e8f1ff);
+            background: #f8fbff;
             border-right: 2px solid #dbeafe;
             display: flex;
             align-items: center;
@@ -2318,8 +2337,8 @@
             padding: 22px 28px;
         }
 
-        .agenda-title { font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 8px; }
-        .agenda-speaker { font-size: 13px; color: var(--primary-color); font-weight: 500; margin-bottom: 4px; }
+        .agenda-title { font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 8px; line-height: 1.5; }
+        .agenda-speaker { font-size: 13px; color: var(--primary-color); font-weight: 600; margin-bottom: 4px; line-height: 1.5; }
         .agenda-location { font-size: 13px; color: var(--text-muted); }
         .agenda-notes { font-size: 13px; color: var(--text-muted); margin-top: 6px; font-style: italic; }
 
@@ -3601,13 +3620,44 @@ body {
 }
 
 .agenda-container {
-    padding: 24px 28px !important;
+    display: grid !important;
+    gap: 24px !important;
+    padding: 0 !important;
     margin-top: 22px !important;
 }
 
 .agenda-item {
-    padding: 20px 0 !important;
-    gap: 20px !important;
+    display: grid !important;
+    grid-template-columns: minmax(128px, 180px) minmax(0, 1fr) !important;
+    gap: 0 !important;
+    padding: 0 !important;
+}
+
+.agenda-content {
+    min-width: 0 !important;
+}
+
+@media (max-width: 520px) {
+    .agenda-date {
+        padding: 16px 18px !important;
+        font-size: 16px !important;
+    }
+
+    .agenda-item {
+        grid-template-columns: 1fr !important;
+    }
+
+    .agenda-time {
+        justify-content: flex-start !important;
+        border-right: none !important;
+        border-bottom: 1px solid #dbeafe !important;
+        padding: 14px 18px !important;
+        text-align: left !important;
+    }
+
+    .agenda-content {
+        padding: 18px !important;
+    }
 }
 
 /* Hero：Banner 與資訊列分離，資訊列更緊湊 */
@@ -4861,17 +4911,12 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         // 若後台「系統設定」更新了 API URL，前台自動使用新 URL
         const API_DEFAULT_URL = 'https://script.google.com/macros/s/AKfycbw2wh9Ud91cJWvMxrm0A8je0EdGU4HY7K6mfQVDxXirYzjdJjfjnsHZY7s4fsCVldo/exec';
 
-        // 啟動時驗證 localStorage URL，若與預設值不同先清除（避免舊 URL 卡住）
         function getApiUrl() {
             const stored = localStorage.getItem('GAS_API_URL');
-            // 如果 localStorage 有值但跟 hardcode 不同，以 hardcode 為準
-            // 使用者可透過後台「系統設定」更新
             return stored || API_DEFAULT_URL;
         }
 
-        // 強制使用 hardcode URL（清除可能錯誤的 localStorage）
-        localStorage.setItem('GAS_API_URL', API_DEFAULT_URL);
-        let activeApiBaseUrl = API_DEFAULT_URL;
+        let activeApiBaseUrl = getApiUrl();
 
         async function apiFetch(action, init = {}) {
             const url = `${activeApiBaseUrl}?action=${action}`;
@@ -5646,13 +5691,13 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         function renderSpeakers() {
             const container = document.getElementById('speakers-content');
             const speakers = siteData.speakers || [];
+            const lang = currentLang;
 
             if (speakers.length === 0) {
-                container.innerHTML = '<div class="loading-section">目前沒有講師資料</div>';
+                container.innerHTML = `<div class="loading-section">${lang === 'zh' ? '目前沒有講師資料' : 'No speaker information available'}</div>`;
                 return;
             }
 
-            const lang = currentLang;
             container.innerHTML = speakers.map(sp => {
                 const name = lang === 'zh' ? sp.name_zh : sp.name_en;
                 const title = lang === 'zh' ? sp.title_zh : sp.title_en;
@@ -5689,6 +5734,44 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             }
         }
 
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[char]));
+        }
+
+        function formatAgendaTime(value) {
+            if (value === null || value === undefined || value === '') return '';
+            const raw = String(value).trim();
+
+            const plainTime = raw.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
+            if (plainTime) {
+                return `${plainTime[1].padStart(2, '0')}:${plainTime[2]}`;
+            }
+
+            const numericTime = Number(raw);
+            if (!Number.isNaN(numericTime) && numericTime >= 0 && numericTime < 1) {
+                const totalMinutes = Math.round(numericTime * 24 * 60);
+                const hours = Math.floor(totalMinutes / 60) % 24;
+                const minutes = totalMinutes % 60;
+                return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+            }
+
+            if (/T|Z/.test(raw)) {
+                const utcDate = new Date(raw);
+                if (!isNaN(utcDate)) {
+                    const twDate = new Date(utcDate.getTime() + 8 * 60 * 60 * 1000);
+                    return `${String(twDate.getUTCHours()).padStart(2, '0')}:${String(twDate.getUTCMinutes()).padStart(2, '0')}`;
+                }
+            }
+
+            return raw;
+        }
+
         // 渲染議程
         function renderAgenda() {
             const container = document.getElementById('agenda-content');
@@ -5700,24 +5783,48 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 return;
             }
 
-            // 按日期和時間排序
-            agenda.sort((a, b) => {
-                const dateA = new Date(a.date + ' ' + a.start_time);
-                const dateB = new Date(b.date + ' ' + b.start_time);
-                return dateA - dateB;
+            // 按日期和時間排序，再依日期分組顯示
+            const sortedAgenda = [...agenda].sort((a, b) => {
+                const dateA = parseLocalDate(a.date);
+                const dateB = parseLocalDate(b.date);
+                const timeA = formatAgendaTime(a.start_time);
+                const timeB = formatAgendaTime(b.start_time);
+                const dayDiff = (dateA ? dateA.getTime() : 0) - (dateB ? dateB.getTime() : 0);
+                return dayDiff || timeA.localeCompare(timeB);
             });
 
-            container.innerHTML = agenda.map(item => `
-                <div class="agenda-item">
-                    <div class="agenda-time">
-                        ${item.start_time} - ${item.end_time}<br>
-                        <small>${formatDate(item.date)}</small>
-                    </div>
-                    <div class="agenda-content">
-                        <div class="agenda-title">${lang === 'zh' ? item.title_zh : item.title_en}</div>
-                        <div class="agenda-speaker">${lang === 'zh' ? item.speaker_zh : item.speaker_en}</div>
-                        <div class="agenda-location">${lang === 'zh' ? item.location_zh : item.location_en}</div>
-                        ${(lang === 'zh' ? item.notes_zh : item.notes_en) ? `<div class="agenda-notes">${lang === 'zh' ? item.notes_zh : item.notes_en}</div>` : ''}
+            const agendaByDate = sortedAgenda.reduce((groups, item) => {
+                const dateLabel = formatDate(item.date);
+                if (!groups[dateLabel]) groups[dateLabel] = [];
+                groups[dateLabel].push(item);
+                return groups;
+            }, {});
+
+            container.innerHTML = Object.entries(agendaByDate).map(([dateLabel, items]) => `
+                <div class="agenda-day">
+                    <div class="agenda-date">${escapeHtml(dateLabel)}</div>
+                    <div class="agenda-table">
+                        ${items.map(item => {
+                            const title = lang === 'zh' ? item.title_zh : item.title_en;
+                            const speaker = lang === 'zh' ? item.speaker_zh : item.speaker_en;
+                            const location = lang === 'zh' ? item.location_zh : item.location_en;
+                            const notes = lang === 'zh' ? item.notes_zh : item.notes_en;
+                            const startTime = formatAgendaTime(item.start_time);
+                            const endTime = formatAgendaTime(item.end_time);
+                            const timeRange = `${startTime || ''}${endTime ? ` - ${endTime}` : ''}`;
+
+                            return `
+                                <div class="agenda-item">
+                                    <div class="agenda-time">${escapeHtml(timeRange || '-')}</div>
+                                    <div class="agenda-content">
+                                        <div class="agenda-title">${escapeHtml(title || '-')}</div>
+                                        ${speaker ? `<div class="agenda-speaker">${escapeHtml(speaker)}</div>` : ''}
+                                        ${location ? `<div class="agenda-location">${escapeHtml(location)}</div>` : ''}
+                                        ${notes ? `<div class="agenda-notes">${escapeHtml(notes)}</div>` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
                     </div>
                 </div>
             `).join('');
