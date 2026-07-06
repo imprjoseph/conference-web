@@ -4911,17 +4911,12 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         // 若後台「系統設定」更新了 API URL，前台自動使用新 URL
         const API_DEFAULT_URL = 'https://script.google.com/macros/s/AKfycbw2wh9Ud91cJWvMxrm0A8je0EdGU4HY7K6mfQVDxXirYzjdJjfjnsHZY7s4fsCVldo/exec';
 
-        // 啟動時驗證 localStorage URL，若與預設值不同先清除（避免舊 URL 卡住）
         function getApiUrl() {
             const stored = localStorage.getItem('GAS_API_URL');
-            // 如果 localStorage 有值但跟 hardcode 不同，以 hardcode 為準
-            // 使用者可透過後台「系統設定」更新
             return stored || API_DEFAULT_URL;
         }
 
-        // 強制使用 hardcode URL（清除可能錯誤的 localStorage）
-        localStorage.setItem('GAS_API_URL', API_DEFAULT_URL);
-        let activeApiBaseUrl = API_DEFAULT_URL;
+        let activeApiBaseUrl = getApiUrl();
 
         async function apiFetch(action, init = {}) {
             const url = `${activeApiBaseUrl}?action=${action}`;
@@ -5696,13 +5691,13 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         function renderSpeakers() {
             const container = document.getElementById('speakers-content');
             const speakers = siteData.speakers || [];
+            const lang = currentLang;
 
             if (speakers.length === 0) {
-                container.innerHTML = '<div class="loading-section">目前沒有講師資料</div>';
+                container.innerHTML = `<div class="loading-section">${lang === 'zh' ? '目前沒有講師資料' : 'No speaker information available'}</div>`;
                 return;
             }
 
-            const lang = currentLang;
             container.innerHTML = speakers.map(sp => {
                 const name = lang === 'zh' ? sp.name_zh : sp.name_en;
                 const title = lang === 'zh' ? sp.title_zh : sp.title_en;
