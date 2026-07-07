@@ -6296,10 +6296,10 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     document.getElementById('reg-form-wrap').innerHTML = `
                         <div class="reg-success-msg">
                             <div class="success-icon">🎉</div>
-                            <h3>${isZh ? '報名成功！' : 'Registration Successful!'}</h3>
+                            <h3>${isZh ? '已收到報名資訊' : 'Registration Information Received'}</h3>
                             <p>${isZh
-                                ? '感謝您的報名，我們將以 Email 與您確認報名資訊。'
-                                : 'Thank you! A confirmation will be sent to your email.'
+                                ? '感謝您提供報名資訊，系統已寄出收件通知。主辦單位審核完成後，將再以 Email 寄發報名成功信函。'
+                                : 'Thank you. We have received your registration information and sent a receipt notice. The organizer will email the registration approval notice after review.'
                             }</p>
                             <button class="reg-submit-btn" onclick="initRegisterForm()"
                                 style="background:var(--success-color);">
