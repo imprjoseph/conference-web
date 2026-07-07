@@ -6289,10 +6289,20 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
             // 前端驗證
             let valid = true;
+            const emailInput = form.querySelector('input[name="email"]');
+            if (emailInput) {
+                emailInput.value = emailInput.value.replace(/\s+/g, '').trim();
+            }
             form.querySelectorAll('[required]').forEach(el => {
                 el.classList.remove('error');
                 if (!el.value.trim()) { el.classList.add('error'); valid = false; }
             });
+            if (emailInput && !emailInput.checkValidity()) {
+                emailInput.classList.add('error');
+                status.textContent = isZh ? '⚠️ 請填寫正確的 Email' : '⚠️ Please enter a valid email address';
+                status.className = 'reg-status error';
+                return;
+            }
             if (!valid) {
                 status.textContent = isZh ? '⚠️ 請填寫必填欄位' : '⚠️ Please fill in required fields';
                 status.className = 'reg-status error';
