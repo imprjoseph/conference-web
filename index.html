@@ -6326,15 +6326,21 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 const json = await res.json();
 
                 if (json.success) {
+                    const emailFailed = json.email_sent === false;
+                    const successText = emailFailed
+                        ? (isZh
+                            ? '感謝您提供報名資訊，系統已收到資料，但收件通知信暫時未能成功寄出。主辦單位審核完成後，仍會依您提供的 Email 寄發報名成功信函。'
+                            : 'Thank you. We have received your registration information, but the receipt notice could not be sent at this time. The organizer will still email the registration approval notice after review.')
+                        : (isZh
+                            ? '感謝您提供報名資訊，系統已寄出收件通知。主辦單位審核完成後，將再以 Email 寄發報名成功信函。'
+                            : 'Thank you. We have received your registration information and sent a receipt notice. The organizer will email the registration approval notice after review.');
+
                     // 成功：顯示感謝畫面
                     document.getElementById('reg-form-wrap').innerHTML = `
                         <div class="reg-success-msg">
                             <div class="success-icon">🎉</div>
                             <h3>${isZh ? '已收到報名資訊' : 'Registration Information Received'}</h3>
-                            <p>${isZh
-                                ? '感謝您提供報名資訊，系統已寄出收件通知。主辦單位審核完成後，將再以 Email 寄發報名成功信函。'
-                                : 'Thank you. We have received your registration information and sent a receipt notice. The organizer will email the registration approval notice after review.'
-                            }</p>
+                            <p>${successText}</p>
                             <button class="reg-submit-btn" onclick="initRegisterForm()"
                                 style="background:var(--success-color);">
                                 ${isZh ? '再次報名' : 'Register Again'}
