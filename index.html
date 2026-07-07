@@ -4856,7 +4856,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                         </p>
                         <p style="font-weight:700;margin-bottom:6px;">二、蒐集項目</p>
                         <p style="margin-bottom:14px;">
-                            姓名、電子郵件地址、聯絡電話、服務單位、職稱、飲食需求及您主動填寫之備註事項。
+                            姓名、電子郵件地址、聯絡電話、所屬單位（公司、法人、學校等）、職稱及您主動填寫之備註事項。
                         </p>
                         <p style="font-weight:700;margin-bottom:6px;">三、利用期間、地區、對象及方式</p>
                         <p style="margin-bottom:14px;">
@@ -6033,7 +6033,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             { key: 'name',     label_zh: '姓名',       label_en: 'Name',         type: 'text',   required: true,  half: false },
             { key: 'email',    label_zh: 'Email',       label_en: 'Email',         type: 'email',  required: true,  half: true  },
             { key: 'phone',    label_zh: '聯絡電話',    label_en: 'Phone',         type: 'tel',    required: true,  half: true  },
-            { key: 'org',      label_zh: '服務單位',    label_en: 'Organization',  type: 'text',   required: false, half: true  },
+            { key: 'org',      label_zh: '所屬單位（公司、法人、學校等）', label_en: 'Organization / Affiliation', type: 'text', required: true, half: true },
             { key: 'title',    label_zh: '職稱',        label_en: 'Job Title',     type: 'text',   required: false, half: true  },
             { key: 'remarks',  label_zh: '備註',        label_en: 'Remarks',       type: 'textarea',required: false, half: false },
         ];
@@ -6171,7 +6171,16 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 }
             } catch(e) { /* 使用預設欄位 */ }
 
-            fields = fields.filter(field => field.key !== 'dietary');
+            fields = fields
+                .filter(field => field.key !== 'dietary')
+                .map(field => field.key === 'org'
+                    ? {
+                        ...field,
+                        label_zh: '所屬單位（公司、法人、學校等）',
+                        label_en: 'Organization / Affiliation',
+                        required: true
+                    }
+                    : field);
             renderRegForm(fields);
         }
 
