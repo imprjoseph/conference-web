@@ -6173,14 +6173,26 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
             fields = fields
                 .filter(field => field.key !== 'dietary')
-                .map(field => field.key === 'org'
-                    ? {
+                .map(field => {
+                    if (field.key === 'name') {
+                        return {
+                            ...field,
+                            hint_zh: '若有中文姓名請填寫中文姓名',
+                            hint_en: 'If you have a Chinese name, please enter it in Chinese.'
+                        };
+                    }
+
+                    if (field.key === 'org') {
+                        return {
                         ...field,
                         label_zh: '所屬單位（公司、法人、學校等）',
                         label_en: 'Organization / Affiliation',
                         required: true
+                        };
                     }
-                    : field);
+
+                    return field;
+                });
             renderRegForm(fields);
         }
 
@@ -6240,6 +6252,8 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             const label = isZh ? f.label_zh : (f.label_en || f.label_zh);
             const req = f.required ? '<span class="required">*</span>' : '';
             const placeholder = isZh ? (f.placeholder_zh || '') : (f.placeholder_en || '');
+            const hint = isZh ? (f.hint_zh || '') : (f.hint_en || f.hint_zh || '');
+            const hintHtml = hint ? `<div class="field-hint">${hint}</div>` : '';
 
             if (f.type === 'select') {
                 const opts = (isZh ? f.options_zh : f.options_en) || [];
@@ -6250,16 +6264,19 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                         <option value="">${isZh ? '請選擇' : 'Select...'}</option>
                         ${optsHtml}
                     </select>
+                    ${hintHtml}
                 </div>`;
             } else if (f.type === 'textarea') {
                 return `<div class="reg-field">
                     <label>${label}${req}</label>
                     <textarea name="${f.key}" placeholder="${placeholder}" rows="3"></textarea>
+                    ${hintHtml}
                 </div>`;
             } else {
                 return `<div class="reg-field">
                     <label>${label}${req}</label>
                     <input type="${f.type}" name="${f.key}" placeholder="${placeholder}" ${f.required ? 'required' : ''}>
+                    ${hintHtml}
                 </div>`;
             }
         }
