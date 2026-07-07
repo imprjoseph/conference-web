@@ -6035,9 +6035,6 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             { key: 'phone',    label_zh: '聯絡電話',    label_en: 'Phone',         type: 'tel',    required: true,  half: true  },
             { key: 'org',      label_zh: '服務單位',    label_en: 'Organization',  type: 'text',   required: false, half: true  },
             { key: 'title',    label_zh: '職稱',        label_en: 'Job Title',     type: 'text',   required: false, half: true  },
-            { key: 'dietary',  label_zh: '飲食需求',    label_en: 'Dietary',       type: 'select', required: false, half: true,
-              options_zh: ['無特殊需求','素食','清真（Halal）','其他'],
-              options_en: ['None','Vegetarian','Halal','Other'] },
             { key: 'remarks',  label_zh: '備註',        label_en: 'Remarks',       type: 'textarea',required: false, half: false },
         ];
 
@@ -6174,6 +6171,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 }
             } catch(e) { /* 使用預設欄位 */ }
 
+            fields = fields.filter(field => field.key !== 'dietary');
             renderRegForm(fields);
         }
 
