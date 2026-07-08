@@ -29,9 +29,10 @@ function initHeroBannerLoading() {
         return;
     }
 
-    img.style.objectFit = "cover";
-    img.style.objectPosition = "top center";
-    img.style.height = "100%";
+    const shouldShowFullBanner = window.matchMedia("(max-width: 768px)").matches;
+    img.style.objectFit = shouldShowFullBanner ? "contain" : "cover";
+    img.style.objectPosition = shouldShowFullBanner ? "center center" : "top center";
+    img.style.height = shouldShowFullBanner ? "auto" : "100%";
     img.style.maxHeight = "none";
 
     function markLoaded() {

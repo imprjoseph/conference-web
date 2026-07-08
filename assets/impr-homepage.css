@@ -636,6 +636,20 @@ body {
         min-height: 0;
     }
 
+    .hero-banner {
+        aspect-ratio: 3 / 1 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+    }
+
+    .hero-banner img,
+    .hero-banner-img {
+        height: auto !important;
+        object-fit: contain !important;
+        object-position: center center !important;
+    }
+
     .hero-body-wrap {
         padding-top: 14px !important;
     }

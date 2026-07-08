@@ -4390,6 +4390,36 @@ body.lang-en .hero-actions {
     min-height: 0 !important;
 }
 
+@media (max-width: 768px) {
+    .hero-banner {
+        aspect-ratio: 3 / 1 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: hidden !important;
+        background: #dfeaf0 !important;
+    }
+
+    .hero-banner::before {
+        height: 100% !important;
+        min-height: 0 !important;
+    }
+
+    .hero-banner img,
+    .hero-banner-img {
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+        object-fit: contain !important;
+        object-position: center center !important;
+    }
+
+    .hero-banner-placeholder {
+        height: 100% !important;
+        min-height: 0 !important;
+    }
+}
+
 /* ===== Final Locale/UI Guards ===== */
 body.lang-zh #hero-location,
 html[lang="zh-TW"] #hero-location {
@@ -7263,9 +7293,10 @@ function initHeroBannerLoading() {
         return;
     }
 
-    img.style.objectFit = "cover";
-    img.style.objectPosition = "top center";
-    img.style.height = "100%";
+    const shouldShowFullBanner = window.matchMedia("(max-width: 768px)").matches;
+    img.style.objectFit = shouldShowFullBanner ? "contain" : "cover";
+    img.style.objectPosition = shouldShowFullBanner ? "center center" : "top center";
+    img.style.height = shouldShowFullBanner ? "auto" : "100%";
     img.style.maxHeight = "none";
 
     function markLoaded() {
