@@ -4906,10 +4906,17 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         let currentLang = localStorage.getItem('conference-lang') || 'zh';
         let siteData = {};
         let countdownInterval;
+        let usedApiCacheThisLoad = false;
+        let isRefreshingCachedData = false;
 
         // ── API URL 管理：優先讀 localStorage（後台設定），再用預設值 ──
         // 若後台「系統設定」更新了 API URL，前台自動使用新 URL
         const API_DEFAULT_URL = 'https://script.google.com/macros/s/AKfycbw2wh9Ud91cJWvMxrm0A8je0EdGU4HY7K6mfQVDxXirYzjdJjfjnsHZY7s4fsCVldo/exec';
+        const API_CACHE_VERSION = '20260708-speed-v1';
+        const API_CACHE_TTL = {
+            settings: 5 * 60 * 1000,
+            content: 10 * 60 * 1000
+        };
 
         function getApiUrl() {
             const stored = localStorage.getItem('GAS_API_URL');
@@ -4927,6 +4934,139 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             const data = await response.json();
             if (data && data.success !== undefined) return data;
             throw new Error(data && data.error ? data.error : `API ${action} 回傳格式錯誤`);
+        }
+
+        function getApiCacheKey(action) {
+            return `${API_CACHE_VERSION}:${activeApiBaseUrl}:${action}`;
+        }
+
+        function readApiCache(action, maxAgeMs) {
+            try {
+                const raw = localStorage.getItem(getApiCacheKey(action));
+                if (!raw) return null;
+
+                const cached = JSON.parse(raw);
+                if (!cached || !cached.timestamp || !cached.payload) return null;
+
+                const age = Date.now() - cached.timestamp;
+                if (age > maxAgeMs) return null;
+
+                return cached.payload;
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function writeApiCache(action, payload) {
+            try {
+                if (!payload || payload.success === false) return;
+                localStorage.setItem(getApiCacheKey(action), JSON.stringify({
+                    timestamp: Date.now(),
+                    payload
+                }));
+            } catch (error) {
+                // localStorage 可能滿了或被瀏覽器封鎖，失敗時直接略過快取。
+            }
+        }
+
+        async function cachedApiFetch(action, ttlMs = API_CACHE_TTL.content) {
+            const cached = readApiCache(action, ttlMs);
+            if (cached) {
+                usedApiCacheThisLoad = true;
+                return cached;
+            }
+
+            const data = await apiFetch(action);
+            writeApiCache(action, data);
+            return data;
+        }
+
+        function applyApiData(action, data) {
+            if (!data || !data.success) return;
+
+            const payload = data.data;
+            switch (action) {
+                case 'getSettings':
+                    siteData.settings = payload;
+                    checkSiteStatus();
+                    applySectionSwitches();
+                    updateContent();
+                    initRegisterButtons();
+                    initRegisterForm();
+                    break;
+                case 'getNews':
+                    siteData.news = payload;
+                    renderNews();
+                    break;
+                case 'getAbout':
+                    siteData.about = payload;
+                    renderAbout();
+                    break;
+                case 'getSponsors':
+                    siteData.sponsors = payload;
+                    renderSponsors();
+                    break;
+                case 'getDownloads':
+                    siteData.downloads = payload;
+                    renderDownloads();
+                    break;
+                case 'getFaq':
+                    siteData.faq = payload;
+                    renderFaq();
+                    break;
+                case 'getSpeakers':
+                    siteData.speakers = payload;
+                    renderSpeakers();
+                    break;
+                case 'getAgenda':
+                    siteData.agenda = payload;
+                    renderAgenda();
+                    break;
+                case 'getTraffic':
+                    siteData.traffic = payload;
+                    renderTraffic();
+                    break;
+                case 'getPrivacy':
+                    siteData.privacy = payload;
+                    break;
+                case 'getPastEvents':
+                    siteData.pastEvents = payload;
+                    renderPastEvents();
+                    break;
+                case 'getFormFields':
+                    initRegisterForm();
+                    break;
+            }
+        }
+
+        async function refreshCachedDataInBackground() {
+            if (!usedApiCacheThisLoad || isRefreshingCachedData) return;
+            isRefreshingCachedData = true;
+
+            const actions = [
+                'getSettings',
+                'getNews',
+                'getAbout',
+                'getSponsors',
+                'getDownloads',
+                'getFaq',
+                'getSpeakers',
+                'getAgenda',
+                'getTraffic',
+                'getPrivacy',
+                'getPastEvents',
+                'getFormFields'
+            ];
+
+            const results = await Promise.allSettled(actions.map(action => apiFetch(action)));
+            results.forEach((result, index) => {
+                if (result.status !== 'fulfilled') return;
+                const action = actions[index];
+                writeApiCache(action, result.value);
+                applyApiData(action, result.value);
+            });
+
+            isRefreshingCachedData = false;
         }
 
         // 初始化
@@ -4956,7 +5096,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     }
 
                     const settingsData = await Promise.race([
-                        apiFetch('getSettings'),
+                        cachedApiFetch('getSettings', API_CACHE_TTL.settings),
                         new Promise((_, reject) =>
                             setTimeout(() => reject(new Error('連線逾時')), 12000)
                         )
@@ -4975,6 +5115,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                         await loadAllData();
                     }
                     showLoading(false);
+                    setTimeout(refreshCachedDataInBackground, 1200);
                     return; // 成功就結束
 
                 } catch (error) {
@@ -5582,7 +5723,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         // 載入最新消息
         async function loadNews() {
             try {
-                const data = await apiFetch('getNews');
+                const data = await cachedApiFetch('getNews');
                 if (data.success) {
                     siteData.news = data.data;
                     renderNews();
@@ -5648,7 +5789,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         // 載入會議介紹
         async function loadAbout() {
             try {
-                const data = await apiFetch('getAbout');
+                const data = await cachedApiFetch('getAbout');
             siteData.about = data.data;
             renderAbout();
             } catch (error) {
@@ -5679,7 +5820,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         // 載入講師資料
         async function loadSpeakers() {
             try {
-                const data = await apiFetch('getSpeakers');
+                const data = await cachedApiFetch('getSpeakers');
             siteData.speakers = data.data;
             renderSpeakers();
             } catch (error) {
@@ -5704,7 +5845,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 const org = lang === 'zh' ? sp.organization_zh : sp.organization_en;
                 const bio = lang === 'zh' ? sp.short_bio_zh : sp.short_bio_en;
                 const photoHtml = sp.photo_url
-                    ? `<img src="${sp.photo_url}" alt="${name}">`
+                    ? `<img src="${sp.photo_url}" alt="${name}" loading="lazy" decoding="async">`
                     : '<i class="fas fa-user"></i>';
                 return `
                 <div class="speaker-card">
@@ -5726,7 +5867,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         // 載入議程
         async function loadAgenda() {
             try {
-                const data = await apiFetch('getAgenda');
+                const data = await cachedApiFetch('getAgenda');
             siteData.agenda = data.data;
             renderAgenda();
             } catch (error) {
@@ -5833,7 +5974,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         // 載入交通資訊
         async function loadTraffic() {
             try {
-                const data = await apiFetch('getTraffic');
+                const data = await cachedApiFetch('getTraffic');
             siteData.traffic = data.data;
             renderTraffic();
             } catch (error) {
@@ -5942,7 +6083,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         // 載入個資宣告
         async function loadPrivacy() {
             try {
-                const data = await apiFetch('getPrivacy');
+                const data = await cachedApiFetch('getPrivacy');
             siteData.privacy = data.data;
             } catch (error) {
                 console.error('載入個資宣告失敗:', error);
@@ -5952,7 +6093,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         // 載入歷年會議
         async function loadPastEvents() {
             try {
-                const data = await apiFetch('getPastEvents');
+                const data = await cachedApiFetch('getPastEvents');
             siteData.pastEvents = data.data;
             renderPastEvents();
             } catch (error) {
@@ -5975,7 +6116,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             container.innerHTML = events.map(event => `
                 <div class="past-event-card">
                     <div class="past-event-image">
-                        ${event.featured_image_url ? `<img src="${event.featured_image_url}" alt="${lang === 'zh' ? event.title_zh : event.title_en}" style="width: 100%; height: 100%; object-fit: cover;">` : '<i class="fas fa-images"></i>'}
+                        ${event.featured_image_url ? `<img src="${event.featured_image_url}" alt="${lang === 'zh' ? event.title_zh : event.title_en}" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover;">` : '<i class="fas fa-images"></i>'}
                     </div>
                     <div class="past-event-content">
                         <div class="past-event-year">${event.year}</div>
@@ -6161,7 +6302,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             // 嘗試從 GAS 取得自訂欄位，失敗則用預設
             let fields = DEFAULT_FORM_FIELDS;
             try {
-                const res = await apiFetch('getFormFields');
+                const res = await cachedApiFetch('getFormFields', API_CACHE_TTL.settings);
                 if (res.success && Array.isArray(res.data) && res.data.length > 0) {
                     fields = res.data;
                 }
@@ -6670,7 +6811,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         // ── 贊助商 ──
         async function loadSponsors() {
             try {
-                const res = await apiFetch('getSponsors');
+                const res = await cachedApiFetch('getSponsors');
                 if (res.success) { siteData.sponsors = res.data; renderSponsors(); }
             } catch(e) { console.error('載入贊助商失敗:', e); }
         }
@@ -6695,7 +6836,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 const label = tierNames[tier] ? (lang==='zh'?tierNames[tier].zh:tierNames[tier].en) : tier;
                 const logos = grouped[tier].map(sp => {
                     const name = lang==='zh'?sp.name_zh:sp.name_en;
-                    const inner = sp.logo_url ? `<img src="${sp.logo_url}" alt="${name}">` : `<span class="sponsor-name-text">${name}</span>`;
+                    const inner = sp.logo_url ? `<img src="${sp.logo_url}" alt="${name}" loading="lazy" decoding="async">` : `<span class="sponsor-name-text">${name}</span>`;
                     return sp.website_url
                         ? `<a href="${sp.website_url}" target="_blank" rel="noopener" class="sponsor-logo-card">${inner}</a>`
                         : `<div class="sponsor-logo-card">${inner}</div>`;
@@ -6710,7 +6851,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         // ── 下載專區 ──
         async function loadDownloads() {
             try {
-                const res = await apiFetch('getDownloads');
+                const res = await cachedApiFetch('getDownloads');
                 if (res.success) { siteData.downloads = res.data; renderDownloads(); }
             } catch(e) { console.error('載入下載失敗:', e); }
         }
@@ -6872,7 +7013,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         // ── FAQ ──
         async function loadFaq() {
             try {
-                const res = await apiFetch('getFaq');
+                const res = await cachedApiFetch('getFaq');
                 if (res.success) { siteData.faq = res.data; renderFaq(); }
             } catch(e) { console.error('載入FAQ失敗:', e); }
         }
