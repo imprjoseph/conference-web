@@ -5222,16 +5222,29 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                         throw new Error('API 回傳異常：' + JSON.stringify(settingsData));
                     }
 
-                    // 成功
+                    // 成功：先顯示網站，再讓各區資料分段載入，避免首頁卡在載入畫面。
                     siteData.settings = settingsData.data;
                     checkSiteStatus();
-                    // settings 載入後立即套用開關（不等所有資料載入）
                     applySectionSwitches();
-                    if (siteData.settings.site_status === 'live') {
-                        await loadAllData();
-                    }
+                    updateHero();
+                    updateCountdown();
+                    updateRegisterButton();
+                    renderLivestream();
+                    renderStats();
+                    renderQrCode();
+                    renderNoticeCards();
+                    updateSocialLinks();
+                    updateTitles();
+                    scheduleHeroBannerCleanup();
                     showLoading(false);
-                    setTimeout(refreshCachedDataInBackground, 1200);
+
+                    if (siteData.settings.site_status === 'live') {
+                        requestAnimationFrame(() => {
+                            loadAllData().catch(error => {
+                                console.error('載入網站內容失敗:', error);
+                            });
+                        });
+                    }
                     return; // 成功就結束
 
                 } catch (error) {
@@ -5372,26 +5385,32 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
         // 載入所有資料
         async function loadAllData() {
-            const promises = [
+            const primaryLoads = [
                 loadNews(),
                 loadAbout(),
-                loadSponsors(),
-                loadDownloads(),
-                loadFaq(),
                 loadSpeakers(),
                 loadAgenda(),
                 loadTraffic(),
-                loadPrivacy(),
-                loadPastEvents()
+                loadPrivacy()
             ];
 
-            await Promise.all(promises);
+            await Promise.allSettled(primaryLoads);
 
-            // 資料全部載入後，套用當前語言重新 render 全部內容
-            // 這樣不論語言是中文還是英文，都保證顯示正確版本
+            // 主要內容先完成，讓使用者可先閱讀首頁、講師與議程。
             updateContent();
             initRegisterButtons();
-            initRegisterForm();
+
+            window.setTimeout(() => {
+                Promise.allSettled([
+                    loadSponsors(),
+                    loadDownloads(),
+                    loadFaq(),
+                    loadPastEvents()
+                ]).then(() => {
+                    applySectionSwitches();
+                    updateTitles();
+                });
+            }, 1200);
         }
 
         // Google Drive 連結轉為可直接嵌入的圖片 URL
