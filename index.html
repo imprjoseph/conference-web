@@ -4359,6 +4359,92 @@ body.lang-en .hero-actions {
         font-size: 18px !important;
         max-width: 280px !important;
     }
+
+    .navbar-content {
+        position: relative !important;
+        height: 58px !important;
+        padding: 0 16px !important;
+    }
+
+    .mobile-menu-toggle {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 42px !important;
+        height: 42px !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 5px !important;
+        border: 1px solid #dbe4ea !important;
+        border-radius: 8px !important;
+        background: #ffffff !important;
+        flex-shrink: 0 !important;
+    }
+
+    .mobile-menu-toggle span {
+        width: 20px !important;
+        height: 2px !important;
+        border-radius: 999px !important;
+        background: #173b54 !important;
+    }
+
+    .mobile-menu-toggle.active span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg) !important;
+    }
+
+    .mobile-menu-toggle.active span:nth-child(2) {
+        opacity: 0 !important;
+    }
+
+    .mobile-menu-toggle.active span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg) !important;
+    }
+
+    .navbar-menu {
+        position: absolute !important;
+        top: 58px !important;
+        left: 12px !important;
+        right: 12px !important;
+        display: none !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0 !important;
+        max-height: calc(100vh - 76px) !important;
+        overflow-y: auto !important;
+        padding: 10px !important;
+        background: rgba(255, 255, 255, 0.98) !important;
+        border: 1px solid #dbe4ea !important;
+        border-radius: 10px !important;
+        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.14) !important;
+    }
+
+    .navbar-menu.mobile-menu-open {
+        display: flex !important;
+    }
+
+    .navbar-menu .navbar-link {
+        display: flex !important;
+        align-items: center !important;
+        width: 100% !important;
+        min-height: 44px !important;
+        padding: 12px 14px !important;
+        border-radius: 8px !important;
+        font-size: 15px !important;
+        line-height: 1.35 !important;
+        white-space: normal !important;
+    }
+
+    .navbar-menu .language-switch {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        width: 100% !important;
+        margin: 10px 0 0 !important;
+        border-radius: 8px !important;
+    }
+
+    .navbar-menu .lang-btn {
+        min-height: 42px !important;
+        font-size: 14px !important;
+    }
 }
 
 /* ===== Hero Banner Final Guard：固定視窗裁切，避免高圖完整展開造成重覆 ===== */
@@ -4480,11 +4566,11 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
     <nav class="navbar">
         <div class="navbar-content">
             <a href="#" class="navbar-brand" id="site-title">會議活動</a>
-            <div class="mobile-menu-toggle" id="mobile-menu-toggle">
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="開啟選單" aria-controls="navbar-menu" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
-            </div>
+            </button>
             <div class="navbar-menu" id="navbar-menu">
                 <a href="#news" class="navbar-link" data-section="news" data-zh="最新消息" data-en="News">最新消息</a>
                 <a href="#about" class="navbar-link" data-section="about" data-zh="會議介紹" data-en="About">會議介紹</a>
@@ -6765,18 +6851,21 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         function initMobileMenu() {
             const toggle = document.getElementById('mobile-menu-toggle');
             const menu = document.getElementById('navbar-menu');
+            if (!toggle || !menu) return;
 
             toggle.addEventListener('click', () => {
                 menu.classList.toggle('mobile-menu-open');
                 toggle.classList.toggle('active');
+                toggle.setAttribute('aria-expanded', menu.classList.contains('mobile-menu-open') ? 'true' : 'false');
             });
 
             // 點擊選單項目後關閉手機選單
-            const menuLinks = menu.querySelectorAll('.navbar-link');
+            const menuLinks = menu.querySelectorAll('.navbar-link, .lang-btn');
             menuLinks.forEach(link => {
                 link.addEventListener('click', () => {
                     menu.classList.remove('mobile-menu-open');
                     toggle.classList.remove('active');
+                    toggle.setAttribute('aria-expanded', 'false');
                 });
             });
         }
