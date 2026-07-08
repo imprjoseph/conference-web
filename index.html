@@ -5018,6 +5018,19 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
     </div>
 
     <script>
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+
+        let isInitialPageLoad = true;
+
+        function forceInitialScrollTop() {
+            if (!isInitialPageLoad) return;
+            window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+        }
+
+        forceInitialScrollTop();
+
         // 全域變數
         let currentLang = localStorage.getItem('conference-lang') || 'zh';
         let siteData = {};
@@ -5187,11 +5200,14 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
+            forceInitialScrollTop();
             initLanguage();
             initSubscribe();
             initCookieBanner();
             initMobileMenu();
             loadSiteData();
+            requestAnimationFrame(forceInitialScrollTop);
+            window.setTimeout(forceInitialScrollTop, 250);
         });
 
         // 載入網站資料
@@ -5237,6 +5253,11 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     updateTitles();
                     scheduleHeroBannerCleanup();
                     showLoading(false);
+                    forceInitialScrollTop();
+                    window.setTimeout(() => {
+                        forceInitialScrollTop();
+                        isInitialPageLoad = false;
+                    }, 600);
 
                     if (siteData.settings.site_status === 'live') {
                         requestAnimationFrame(() => {
