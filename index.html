@@ -4558,6 +4558,22 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
     text-align: center !important;
 }
 
+.speaker-card {
+    height: 100% !important;
+}
+
+.speaker-card .speaker-content {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    flex-direction: column !important;
+    width: 100% !important;
+}
+
+.speaker-card .speaker-detail-btn {
+    align-self: center !important;
+    margin-top: auto !important;
+}
+
 @media (max-width: 600px) {
     .speaker-modal .speaker-detail {
         align-items: stretch !important;
@@ -6278,6 +6294,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 const data = await cachedApiFetch('getPastEvents');
             siteData.pastEvents = data.data;
             renderPastEvents();
+            if (siteData.settings) applySectionSwitches();
             } catch (error) {
                 console.error('載入歷年會議失敗:', error);
             }
@@ -6765,24 +6782,31 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         function applySectionSwitches() {
             const s = siteData.settings || {};
 
+            const setLinkVisibility = (selector, show) => {
+                document.querySelectorAll(selector).forEach(link => {
+                    const footerItem = link.closest('.footer-col li');
+                    const target = footerItem || link;
+                    target.style.setProperty('display', show ? '' : 'none', 'important');
+                });
+            };
+
             // 贊助單位
             const showSponsors = !settingIsFalse(s.show_sponsors);
             const sponsorsSec = document.getElementById('sponsors-section');
             if (sponsorsSec) sponsorsSec.style.setProperty('display', showSponsors ? '' : 'none', 'important');
-            document.querySelectorAll('a[data-section="sponsors"], a[href="#sponsors"]')
-                .forEach(el => { el.style.setProperty('display', showSponsors ? '' : 'none', 'important'); });
+            setLinkVisibility('a[data-section="sponsors"], a[href="#sponsors"]', showSponsors);
 
             // 下載專區
-            const showDl = !settingIsFalse(s.show_downloads);
-            document.querySelectorAll('a[data-section="downloads"]')
-                .forEach(el => { el.style.setProperty('display', showDl ? '' : 'none', 'important'); });
+            const hasDownloads = !Array.isArray(siteData.downloads) || siteData.downloads.length > 0;
+            const showDl = !settingIsFalse(s.show_downloads) && hasDownloads;
+            setLinkVisibility('a[data-section="downloads"]', showDl);
 
             // 歷年會議
-            const showPast = !settingIsFalse(s.show_past_events);
+            const hasPastEvents = !Array.isArray(siteData.pastEvents) || siteData.pastEvents.length > 0;
+            const showPast = !settingIsFalse(s.show_past_events) && hasPastEvents;
             const pastNavLink = document.getElementById('past-events-nav-link');
             if (pastNavLink) pastNavLink.style.setProperty('display', showPast ? '' : 'none', 'important');
-            document.querySelectorAll('a[data-section="past_events"]')
-                .forEach(el => { el.style.setProperty('display', showPast ? '' : 'none', 'important'); });
+            setLinkVisibility('a[data-section="past_events"]', showPast);
         }
 
         function updateContent() {
@@ -7037,7 +7061,11 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         async function loadDownloads() {
             try {
                 const res = await cachedApiFetch('getDownloads');
-                if (res.success) { siteData.downloads = res.data; renderDownloads(); }
+                if (res.success) {
+                    siteData.downloads = res.data;
+                    renderDownloads();
+                    if (siteData.settings) applySectionSwitches();
+                }
             } catch(e) { console.error('載入下載失敗:', e); }
         }
         function renderDownloads() {
