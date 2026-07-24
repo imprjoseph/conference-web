@@ -5122,10 +5122,12 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     <ul id="footer-organizer-list">
                         <li><i class="fas fa-building"></i><span id="footer-organizer">-</span></li>
                     </ul>
-                    <h4 style="margin-top:20px;" data-zh="協辦單位" data-en="Co-Organizer">協辦單位</h4>
-                    <ul id="footer-co-organizer-list">
-                        <li><i class="fas fa-handshake"></i><span id="footer-co-organizer">-</span></li>
-                    </ul>
+                    <div id="footer-co-organizer-block" style="display:none;">
+                        <h4 style="margin-top:20px;" data-zh="協辦單位" data-en="Co-Organizer">協辦單位</h4>
+                        <ul id="footer-co-organizer-list">
+                            <li><i class="fas fa-handshake"></i><span id="footer-co-organizer"></span></li>
+                        </ul>
+                    </div>
                 </div>
 
                 <!-- 聯絡資訊 -->
@@ -5862,7 +5864,14 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             // 主辦 / 協辦
             const setSpan = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '-'; };
             setSpan('footer-organizer', isEn ? (s.organizer_en || s.organizer_zh || '-') : (s.organizer_zh || '-'));
-            setSpan('footer-co-organizer', isEn ? (s.co_organizer_en || s.co_organizer_zh || '-') : (s.co_organizer_zh || '-'));
+            const coOrganizerRaw = isEn ? (s.co_organizer_en || s.co_organizer_zh) : (s.co_organizer_zh || s.co_organizer_en);
+            const coOrganizerValue = String(coOrganizerRaw || '').trim();
+            const coOrganizerBlock = document.getElementById('footer-co-organizer-block');
+            const coOrganizerText = document.getElementById('footer-co-organizer');
+            if (coOrganizerBlock && coOrganizerText) {
+                coOrganizerText.textContent = coOrganizerValue;
+                coOrganizerBlock.style.display = coOrganizerValue ? 'block' : 'none';
+            }
 
             // 聯絡資訊
             setSpan('footer-phone', s.contact_phone || '-');
