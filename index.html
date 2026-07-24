@@ -4588,6 +4588,19 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
     margin-top: 22px !important;
 }
 
+.agenda-image-wrap {
+    margin: 0 auto !important;
+    width: min(100%, 1120px) !important;
+    overflow: hidden !important;
+    background: #ffffff !important;
+}
+
+.agenda-image-wrap img {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+}
+
 .agenda-day {
     overflow: hidden !important;
     border: 1px solid #8acfd0 !important;
@@ -6274,6 +6287,16 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             const container = document.getElementById('agenda-content');
             const agenda = siteData.agenda || [];
             const lang = currentLang;
+            const agendaImageHtml = `
+                <div class="agenda-image-wrap">
+                    <img src="assets/optimized-images/agenda-table-clear.jpg"
+                         alt="${lang === 'zh' ? '會議議程表' : 'Conference agenda'}"
+                         loading="lazy" decoding="async">
+                </div>
+            `;
+
+            container.innerHTML = agendaImageHtml;
+            return;
 
             if (agenda.length === 0) {
                 container.innerHTML = '<div class="loading-section">目前沒有議程資料</div>';
