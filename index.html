@@ -7890,6 +7890,64 @@ function enhanceHomepageLabels() {
     });
 }
 
+function applyTwoPointFontBoost(root) {
+    const scope = root || document.body;
+    if (!scope) return;
+
+    const textSelectors = [
+        "a", "button", "label", "p", "span", "li", "small",
+        "h1", "h2", "h3", "h4", "h5", "h6",
+        "input", "select", "textarea",
+        ".section-title", ".section-title *",
+        ".hero-title", ".hero-subtitle", ".hero-meta-label", ".hero-meta-value",
+        ".speaker-card *", ".speaker-modal *",
+        ".news-card *", ".traffic-card *", ".notice-card *",
+        ".reg-form-wrap *", ".faq-item *", ".download-card *",
+        ".site-footer *", ".modal-content *", ".cookie-banner *"
+    ].join(",");
+
+    const elements = [];
+    if (scope.matches && scope.matches(textSelectors)) elements.push(scope);
+    scope.querySelectorAll(textSelectors).forEach(function (el) {
+        elements.push(el);
+    });
+
+    elements.sort(function (a, b) {
+        return a.querySelectorAll("*").length - b.querySelectorAll("*").length;
+    }).forEach(function (el) {
+        if (el.dataset.fontBoostApplied === "true") return;
+        if (el.closest("script, style, svg")) return;
+
+        const tag = el.tagName;
+        const isFormControl = tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA";
+        const hasText = isFormControl || Array.from(el.childNodes).some(function (node) {
+            return node.nodeType === Node.TEXT_NODE && node.textContent.trim();
+        });
+        if (!hasText) return;
+
+        const currentSize = parseFloat(window.getComputedStyle(el).fontSize);
+        if (!Number.isFinite(currentSize)) return;
+
+        el.style.fontSize = (currentSize + 2) + "px";
+        el.dataset.fontBoostApplied = "true";
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    applyTwoPointFontBoost(document.body);
+
+    const observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            mutation.addedNodes.forEach(function (node) {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    applyTwoPointFontBoost(node);
+                }
+            });
+        });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+});
+
     </script>
 
 </body>
