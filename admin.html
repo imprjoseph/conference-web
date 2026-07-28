@@ -891,6 +891,59 @@
                             </div>
 
                             <div class="settings-group">
+                                <h3 class="settings-group-title">自動發信設定</h3>
+                                <p style="color:#6b7280;font-size:13px;margin-bottom:16px;">
+                                    報名送出後的收件通知信。可使用變數：{{name}}、{{email}}、{{phone}}、{{org}}、{{job_title}}、{{remarks}}、{{conference_title}}、{{conference_date}}、{{conference_location}}、{{contact_email}}。
+                                </p>
+                                <div class="form-group">
+                                    <label class="form-label">是否寄出收件通知信</label>
+                                    <select class="form-select" id="receipt_email_enabled">
+                                        <option value="true">寄出</option>
+                                        <option value="false">不寄出</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">寄件顯示名稱</label>
+                                    <input type="text" class="form-input" id="receipt_email_sender_name" placeholder="{{conference_title}}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">回覆信箱</label>
+                                    <input type="email" class="form-input" id="receipt_email_reply_to" placeholder="留空則使用聯絡 Email">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">信件主旨</label>
+                                    <input type="text" class="form-input" id="receipt_email_subject" placeholder="2026智慧網路 SIG 研討會 - 已收到您的報名資訊">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">信件內文</label>
+                                    <textarea class="form-textarea" id="receipt_email_body" rows="12" placeholder="{{name}} 您好：
+
+感謝您報名參加由工業技術研究院主辦的 「2026 智慧網路 SIG 研討會」！
+
+我們已收到您的報名資料，為確保報名資格及活動品質，主辦單位將進行報名資格審核，並於 2026 年 8 月 31 日（星期一）23:59 前完成審核作業。
+
+審核通過者，將統一寄發 「報名確認信」，信件中將包含您的入場編號及活動相關資訊，敬請留意您的電子信箱。
+
+姓名	{{name}}
+Email	{{email}}
+聯絡電話	{{phone}}
+所屬單位（公司、法人、學校等）	{{org}}
+職稱	{{job_title}}
+備註	{{remarks}}
+
+若您需要更正報名資料，或有任何疑問，歡迎與主辦單位聯繫：
+Email： {{contact_email}}
+再次感謝您的支持與報名，期待與您在研討會相見！
+
+
+敬祝
+順心愉快
+工業技術研究院 資訊與通訊研究所
+2026 智慧網路 SIG 研討會 工作小組 敬上"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="settings-group">
                                 <h3 class="settings-group-title">線上直播 ／ 線上參與</h3>
                                 <p style="color:#6b7280;font-size:13px;margin-bottom:16px;">填入對應平台連結即顯示，留空則不顯示。支援同時設定多個平台。</p>
 
@@ -1367,8 +1420,8 @@
                     <div class="settings-group" style="margin-bottom:24px; padding:16px; background:#fff3cd; border-radius:8px; border:1px solid #ffc107;">
                         <p style="color:#856404; font-size:14px;">
                             <i class="fas fa-info-circle"></i>
-                            <strong>每次重新部署 Google Apps Script 後，請在此更新 API URL。</strong>
-                            前台（index.html）會自動從此處讀取最新的 API URL，無需修改程式碼。
+                            <strong>此處切換 API URL 只供目前瀏覽器測試。</strong>
+                            正式發布給所有訪客使用的網址，請修改 assets/conference-config.js。
                         </p>
                     </div>
                     <form id="config-form">
@@ -1383,7 +1436,7 @@
                                 <label class="form-label">新的 Apps Script URL（重新部署後在此填入）</label>
                                 <input type="url" class="form-input" id="config_api_url_new"
                                     placeholder="https://script.google.com/macros/s/YOUR_NEW_ID/exec">
-                                <small style="color:#6b7280;">填入後儲存，系統會自動更新前後台的 API 連線網址</small>
+                                <small style="color:#6b7280;">填入後只會更新目前瀏覽器的前後台連線，適合測試新部署</small>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Google Sheets ID</label>
@@ -1429,6 +1482,7 @@
         </div>
     </div>
 
+    <script src="assets/conference-config.js"></script>
     <script>
         // 全域變數
         let currentUser = null;
@@ -1436,15 +1490,18 @@
         let editData = null;
         let editType = null;
 
-        // ── API URL 管理：優先讀 localStorage，再用 hardcoded 預設值 ──
-        // 每次 GAS 重新部署後，只需在「系統設定」分頁貼上新 URL 儲存即可
-        const API_DEFAULT_URL = 'https://script.google.com/macros/s/AKfycbw2wh9Ud91cJWvMxrm0A8je0EdGU4HY7K6mfQVDxXirYzjdJjfjnsHZY7s4fsCVldo/exec';
+        // 正式預設值統一由 assets/conference-config.js 管理。
+        // localStorage 僅供管理者在目前瀏覽器暫時測試其他 API。
+        const CONFERENCE_CONFIG = window.CONFERENCE_CONFIG || {};
+        const API_DEFAULT_URL = CONFERENCE_CONFIG.apiUrl || '';
+        const API_OVERRIDE_KEY = `GAS_API_URL:${CONFERENCE_CONFIG.siteId || 'conference'}`;
+        document.title = CONFERENCE_CONFIG.adminTitle || document.title;
 
         function getApiUrl() {
-          return localStorage.getItem('GAS_API_URL') || API_DEFAULT_URL;
+          return localStorage.getItem(API_OVERRIDE_KEY) || API_DEFAULT_URL;
         }
         function setApiUrl(url) {
-          localStorage.setItem('GAS_API_URL', url);
+          localStorage.setItem(API_OVERRIDE_KEY, url);
           activeApiBaseUrl = url;
         }
 
@@ -2845,7 +2902,7 @@
                         body: JSON.stringify({ action: 'saveConfig', config: { sheet_id: sheetId, api_url: newUrl || getApiUrl() } })
                             });
                             if (result.success) {
-                                localStorage.setItem('GAS_SHEET_ID', sheetId);
+                                localStorage.setItem(`GAS_SHEET_ID:${CONFERENCE_CONFIG.siteId || 'conference'}`, sheetId);
                                 document.getElementById('config_sheet_id').value = '';
                                 showMessage((newUrl ? '' : '✅ ') + 'Google Sheets ID 已儲存！', 'success');
                             }
