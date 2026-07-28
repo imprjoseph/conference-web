@@ -2629,6 +2629,13 @@
             outline: none;
         }
 
+        .reg-field--org label,
+        .reg-field--org input,
+        .reg-field--org select,
+        .reg-field--org textarea {
+            color: #111827 !important;
+        }
+
         .reg-submit-btn {
             padding: 13px 36px;
             border-radius: 10px;
@@ -4874,6 +4881,77 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
     font-size: 24px !important;
 }
 
+.hidden-site-option {
+    display: none !important;
+}
+
+.hero-left {
+    border-left: none !important;
+    padding-left: 0 !important;
+}
+
+.hero-meta {
+    gap: 28px !important;
+    margin-bottom: 26px !important;
+}
+
+.hero-meta-item {
+    padding: 18px 22px !important;
+}
+
+.hero-meta-icon {
+    width: 56px !important;
+    height: 56px !important;
+    font-size: 22px !important;
+}
+
+.hero-meta-label {
+    font-size: 18px !important;
+    letter-spacing: 2px !important;
+}
+
+.hero-meta-value {
+    font-size: 30px !important;
+    line-height: 1.25 !important;
+}
+
+#news-section,
+#faq-section,
+#subscribe-section {
+    display: none !important;
+}
+
+.footer-organizer-col {
+    display: none !important;
+}
+
+#footer-organizer-short {
+    display: none !important;
+}
+
+.speaker-org {
+    order: 1 !important;
+    margin-bottom: 8px !important;
+}
+
+.speaker-name {
+    order: 2 !important;
+    margin-bottom: 6px !important;
+}
+
+.speaker-title {
+    order: 3 !important;
+    margin-bottom: 14px !important;
+}
+
+.speaker-bio {
+    order: 4 !important;
+}
+
+.speaker-detail-btn {
+    order: 5 !important;
+}
+
 </style>
 
 </head>
@@ -4888,7 +4966,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 <span></span>
             </button>
             <div class="navbar-menu" id="navbar-menu">
-                <a href="#news" class="navbar-link" data-section="news" data-zh="最新消息" data-en="News">最新消息</a>
+                <a href="#news" class="navbar-link hidden-site-option" data-section="news" data-zh="最新消息" data-en="News">最新消息</a>
                 <a href="#about" class="navbar-link" data-section="about" data-zh="會議介紹" data-en="About">會議介紹</a>
                 <a href="#speakers" class="navbar-link" data-section="speakers" data-zh="講師介紹" data-en="Speakers">講師介紹</a>
                 <a href="#agenda" class="navbar-link" data-section="agenda" data-zh="會議議程" data-en="Agenda">會議議程</a>
@@ -4896,7 +4974,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 <a href="#traffic" class="navbar-link" data-section="traffic" data-zh="交通資訊" data-en="Transportation">交通資訊</a>
                 <a href="#sponsors" class="navbar-link" data-section="sponsors" data-zh="贊助單位" data-en="Sponsors">贊助單位</a>
                 <a href="#" class="navbar-link" data-section="downloads" data-zh="下載專區" data-en="Downloads" onclick="openDownloads();return false;">下載專區</a>
-                <a href="#faq" class="navbar-link" data-section="faq" data-zh="常見問題" data-en="FAQ">常見問題</a>
+                <a href="#faq" class="navbar-link hidden-site-option" data-section="faq" data-zh="常見問題" data-en="FAQ">常見問題</a>
                 <a href="#" class="navbar-link" id="past-events-nav-link" data-section="past_events" data-zh="歷年會議" data-en="Past Events" onclick="openPastEventsAlbum(event)">歷年會議</a>
                 <div class="language-switch">
                     <button class="lang-btn active" data-lang="zh">中文</button>
@@ -4972,8 +5050,8 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             <div class="hero-body-wrap">
             <div class="hero-body">
                 <div class="hero-left">
-                    <h1 class="hero-title" id="hero-title">會議名稱</h1>
-                    <p class="hero-subtitle" id="hero-subtitle">會議副標題</p>
+                    <h1 class="hero-title hidden-site-option" id="hero-title">會議名稱</h1>
+                    <p class="hero-subtitle hidden-site-option" id="hero-subtitle">會議副標題</p>
                     <div class="hero-meta">
                         <div class="hero-meta-item">
                             <div class="hero-meta-icon"><i class="fas fa-calendar-alt"></i></div>
@@ -5027,7 +5105,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
 
         <!-- 最新消息 -->
-        <section id="news-section" class="section hidden">
+        <section id="news-section" class="section hidden hidden-site-option">
             <div class="container">
                 <div class="section-title">
                     <h2 id="news-title">最新消息</h2>
@@ -5160,7 +5238,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         </section>
 
         <!-- ══ FAQ ══ -->
-        <section id="faq-section" class="section hidden">
+        <section id="faq-section" class="section hidden hidden-site-option">
             <div class="container">
                 <div class="section-title">
                     <h2 id="faq-title">常見問題</h2>
@@ -5171,7 +5249,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         </section>
 
         <!-- ══ Email 訂閱 + 活動提示 ══ -->
-        <section id="subscribe-section" class="section hidden">
+        <section id="subscribe-section" class="section hidden hidden-site-option">
             <div class="container">
                 <div class="subscribe-layout">
                     <!-- 左欄：Email 訂閱 -->
@@ -5211,7 +5289,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 </div>
 
                 <!-- 主辦 / 協辦單位 -->
-                <div class="footer-col">
+                <div class="footer-col footer-organizer-col hidden-site-option">
                     <h4 data-zh="主辦單位" data-en="Organizer">主辦單位</h4>
                     <!-- Logo 顯示（有設定時取代文字）-->
                     <div id="footer-organizer-logo-wrap"
@@ -5247,7 +5325,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 <div class="footer-col">
                     <h4 data-zh="快速連結" data-en="Quick Links">快速連結</h4>
                     <ul>
-                        <li><i class="fas fa-newspaper"></i><a href="#news" data-zh="最新消息" data-en="News">最新消息</a></li>
+                        <li class="hidden-site-option"><i class="fas fa-newspaper"></i><a href="#news" data-zh="最新消息" data-en="News">最新消息</a></li>
                         <li><i class="fas fa-info-circle"></i><a href="#about" data-zh="會議介紹" data-en="About">會議介紹</a></li>
                         <li><i class="fas fa-users"></i><a href="#speakers" data-zh="講師介紹" data-en="Speakers">講師介紹</a></li>
                         <li><i class="fas fa-calendar"></i><a href="#agenda" data-zh="會議議程" data-en="Agenda">會議議程</a></li>
@@ -5335,6 +5413,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         <button class="cookie-btn cookie-decline" id="cookie-decline">拒絕</button>
     </div>
 
+    <script src="assets/conference-config.js"></script>
     <script>
         if ('scrollRestoration' in history) {
             history.scrollRestoration = 'manual';
@@ -5356,17 +5435,20 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         let usedApiCacheThisLoad = false;
         let isRefreshingCachedData = false;
 
-        // ── API URL 管理：優先讀 localStorage（後台設定），再用預設值 ──
-        // 若後台「系統設定」更新了 API URL，前台自動使用新 URL
-        const API_DEFAULT_URL = 'https://script.google.com/macros/s/AKfycbw2wh9Ud91cJWvMxrm0A8je0EdGU4HY7K6mfQVDxXirYzjdJjfjnsHZY7s4fsCVldo/exec';
-        const API_CACHE_VERSION = '20260708-speed-v1';
+        // 正式預設值統一由 assets/conference-config.js 管理。
+        // localStorage 僅供管理者在目前瀏覽器暫時測試其他 API。
+        const CONFERENCE_CONFIG = window.CONFERENCE_CONFIG || {};
+        const API_DEFAULT_URL = CONFERENCE_CONFIG.apiUrl || '';
+        const API_OVERRIDE_KEY = `GAS_API_URL:${CONFERENCE_CONFIG.siteId || 'conference'}`;
+        const API_CACHE_VERSION = `${CONFERENCE_CONFIG.siteId || 'conference'}:20260708-speed-v1`;
+        document.title = CONFERENCE_CONFIG.siteTitle || document.title;
         const API_CACHE_TTL = {
             settings: 5 * 60 * 1000,
             content: 10 * 60 * 1000
         };
 
         function getApiUrl() {
-            const stored = localStorage.getItem('GAS_API_URL');
+            const stored = localStorage.getItem(API_OVERRIDE_KEY);
             return stored || API_DEFAULT_URL;
         }
 
@@ -6332,9 +6414,9 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 <div class="speaker-card">
                     <div class="speaker-avatar">${photoHtml}</div>
                     <div class="speaker-content">
+                        <div class="speaker-org">${org}</div>
                         <div class="speaker-name">${name}</div>
                         <div class="speaker-title">${title}</div>
-                        <div class="speaker-org">${org}</div>
                         <div class="speaker-bio">${bio}</div>
                         <button class="speaker-detail-btn" onclick="showSpeakerDetail('${sp.id}')">
                             <i class="fas fa-address-card"></i>
@@ -6673,7 +6755,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             { key: 'email',    label_zh: 'Email',       label_en: 'Email',         type: 'email',  required: true,  half: true  },
             { key: 'phone',    label_zh: '聯絡電話',    label_en: 'Phone',         type: 'tel',    required: true,  half: true  },
             { key: 'org',      label_zh: '所屬單位（公司、法人、學校等）', label_en: 'Organization / Affiliation', type: 'text', required: true, half: true },
-            { key: 'title',    label_zh: '職稱',        label_en: 'Job Title',     type: 'text',   required: false, half: true  },
+            { key: 'title',    label_zh: '職稱',        label_en: 'Job Title',     type: 'text',   required: true,  half: true  },
             { key: 'remarks',  label_zh: '備註',        label_en: 'Remarks',       type: 'textarea',required: false, half: false },
         ];
 
@@ -6830,6 +6912,13 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                         };
                     }
 
+                    if (field.key === 'title') {
+                        return {
+                            ...field,
+                            required: true
+                        };
+                    }
+
                     return field;
                 });
             renderRegForm(fields);
@@ -6893,28 +6982,31 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             const placeholder = isZh ? (f.placeholder_zh || '') : (f.placeholder_en || '');
             const hint = isZh ? (f.hint_zh || '') : (f.hint_en || f.hint_zh || '');
             const hintHtml = hint ? `<div class="field-hint">${hint}</div>` : '';
+            const fieldKey = String(f.key || '').replace(/[^a-zA-Z0-9_-]/g, '');
+            const fieldClass = `reg-field reg-field--${fieldKey}`;
+            const requiredAttr = f.required ? 'required' : '';
 
             if (f.type === 'select') {
                 const opts = (isZh ? f.options_zh : f.options_en) || [];
                 const optsHtml = opts.map(o => `<option>${o}</option>`).join('');
-                return `<div class="reg-field">
+                return `<div class="${fieldClass}">
                     <label>${label}${req}</label>
-                    <select name="${f.key}">
+                    <select name="${f.key}" ${requiredAttr}>
                         <option value="">${isZh ? '請選擇' : 'Select...'}</option>
                         ${optsHtml}
                     </select>
                     ${hintHtml}
                 </div>`;
             } else if (f.type === 'textarea') {
-                return `<div class="reg-field">
+                return `<div class="${fieldClass}">
                     <label>${label}${req}</label>
-                    <textarea name="${f.key}" placeholder="${placeholder}" rows="3"></textarea>
+                    <textarea name="${f.key}" placeholder="${placeholder}" rows="3" ${requiredAttr}></textarea>
                     ${hintHtml}
                 </div>`;
             } else {
-                return `<div class="reg-field">
+                return `<div class="${fieldClass}">
                     <label>${label}${req}</label>
-                    <input type="${f.type}" name="${f.key}" placeholder="${placeholder}" ${f.required ? 'required' : ''}>
+                    <input type="${f.type}" name="${f.key}" placeholder="${placeholder}" ${requiredAttr}>
                     ${hintHtml}
                 </div>`;
             }
@@ -7112,6 +7204,25 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             setLinkVisibility('a[data-section="past_events"]', showPast);
         }
 
+        function enforceHiddenSiteOptions() {
+            const selectors = [
+                '#news-section',
+                '#faq-section',
+                '#subscribe-section',
+                '.navbar-link[data-section="news"]',
+                '.navbar-link[data-section="faq"]',
+                '.footer-organizer-col',
+                '.footer-col li:has(a[href="#news"])'
+            ];
+
+            selectors.forEach(selector => {
+                document.querySelectorAll(selector).forEach(el => {
+                    el.classList.add('hidden-site-option');
+                    el.style.setProperty('display', 'none', 'important');
+                });
+            });
+        }
+
         function updateContent() {
             if (siteData.settings) {
                 updateHero();
@@ -7133,6 +7244,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
             // ── 最後執行：確保蓋過所有 render 函式的顯示邏輯 ──
             if (siteData.settings) applySectionSwitches();
+            enforceHiddenSiteOptions();
             scheduleHeroBannerCleanup();
         }
 
