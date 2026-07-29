@@ -4954,7 +4954,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
 .site-footer .footer-grid {
     grid-template-columns: minmax(320px, 1.35fr) minmax(300px, 1fr) minmax(220px, .85fr) !important;
-    column-gap: 48px !important;
+    column-gap: 72px !important;
     row-gap: 34px !important;
     align-items: start !important;
 }
@@ -5003,7 +5003,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 @media (max-width: 980px) {
     .site-footer .footer-grid {
         grid-template-columns: minmax(280px, 1.15fr) minmax(280px, 1fr) !important;
-        column-gap: 42px !important;
+        column-gap: 56px !important;
         row-gap: 32px !important;
     }
 }
@@ -5964,6 +5964,12 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             return url;
         }
 
+        function keepOranTogether(text) {
+            return String(text || '').replace(/O-RAN/gi, function(match) {
+                return match.charAt(0) + '\u2011' + match.slice(2);
+            });
+        }
+
         function syncHeroBanner(heroImgUrl) {
             const heroBanner = document.getElementById('hero-image');
             if (!heroBanner) return;
@@ -6077,9 +6083,9 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 settings.conference_title_zh || '會議名稱' :
                 settings.conference_title_en || 'Conference Title';
 
-            document.getElementById('hero-subtitle').textContent = currentLang === 'zh' ?
+            document.getElementById('hero-subtitle').textContent = keepOranTogether(currentLang === 'zh' ?
                 settings.conference_subtitle_zh || '會議副標題' :
-                settings.conference_subtitle_en || 'Conference Subtitle';
+                settings.conference_subtitle_en || 'Conference Subtitle');
 
             // 日期顯示：解析 conference_date，自動處理 UTC datetime 格式
             const rawDate = settings.conference_date || '';
@@ -6120,7 +6126,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             const subEl = document.getElementById('footer-conf-subtitle');
             const dateLoc = document.getElementById('footer-conf-date-loc');
             if (titleEl) titleEl.textContent = title || (isEn ? 'Conference' : '會議名稱');
-            if (subEl) subEl.textContent = subtitle || '';
+            if (subEl) subEl.textContent = keepOranTogether(subtitle || '');
             // footer 日期顯示
             const footerRawDate = s.conference_date || '';
             const footerDate = footerRawDate ? parseLocalDate(footerRawDate) : null;
