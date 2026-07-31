@@ -362,8 +362,7 @@ function sendRegistrationReceipt_(email, registrant) {
     '',
     '此信由系統自動寄出，請勿直接回覆。'
   ].join('\n');
-  const defaultSubject = '2026智慧網路 SIG 研討會 - 已收到您的報名資訊';
-  const defaultBody = [
+  const requestedBodyWithExtraBlank = [
     '{{name}} 您好：',
     '',
     '感謝您報名參加由工業技術研究院主辦的 「2026 智慧網路 SIG 研討會」！',
@@ -389,10 +388,38 @@ function sendRegistrationReceipt_(email, registrant) {
     '工業技術研究院 資訊與通訊研究所',
     '2026 智慧網路 SIG 研討會 工作小組 敬上'
   ].join('\n');
+  const defaultSubject = '2026智慧網路 SIG 研討會 - 已收到您的報名資訊';
+  const defaultBody = [
+    '{{name}} 您好：',
+    '',
+    '感謝您報名參加由工業技術研究院主辦的 「2026 智慧網路 SIG 研討會」！',
+    '',
+    '我們已收到您的報名資料，為確保報名資格及活動品質，主辦單位將進行報名資格審核，並於 2026 年 8 月 31 日（星期一）23:59 前完成審核作業。',
+    '',
+    '審核通過者，將統一寄發 「報名確認信」，信件中將包含您的入場編號及活動相關資訊，敬請留意您的電子信箱。',
+    '',
+    '姓名\t{{name}}',
+    'Email\t{{email}}',
+    '聯絡電話\t{{phone}}',
+    '所屬單位（公司、法人、學校等）\t{{org}}',
+    '職稱\t{{job_title}}',
+    '備註\t{{remarks}}',
+    '若您需要更正報名資料，或有任何疑問，歡迎與主辦單位聯繫：',
+    'Email： {{contact_email}}',
+    '再次感謝您的支持與報名，期待與您在研討會相見！',
+    '',
+    '',
+    '敬祝',
+    '順心愉快',
+    '工業技術研究院 資訊與通訊研究所',
+    '2026 智慧網路 SIG 研討會 工作小組 敬上'
+  ].join('\n');
   const configuredSubject = String(settings.receipt_email_subject || '').trim();
   const configuredBody = String(settings.receipt_email_body || '').trim();
   const subjectTemplate = configuredSubject && configuredSubject !== oldDefaultSubject ? configuredSubject : defaultSubject;
-  const bodyTemplate = configuredBody && configuredBody !== oldDefaultBody ? configuredBody : defaultBody;
+  const bodyTemplate = configuredBody && configuredBody !== oldDefaultBody && configuredBody !== requestedBodyWithExtraBlank
+    ? configuredBody
+    : defaultBody;
   const subject = renderTemplate_(subjectTemplate, variables);
   const body = renderTemplate_(bodyTemplate, variables);
   const senderName = renderTemplate_(settings.receipt_email_sender_name || '{{conference_title}}', variables);

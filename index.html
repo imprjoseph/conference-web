@@ -3,13 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>會議活動官方網站</title>
+    <title>2026 智慧網路 SIG 研討會｜AI-RAN 商業化與產業應用</title>
+    <meta name="description" content="2026 智慧網路 SIG 研討會聚焦 AI-RAN 之商業化與產業應用、O-RAN 生態系發展機會，活動於 2026 年 9 月 15 日在政大公企中心 645 會議室舉辦。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.2026sig.tw/">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="zh_TW">
+    <meta property="og:site_name" content="2026 智慧網路 SIG 研討會">
+    <meta property="og:title" content="2026 智慧網路 SIG 研討會｜AI-RAN 商業化與產業應用">
+    <meta property="og:description" content="聚焦 AI-RAN 之商業化與產業應用、O-RAN 生態系發展機會。2026 年 9 月 15 日於政大公企中心 645 會議室舉辦。">
+    <meta property="og:url" content="https://www.2026sig.tw/">
+    <meta property="og:image" content="https://www.2026sig.tw/assets/optimized-images/2026sig-banner-web.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="2026 智慧網路 SIG 研討會｜AI-RAN 商業化與產業應用">
+    <meta name="twitter:description" content="聚焦 AI-RAN 之商業化與產業應用、O-RAN 生態系發展機會。">
+    <meta name="twitter:image" content="https://www.2026sig.tw/assets/optimized-images/2026sig-banner-web.jpg">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": "2026 智慧網路 SIG 研討會",
+        "description": "AI-RAN 之商業化與產業應用：O-RAN 生態系的發展機會。",
+        "startDate": "2026-09-15T13:00:00+08:00",
+        "endDate": "2026-09-15T17:00:00+08:00",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "url": "https://www.2026sig.tw/",
+        "image": [
+            "https://www.2026sig.tw/assets/optimized-images/2026sig-banner-web.jpg"
+        ],
+        "location": {
+            "@type": "Place",
+            "name": "政大公企中心 645 會議室",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "金華街187號",
+                "addressLocality": "台北市大安區",
+                "addressRegion": "台北市",
+                "addressCountry": "TW"
+            }
+        },
+        "organizer": {
+            "@type": "Organization",
+            "name": "工業技術研究院",
+            "url": "https://www.itri.org.tw/"
+        }
+    }
+    </script>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
     <!-- imPR-conf-v7 + homepage-formal-inline-20260529 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+TC:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preload" as="image" href="assets/optimized-images/2026sig-banner-web.jpg" fetchpriority="high">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+TC:wght@300;400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+TC:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
     <style>
         /* CSS 樣式 */
         :root {
@@ -5147,6 +5196,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         <section id="hero-section" class="hero hidden">
             <!-- ① Banner 圖：獨立全寬，文字完全在下方，不重疊 -->
             <div class="hero-banner" id="hero-image">
+                <img src="assets/optimized-images/2026sig-banner-web.jpg" class="hero-banner-img" alt="2026 智慧網路 SIG 研討會 Banner" width="2880" height="960" decoding="async" fetchpriority="high">
                 <div class="hero-banner-placeholder">
                     <i class="fas fa-calendar-alt"></i>
                 </div>
@@ -5539,6 +5589,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         let countdownInterval;
         let usedApiCacheThisLoad = false;
         let isRefreshingCachedData = false;
+        let hasStartedContentLoad = false;
 
         // 正式預設值統一由 assets/conference-config.js 管理。
         // localStorage 僅供管理者在目前瀏覽器暫時測試其他 API。
@@ -5551,6 +5602,19 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             settings: 5 * 60 * 1000,
             content: 10 * 60 * 1000
         };
+        const DEFAULT_SITE_SETTINGS = Object.freeze({
+            site_status: 'live',
+            conference_title_zh: '2026 智慧網路 SIG 研討會',
+            conference_title_en: '2026 Smart Networks SIG Seminar',
+            conference_subtitle_zh: 'AI-RAN之商業化與產業應用：O-RAN生態系的發展機會',
+            conference_subtitle_en: 'Commercialization and Industrial Applications of AI-RAN: Development Opportunities in the O-RAN Ecosystem',
+            conference_date: '2026-09-15',
+            conference_location_zh: '政大公企中心645會議室',
+            conference_location_en: 'NCCU Center for Public and Business Administration, Room 645',
+            contact_email: 'arlena@impr.com.tw',
+            contact_address_zh: '台北市大安區金華街187號',
+            registration_status: 'open'
+        });
 
         function getApiUrl() {
             const stored = localStorage.getItem(API_OVERRIDE_KEY);
@@ -5706,6 +5770,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             forceInitialScrollTop();
+            renderStaticShell();
             initLanguage();
             initSubscribe();
             initCookieBanner();
@@ -5715,12 +5780,35 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             window.setTimeout(forceInitialScrollTop, 250);
         });
 
+        function renderStaticShell() {
+            siteData.settings = Object.assign({}, DEFAULT_SITE_SETTINGS, siteData.settings || {});
+            const heroSection = document.getElementById('hero-section');
+            if (heroSection) heroSection.classList.remove('hidden');
+            updateHero();
+            scheduleHeroBannerCleanup();
+            showLoading(false);
+        }
+
+        function startContentLoad() {
+            if (hasStartedContentLoad) return;
+            hasStartedContentLoad = true;
+            requestAnimationFrame(() => {
+                loadAllData().catch(error => {
+                    console.error('載入網站內容失敗:', error);
+                });
+            });
+        }
+
         // 載入網站資料
         async function loadSiteData() {
-            showLoading(true);
+            const staleSettings = readApiCache('getSettings', Infinity);
+            if (staleSettings && staleSettings.success && staleSettings.data) {
+                siteData.settings = Object.assign({}, DEFAULT_SITE_SETTINGS, staleSettings.data);
+                updateHero();
+            }
 
             // GAS 冷啟動可能需要幾秒，自動重試最多 3 次
-            const MAX_RETRY = 3;
+            const MAX_RETRY = 2;
             let lastError = null;
 
             for (let attempt = 1; attempt <= MAX_RETRY; attempt++) {
@@ -5728,14 +5816,13 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     // 每次重試等待時間遞增
                     if (attempt > 1) {
                         const wait = attempt * 2000;
-                        showLoadingMsg(`連線中... 第 ${attempt} 次嘗試（等待 ${wait/1000} 秒）`);
                         await new Promise(r => setTimeout(r, wait));
                     }
 
                     const settingsData = await Promise.race([
                         cachedApiFetch('getSettings', API_CACHE_TTL.settings),
                         new Promise((_, reject) =>
-                            setTimeout(() => reject(new Error('連線逾時')), 12000)
+                            setTimeout(() => reject(new Error('連線逾時')), 5500)
                         )
                     ]);
 
@@ -5744,7 +5831,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     }
 
                     // 成功：先顯示網站，再讓各區資料分段載入，避免首頁卡在載入畫面。
-                    siteData.settings = settingsData.data;
+                    siteData.settings = Object.assign({}, DEFAULT_SITE_SETTINGS, settingsData.data);
                     checkSiteStatus();
                     applySectionSwitches();
                     updateHero();
@@ -5765,11 +5852,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     }, 600);
 
                     if (siteData.settings.site_status === 'live') {
-                        requestAnimationFrame(() => {
-                            loadAllData().catch(error => {
-                                console.error('載入網站內容失敗:', error);
-                            });
-                        });
+                        startContentLoad();
                     }
                     return; // 成功就結束
 
@@ -5779,9 +5862,9 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 }
             }
 
-            // 三次都失敗
+            // API 暫時較慢時保留本機首頁，不讓訪客卡在錯誤頁。
+            console.warn(`後台資料載入較慢（已重試 ${MAX_RETRY} 次）：`, lastError ? lastError.message : '未知錯誤');
             showLoading(false);
-            showError(`連線失敗（已重試 ${MAX_RETRY} 次）：${lastError ? lastError.message : '未知錯誤'}。請確認 GAS 已重新部署（新版本），且存取對象設為「任何人」。`);
         }
 
         // 測試 API 連線按鈕
@@ -5996,6 +6079,18 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             };
 
             let currentImg = normalizeImages();
+            if (currentImg && !heroBanner.dataset.bannerSrc && heroImgUrl) {
+                const currentSrc = currentImg.getAttribute('src') || '';
+                if (currentSrc === heroImgUrl || currentImg.currentSrc.endsWith(heroImgUrl)) {
+                    heroBanner.dataset.bannerSrc = heroImgUrl;
+                    if (currentImg.complete && currentImg.naturalWidth > 0) {
+                        const ph = heroBanner.querySelector('.hero-banner-placeholder');
+                        if (ph) ph.remove();
+                        heroBanner.classList.add('has-image-loaded');
+                        heroBanner.classList.remove('image-load-error');
+                    }
+                }
+            }
 
             if (!heroImgUrl) {
                 if (currentImg) currentImg.remove();
@@ -6020,6 +6115,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 currentImg.className = 'hero-banner-img';
                 currentImg.alt = 'banner';
                 currentImg.decoding = 'async';
+                currentImg.fetchPriority = 'high';
                 heroBanner.appendChild(currentImg);
             }
 
@@ -6486,7 +6582,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 <div class="about-card">
                     <h3>${lang === 'zh' ? item.title_zh : item.title_en}</h3>
                     <p>${lang === 'zh' ? item.content_zh : item.content_en}</p>
-                    ${item.image_url ? `<img src="${item.image_url}" alt="${lang === 'zh' ? item.title_zh : item.title_en}">` : ''}
+                    ${item.image_url ? `<img src="${item.image_url}" alt="${lang === 'zh' ? item.title_zh : item.title_en}" loading="lazy" decoding="async">` : ''}
                 </div>
             `).join('');
         }
@@ -7983,9 +8079,16 @@ document.addEventListener("DOMContentLoaded", function () {
     initHeroBannerLoading();
     preventHeroInfoOverlap();
     ensureFloatingRegisterButton();
-    collapseLongMapInfo();
-    softenFrontendErrorMessage();
-    enhanceHomepageLabels();
+    const runNonCriticalEnhancements = function () {
+        collapseLongMapInfo();
+        softenFrontendErrorMessage();
+        enhanceHomepageLabels();
+    };
+    if ("requestIdleCallback" in window) {
+        requestIdleCallback(runNonCriticalEnhancements, { timeout: 2500 });
+    } else {
+        window.setTimeout(runNonCriticalEnhancements, 1200);
+    }
 });
 
 /**
@@ -8260,18 +8363,14 @@ function applyTwoPointFontBoost(root) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    applyTwoPointFontBoost(document.body);
-
-    const observer = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
-            mutation.addedNodes.forEach(function (node) {
-                if (node.nodeType === Node.ELEMENT_NODE) {
-                    applyTwoPointFontBoost(node);
-                }
-            });
-        });
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+    const runFontBoost = function () {
+        applyTwoPointFontBoost(document.body);
+    };
+    if ("requestIdleCallback" in window) {
+        requestIdleCallback(runFontBoost, { timeout: 1800 });
+    } else {
+        window.setTimeout(runFontBoost, 900);
+    }
 });
 
     </script>
