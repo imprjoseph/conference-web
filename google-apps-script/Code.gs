@@ -414,12 +414,9 @@ function sendRegistrationReceipt_(email, registrant) {
     '工業技術研究院 資訊與通訊研究所',
     '2026 智慧網路 SIG 研討會 工作小組 敬上'
   ].join('\n');
-  const configuredSubject = String(settings.receipt_email_subject || '').trim();
-  const configuredBody = String(settings.receipt_email_body || '').trim();
-  const subjectTemplate = configuredSubject && configuredSubject !== oldDefaultSubject ? configuredSubject : defaultSubject;
-  const bodyTemplate = configuredBody && configuredBody !== oldDefaultBody && configuredBody !== requestedBodyWithExtraBlank
-    ? configuredBody
-    : defaultBody;
+  // 客戶指定「收到報名資訊」通知信需固定使用此版，避免後台舊模板覆蓋。
+  const subjectTemplate = defaultSubject;
+  const bodyTemplate = defaultBody;
   const subject = renderTemplate_(subjectTemplate, variables);
   const body = removeDietaryLine_(renderTemplate_(bodyTemplate, variables));
   const senderName = renderTemplate_(settings.receipt_email_sender_name || '{{conference_title}}', variables);

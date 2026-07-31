@@ -5782,9 +5782,16 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
         function renderStaticShell() {
             siteData.settings = Object.assign({}, DEFAULT_SITE_SETTINGS, siteData.settings || {});
-            const heroSection = document.getElementById('hero-section');
-            if (heroSection) heroSection.classList.remove('hidden');
+            showLiveContent();
             updateHero();
+            updateCountdown();
+            updateRegisterButton();
+            renderAgenda();
+            renderNoticeCards();
+            initRegisterForm();
+            updateTitles();
+            applySectionSwitches();
+            enforceHiddenSiteOptions();
             scheduleHeroBannerCleanup();
             showLoading(false);
         }
