@@ -421,7 +421,7 @@ function sendRegistrationReceipt_(email, registrant) {
     ? configuredBody
     : defaultBody;
   const subject = renderTemplate_(subjectTemplate, variables);
-  const body = renderTemplate_(bodyTemplate, variables);
+  const body = removeDietaryLine_(renderTemplate_(bodyTemplate, variables));
   const senderName = renderTemplate_(settings.receipt_email_sender_name || '{{conference_title}}', variables);
   const replyTo = String(settings.receipt_email_reply_to || contactEmail || '').trim().slice(0, 254);
 
@@ -542,6 +542,12 @@ function renderTemplate_(template, variables) {
   return String(template || '').replace(/\{\{\s*([a-zA-Z0-9_]+)\s*\}\}/g, function(match, key) {
     return variables[key] === undefined || variables[key] === null ? '' : String(variables[key]);
   });
+}
+
+function removeDietaryLine_(text) {
+  return String(text || '').split('\n').filter(function(line) {
+    return !/(飲食需求|餐食需求|dietary)/i.test(line);
+  }).join('\n');
 }
 
 function textToHtml_(text) {
