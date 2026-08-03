@@ -3,14 +3,14 @@
  * 部署方式請參閱同目錄 README.md。
  */
 
-const DEFAULT_SPREADSHEET_ID = '1r82HCNk51leDTqTptNPis1cnvP9TMx-54i7ZRIyPGLY';
+const DEFAULT_SPREADSHEET_ID = '12RUMRu1mcjI8xEjq1ajWKxZkblrCvRkuTmNpgM9ewH4';
 
 const SHEET_SCHEMAS = Object.freeze({
   Settings: ['key', 'value', '備註'],
   About: ['id', 'title_zh', 'title_en', 'content_zh', 'content_en', 'sort_order', 'is_visible'],
   Speakers: ['id', 'name_zh', 'name_en', 'title_zh', 'title_en', 'organization_zh', 'organization_en', 'photo_url', 'short_bio_zh', 'short_bio_en', 'full_bio_zh', 'full_bio_en', 'expertise_zh', 'expertise_en', 'sort_order', 'is_visible'],
   Agenda: ['id', 'date', 'start_time', 'end_time', 'title_zh', 'title_en', 'speaker_zh', 'speaker_en', 'location_zh', 'location_en', 'type', 'notes_zh', 'notes_en', 'sort_order', 'is_visible'],
-  Traffic: ['id', 'type', 'title_zh', 'title_en', 'description_zh', 'description_en', 'sort_order', 'is_visible'],
+  Traffic: ['id', 'type', 'title_zh', 'title_en', 'content_zh', 'content_en', 'sort_order', 'is_visible'],
   Privacy: ['title_zh', 'title_en', 'content_zh', 'content_en', 'checkbox_text_zh', 'checkbox_text_en'],
   PastEvents: ['id', 'year', 'title_zh', 'title_en', 'description_zh', 'description_en', 'album_url', 'featured_image_url', 'sort_order', 'is_visible'],
   News: ['id', 'date', 'type', 'title_zh', 'title_en', 'content_zh', 'content_en', 'link_url', 'sort_order', 'is_visible'],
@@ -226,7 +226,7 @@ function saveSingleSetting_(key, value) {
 
 function readVisibleRows_(sheetName) {
   return readRows_(sheetName).filter(function(item) {
-    return item.is_visible === undefined || truthy_(item.is_visible);
+    return item.is_visible === undefined || item.is_visible === '' || truthy_(item.is_visible);
   }).sort(function(a, b) {
     return Number(a.sort_order || 0) - Number(b.sort_order || 0);
   });
