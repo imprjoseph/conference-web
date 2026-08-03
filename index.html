@@ -1896,6 +1896,18 @@
             color: var(--text-color);
         }
 
+        .reg-field--org label {
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+            white-space: nowrap;
+        }
+
+        .reg-field--org .reg-label-note {
+            font-size: calc(1em - 4pt);
+            font-weight: 600;
+        }
+
         .reg-field label .required {
             color: #ef4444;
             margin-left: 2px;
@@ -3331,8 +3343,8 @@ body {
 /* JS 會加上這個 class */
 .impr-collapsed-map-text {
     position: relative;
-    max-height: 5.2em;
-    overflow: hidden;
+    max-height: none !important;
+    overflow: visible !important;
     transition: max-height 0.25s ease;
 }
 
@@ -3341,7 +3353,7 @@ body {
 }
 
 .impr-collapsed-map-text:not(.is-expanded)::after {
-    content: "";
+    content: none !important;
     position: absolute;
     left: 0;
     right: 0;
@@ -3351,7 +3363,7 @@ body {
 }
 
 .impr-map-toggle {
-    display: inline-flex;
+    display: none !important;
     align-items: center;
     justify-content: center;
     margin-top: 8px;
@@ -5115,7 +5127,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 .speaker-card {
     align-items: stretch !important;
     padding: 24px 22px !important;
-    text-align: left !important;
+    text-align: center !important;
     border-radius: 14px !important;
     min-height: 410px !important;
 }
@@ -5146,6 +5158,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
 .speaker-card .speaker-content {
     gap: 0 !important;
+    text-align: center !important;
 }
 
 .speaker-org,
@@ -5156,7 +5169,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 }
 
 .speaker-org {
-    min-height: 56px !important;
+    min-height: 38px !important;
     font-size: 18px !important;
     line-height: 1.45 !important;
 }
@@ -5170,6 +5183,17 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
     min-height: 38px !important;
     font-size: 18px !important;
     line-height: 1.45 !important;
+}
+
+.section-title p:not(#speakers-subtitle) {
+    display: none !important;
+}
+
+#speakers-subtitle {
+    color: #536579 !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    margin-top: 8px !important;
 }
 
 .speaker-bio {
@@ -5277,7 +5301,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             </button>
             <div class="navbar-menu" id="navbar-menu">
                 <a href="#news" class="navbar-link hidden-site-option" data-section="news" data-zh="最新消息" data-en="News">最新消息</a>
-                <a href="#about" class="navbar-link" data-section="about" data-zh="會議介紹" data-en="About">會議介紹</a>
+                <a href="#about" class="navbar-link" data-section="about" data-zh="活動簡介" data-en="活動簡介">活動簡介</a>
                 <a href="#speakers" class="navbar-link" data-section="speakers" data-zh="講師介紹" data-en="Speakers">講師介紹</a>
                 <a href="#agenda" class="navbar-link" data-section="agenda" data-zh="會議議程" data-en="Agenda">會議議程</a>
                 <a href="#register-section" class="navbar-link" data-section="register" data-zh="線上報名" data-en="Register" onclick="scrollToRegForm();return false;">線上報名</a>
@@ -5428,11 +5452,11 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             </div>
         </section>
 
-        <!-- 會議介紹 -->
+        <!-- 活動簡介 -->
         <section id="about-section" class="section hidden">
             <div class="container">
                 <div class="section-title">
-                    <h2 id="about-title">會議介紹</h2>
+                    <h2 id="about-title">活動簡介</h2>
                     <p id="about-subtitle">了解本次會議的詳細內容</p>
                 </div>
                 <div id="about-content" class="about-grid">
@@ -5446,7 +5470,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             <div class="container">
                 <div class="section-title">
                     <h2 id="speakers-title">講師介紹</h2>
-                    <p id="speakers-subtitle">來自各領域的專業講師</p>
+                    <p id="speakers-subtitle">（依講程排序）</p>
                 </div>
                 <div id="speakers-content" class="speakers-grid">
                     <!-- 動態載入內容 -->
@@ -5637,7 +5661,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     <h4 data-zh="快速連結" data-en="Quick Links">快速連結</h4>
                     <ul>
                         <li class="hidden-site-option"><i class="fas fa-newspaper"></i><a href="#news" data-zh="最新消息" data-en="News">最新消息</a></li>
-                        <li><i class="fas fa-info-circle"></i><a href="#about" data-zh="會議介紹" data-en="About">會議介紹</a></li>
+                        <li><i class="fas fa-info-circle"></i><a href="#about" data-zh="活動簡介" data-en="活動簡介">活動簡介</a></li>
                         <li><i class="fas fa-users"></i><a href="#speakers" data-zh="講師介紹" data-en="Speakers">講師介紹</a></li>
                         <li><i class="fas fa-calendar"></i><a href="#agenda" data-zh="會議議程" data-en="Agenda">會議議程</a></li>
                         <li><i class="fas fa-edit"></i><a href="#" onclick="scrollToRegForm();return false;" data-zh="線上報名" data-en="Register">線上報名</a></li>
@@ -5740,7 +5764,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         forceInitialScrollTop();
 
         // 全域變數
-        let currentLang = localStorage.getItem('conference-lang') || 'zh';
+        let currentLang = 'zh';
         let siteData = {};
         let countdownInterval;
         let usedApiCacheThisLoad = false;
@@ -5780,8 +5804,29 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 type: 'address',
                 title_zh: '會場地址',
                 title_en: 'Venue Address',
-                content_zh: '政大公企中心645會議室，台北市大安區金華街187號',
-                content_en: 'NCCU Center for Public and Business Administration, Room 645, No. 187, Jinhua St., Da-an Dist., Taipei City'
+                content_zh: '台北市大安區金華街187號',
+                content_en: 'No. 187, Jinhua Street, Da-an District, Taipei City'
+            },
+            {
+                type: 'mrt',
+                title_zh: '捷運資訊',
+                title_en: 'MRT Info',
+                content_zh: '● 淡水線(紅線)/蘆洲線(橘線)→東門站3號出口：步行約6-8分鐘\n● 新店線(綠線)/蘆洲線(橘線)→古亭站4號出口：至和平東路轉搭214、606公車至公企中心站\n● 新店線(綠線)/蘆洲線(橘線)→古亭站5號出口：沿和平東路左轉金山南路，再至金華街口右轉，步行約12-15分鐘',
+                content_en: 'Dongmen Station (Red Line 2 / Orange Line 4) - Exit 3: A 6-8 minute walk.\nGuting Station (Green Line 3 / Orange Line 4) - Exit 4: Transfer to Bus 214 or 606 and get off at CPB Center.\nGuting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.'
+            },
+            {
+                type: 'bus',
+                title_zh: '公車資訊',
+                title_en: 'Bus Info',
+                content_zh: '● 公企中心：0南、214、214直、237、253、606、670、671\n● 信義永康街口：0東、20、22、38、88、88區、204、758、信義幹線\n● 金華新生路口：72、109、211、280、280直、311、505、643、668、672、675、676、680、1550(基隆/台北)、松江新生幹線\n● 師大：18、235、237、278、278區、254、295、295副、568、662、663、672、907、949、和平幹線、復興幹線',
+                content_en: 'CPB Center: 0 South, 214, 214 Direct, 237, 253, 606, 670, 671\nXinyi Yongkang St. Intersection: 0 East, 20, 22, 38, 88, 88 Sub, 204, 758, Xinyi Main Line\nJinhua Xinsheng Rd. Intersection: 72, 109, 211, 280, 280 Direct, 311, 505, 643, 668, 672, 675, 676, 680, 1550, Songjiang Xinsheng Main Line\nNTNU: 18, 235, 237, 278, 278 Sub, 254, 295, 295 Sub, 568, 662, 663, 672, 907, 949, Heping Main Line, Fuxing Main Line'
+            },
+            {
+                type: 'parking',
+                title_zh: '停車資訊',
+                title_en: 'Parking Info',
+                content_zh: '停車場由金華街199巷(單行道)，左轉金華街193巷(單行道)進入',
+                content_en: 'The surrounding alleys are one-way streets. To enter the parking lot, please drive through Lane 199, Jinhua St. and turn left onto Lane 193, Jinhua St.'
             }
         ]);
         const DEFAULT_SPEAKERS = Object.freeze([
@@ -6922,35 +6967,49 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             }).join('');
         }
 
-        // 載入會議介紹
+        // 載入活動簡介
         async function loadAbout() {
             try {
                 const data = await cachedApiFetch('getAbout');
             siteData.about = data.data;
             renderAbout();
             } catch (error) {
-                console.error('載入會議介紹失敗:', error);
+                console.error('載入活動簡介失敗:', error);
             }
         }
 
-        // 渲染會議介紹
+        // 渲染活動簡介
         function renderAbout() {
             const container = document.getElementById('about-content');
             const about = siteData.about || [];
             const lang = currentLang;
 
             if (about.length === 0) {
-                container.innerHTML = `<div class="loading-section">${lang === 'zh' ? '目前沒有會議介紹內容' : 'No content available'}</div>`;
+                container.innerHTML = `<div class="loading-section">${lang === 'zh' ? '目前沒有活動簡介內容' : 'No content available'}</div>`;
                 return;
             }
 
-            container.innerHTML = about.map(item => `
+            const introItems = about.filter(item => {
+                const titleZh = String(item.title_zh || '').trim();
+                const titleEn = String(item.title_en || '').trim();
+                return /^(about|conference\s*intro|introduction)$/i.test(titleEn) ||
+                    /活動簡介|會議簡介|會議介紹/.test(titleZh);
+            });
+            const items = introItems.length ? introItems : about;
+
+            container.innerHTML = items.map(item => {
+                const content = lang === 'zh'
+                    ? (item.content_zh || item.content_en || '')
+                    : (item.content_en || item.content_zh || '');
+                const imageAlt = lang === 'zh'
+                    ? (item.title_zh || item.title_en || '')
+                    : (item.title_en || item.title_zh || '');
+                return `
                 <div class="about-card">
-                    <h3>${lang === 'zh' ? item.title_zh : item.title_en}</h3>
-                    <p>${lang === 'zh' ? item.content_zh : item.content_en}</p>
-                    ${item.image_url ? `<img src="${item.image_url}" alt="${lang === 'zh' ? item.title_zh : item.title_en}" loading="lazy" decoding="async">` : ''}
-                </div>
-            `).join('');
+                    <p>${escapeHtml(content).replace(/\n/g, '<br>')}</p>
+                    ${item.image_url ? `<img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(imageAlt)}" loading="lazy" decoding="async">` : ''}
+                </div>`;
+            }).join('');
         }
 
         // 載入講師資料
@@ -7147,7 +7206,8 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             const section = document.getElementById('traffic-section');
             if (section) {
                 section.classList.remove('hidden');
-                section.style.removeProperty('display');
+                section.classList.remove('hidden-site-option');
+                section.style.setProperty('display', 'block', 'important');
             }
             const traffic = Array.isArray(siteData.traffic) && siteData.traffic.length ? siteData.traffic : DEFAULT_TRAFFIC_ITEMS;
             const lang = currentLang;
@@ -7216,15 +7276,16 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                    </div>`;
 
             const cardsHtml = traffic.map(item => {
-                const iconClass = typeIcons[item.type] || typeIcons.default;
-                const title = lang === 'zh' ? item.title_zh : item.title_en;
+                const type = String(item.type || '').toLowerCase();
+                const iconClass = typeIcons[type] || typeIcons.default;
+                const title = lang === 'zh' ? (item.title_zh || item.title_en || '') : (item.title_en || item.title_zh || '');
                 const text = lang === 'zh'
                     ? (item.content_zh || item.description_zh || '')
                     : (item.content_en || item.description_en || item.content_zh || item.description_zh || '');
                 // 若 type 為 address，加上開啟 Google Maps 按鈕
                 // 「在 Google Maps 開啟」按鈕：永遠用地址文字查詢，不帶 iframe 碼
                 const mapsHref = 'https://maps.google.com/?q=' + encodeURIComponent(text);
-                const mapsBtn = (item.type === 'address')
+                const mapsBtn = (type === 'address')
                     ? `<a class="traffic-open-map-btn"
                           href="${mapsHref}"
                           target="_blank" rel="noopener">
@@ -7235,8 +7296,8 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 return `<div class="traffic-card">
                     <div class="traffic-icon"><i class="${iconClass}"></i></div>
                     <div class="traffic-card-body">
-                        <h3>${title}</h3>
-                        <p>${text}</p>
+                        <h3>${escapeHtml(title)}</h3>
+                        <p style="white-space: pre-line;">${escapeHtml(text)}</p>
                         ${mapsBtn}
                     </div>
                 </div>`;
@@ -7574,6 +7635,9 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
         function fieldHtml(f, isZh) {
             const label = isZh ? f.label_zh : (f.label_en || f.label_zh);
+            const labelHtml = String(f.key || '') === 'org' && isZh
+                ? '所屬單位<span class="reg-label-note">（公司、法人、學校等）</span>'
+                : escapeHtml(label);
             const req = f.required ? '<span class="required">*</span>' : '';
             const placeholder = isZh ? (f.placeholder_zh || '') : (f.placeholder_en || '');
             const hint = isZh ? (f.hint_zh || '') : (f.hint_en || f.hint_zh || '');
@@ -7584,10 +7648,10 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
             if (f.type === 'select') {
                 const opts = (isZh ? f.options_zh : f.options_en) || [];
-                const optsHtml = opts.map(o => `<option>${o}</option>`).join('');
+                const optsHtml = opts.map(o => `<option>${escapeHtml(o)}</option>`).join('');
                 return `<div class="${fieldClass}">
-                    <label>${label}${req}</label>
-                    <select name="${f.key}" ${requiredAttr}>
+                    <label>${labelHtml}${req}</label>
+                    <select name="${escapeHtml(f.key)}" ${requiredAttr}>
                         <option value="">${isZh ? '請選擇' : 'Select...'}</option>
                         ${optsHtml}
                     </select>
@@ -7595,14 +7659,14 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 </div>`;
             } else if (f.type === 'textarea') {
                 return `<div class="${fieldClass}">
-                    <label>${label}${req}</label>
-                    <textarea name="${f.key}" placeholder="${placeholder}" rows="3" ${requiredAttr}></textarea>
+                    <label>${labelHtml}${req}</label>
+                    <textarea name="${escapeHtml(f.key)}" placeholder="${escapeHtml(placeholder)}" rows="3" ${requiredAttr}></textarea>
                     ${hintHtml}
                 </div>`;
             } else {
                 return `<div class="${fieldClass}">
-                    <label>${label}${req}</label>
-                    <input type="${f.type}" name="${f.key}" placeholder="${placeholder}" ${requiredAttr}>
+                    <label>${labelHtml}${req}</label>
+                    <input type="${escapeHtml(f.type)}" name="${escapeHtml(f.key)}" placeholder="${escapeHtml(placeholder)}" ${requiredAttr}>
                     ${hintHtml}
                 </div>`;
             }
@@ -7852,10 +7916,10 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             const titles = {
                 'news-title':          ['最新消息', 'Latest News'],
                 'news-subtitle':       ['會議相關最新公告與資訊', 'Latest announcements and updates'],
-                'about-title':         ['會議介紹', 'About Conference'],
+                'about-title':         ['活動簡介', '活動簡介'],
                 'about-subtitle':      ['了解本次會議的詳細內容', 'Learn about the conference details'],
                 'speakers-title':      ['講師介紹', 'Speakers'],
-                'speakers-subtitle':   ['來自各領域的專業講師', 'Professional speakers from various fields'],
+                'speakers-subtitle':   ['（依講程排序）', '(In agenda order)'],
                 'agenda-title':        ['會議議程', 'Conference Agenda'],
                 'agenda-subtitle':     ['完整的會議時程安排', 'Complete conference schedule'],
                 'traffic-title':       ['交通資訊', 'Transportation'],
@@ -8587,53 +8651,7 @@ function ensureFloatingRegisterButton() {
  * 04. 地圖 / 交通資訊過長時收合
  */
 function collapseLongMapInfo() {
-    const trafficSections = Array.from(document.querySelectorAll("section, div"))
-        .filter(function (el) {
-            const id = (el.id || "").toLowerCase();
-            const cls = (el.className || "").toString().toLowerCase();
-            const text = (el.textContent || "").trim();
-
-            const isTrafficArea =
-                id.includes("traffic") ||
-                id.includes("transport") ||
-                id.includes("venue") ||
-                id.includes("location") ||
-                text.includes("交通資訊") ||
-                text.includes("高捷") ||
-                text.includes("捷運") ||
-                text.includes("高鐵") ||
-                text.includes("停車");
-
-            return isTrafficArea && text.length > 80;
-        });
-
-    const candidates = [];
-
-    trafficSections.forEach(function (section) {
-        const ps = Array.from(section.querySelectorAll("p, li, .traffic-info, .transport-info, .venue-info, .location-info"));
-        ps.forEach(function (p) {
-            const text = (p.textContent || "").trim();
-            if (text.length >= 55 && !p.classList.contains("impr-collapsed-map-text")) {
-                candidates.push(p);
-            }
-        });
-    });
-
-    candidates.slice(0, 12).forEach(function (el) {
-        el.classList.add("impr-collapsed-map-text");
-
-        const toggle = document.createElement("button");
-        toggle.type = "button";
-        toggle.className = "impr-map-toggle";
-        toggle.textContent = "展開交通資訊";
-
-        toggle.addEventListener("click", function () {
-            const expanded = el.classList.toggle("is-expanded");
-            toggle.textContent = expanded ? "收合交通資訊" : "展開交通資訊";
-        });
-
-        el.insertAdjacentElement("afterend", toggle);
-    });
+    return;
 }
 
 /**
@@ -8678,7 +8696,7 @@ function softenFrontendErrorMessage() {
 function enhanceHomepageLabels() {
     const sectionMap = [
         { keyword: "最新消息", desc: "掌握活動最新公告與重要提醒" },
-        { keyword: "會議介紹", desc: "了解本次活動目標、議題方向與參與價值" },
+        { keyword: "活動簡介", desc: "了解本次活動目標、議題方向與參與價值" },
         { keyword: "講師介紹", desc: "邀集專業講者分享產業觀點與實務經驗" },
         { keyword: "會議議程", desc: "查看完整時程安排與各場次重點" },
         { keyword: "線上報名", desc: "填寫報名資料，完成活動參與登記" },
