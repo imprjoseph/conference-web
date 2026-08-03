@@ -5618,6 +5618,126 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         });
         const FOOTER_CONTACT_PHONE = '02-27635666#111';
         const FOOTER_CONTACT_ADDRESS_ZH = '台北市大安區敦化南路二段1號11樓';
+        const DEFAULT_TRAFFIC_MAP_QUERY = '政大公企中心645會議室 台北市大安區金華街187號';
+        const DEFAULT_TRAFFIC_ITEMS = Object.freeze([
+            {
+                type: 'address',
+                title_zh: '會場地址',
+                title_en: 'Venue Address',
+                content_zh: '政大公企中心645會議室，台北市大安區金華街187號',
+                content_en: 'NCCU Center for Public and Business Administration, Room 645, No. 187, Jinhua St., Da-an Dist., Taipei City'
+            }
+        ]);
+        const DEFAULT_SPEAKERS = Object.freeze([
+            {
+                id: 'default-speaker-ntt-east',
+                name_zh: '增山大史',
+                name_en: 'Hirofumi Masuyama',
+                title_zh: '擔當部長',
+                title_en: 'General Manager',
+                organization_zh: '日本 NTT EAST',
+                organization_en: 'NTT EAST, Japan',
+                short_bio_zh: '分享 Private AI-RAN in the Era of Physical AI。',
+                short_bio_en: 'Speaker for Private AI-RAN in the Era of Physical AI.',
+                full_bio_zh: '日本 NTT EAST 擔當部長。',
+                full_bio_en: 'General Manager at NTT EAST, Japan.',
+                topic_zh: 'Private AI-RAN in the Era of Physical AI',
+                topic_en: 'Private AI-RAN in the Era of Physical AI',
+                expertise_zh: '',
+                expertise_en: '',
+                photo_url: ''
+            },
+            {
+                id: 'default-speaker-ntust',
+                name_zh: '呂政修',
+                name_en: 'Cheng-Hsiu Lu',
+                title_zh: '院長',
+                title_en: 'Dean',
+                organization_zh: '國立臺灣科技大學 電資學院',
+                organization_en: 'College of Electrical Engineering and Computer Science, National Taiwan University of Science and Technology',
+                short_bio_zh: '分享 AI-Native Sensing and Intent-Driven Agentic Systems for 6G Radio Access Networks。',
+                short_bio_en: 'Speaker for AI-Native Sensing and Intent-Driven Agentic Systems for 6G Radio Access Networks.',
+                full_bio_zh: '國立臺灣科技大學電資學院院長。',
+                full_bio_en: 'Dean of the College of Electrical Engineering and Computer Science, National Taiwan University of Science and Technology.',
+                topic_zh: 'AI-Native Sensing and Intent-Driven Agentic Systems for 6G Radio Access Networks',
+                topic_en: 'AI-Native Sensing and Intent-Driven Agentic Systems for 6G Radio Access Networks',
+                expertise_zh: '',
+                expertise_en: '',
+                photo_url: ''
+            },
+            {
+                id: 'default-speaker-reigns',
+                name_zh: '吳長益',
+                name_en: 'Chang-Yi Wu',
+                title_zh: '經理',
+                title_en: 'Manager',
+                organization_zh: '耀登集團',
+                organization_en: 'REIGNs Group',
+                short_bio_zh: '分享 AI-RAN Commercialization and 6G Opportunities: Insights from O-RAN PlugFest Data。',
+                short_bio_en: 'Speaker for AI-RAN Commercialization and 6G Opportunities: Insights from O-RAN PlugFest Data.',
+                full_bio_zh: '耀登集團經理。',
+                full_bio_en: 'Manager at REIGNs Group.',
+                topic_zh: 'AI-RAN Commercialization and 6G Opportunities: Insights from O-RAN PlugFest Data',
+                topic_en: 'AI-RAN Commercialization and 6G Opportunities: Insights from O-RAN PlugFest Data',
+                expertise_zh: '',
+                expertise_en: '',
+                photo_url: ''
+            },
+            {
+                id: 'default-speaker-osamah',
+                name_zh: 'Osamah Ibrahiem Abdullaziz',
+                name_en: 'Osamah Ibrahiem Abdullaziz',
+                title_zh: '首席策略架構師',
+                title_en: 'Chief Strategy Architect',
+                organization_zh: '現觀科技',
+                organization_en: 'Groundhog Technologies',
+                short_bio_zh: '分享 Networks That Reason: RAN Intent-Driven and Agent-Orchestrated Analytics and Optimization。',
+                short_bio_en: 'Speaker for Networks That Reason: RAN Intent-Driven and Agent-Orchestrated Analytics and Optimization.',
+                full_bio_zh: '現觀科技首席策略架構師。',
+                full_bio_en: 'Chief Strategy Architect at Groundhog Technologies.',
+                topic_zh: 'Networks That Reason: RAN Intent-Driven and Agent-Orchestrated Analytics and Optimization',
+                topic_en: 'Networks That Reason: RAN Intent-Driven and Agent-Orchestrated Analytics and Optimization',
+                expertise_zh: '',
+                expertise_en: '',
+                photo_url: ''
+            },
+            {
+                id: 'default-speaker-pegatron',
+                name_zh: '韓景光',
+                name_en: 'Jing-Guang Han',
+                title_zh: '副總經理',
+                title_en: 'Vice General Manager',
+                organization_zh: '智宏網',
+                organization_en: 'PEGATRON 5G',
+                short_bio_zh: '分享 AI-RAN for ISAC: Empowering Next-Generation Integrated Sensing and Communication Base Stations。',
+                short_bio_en: 'Speaker for AI-RAN for ISAC: Empowering Next-Generation Integrated Sensing and Communication Base Stations.',
+                full_bio_zh: '智宏網副總經理。',
+                full_bio_en: 'Vice General Manager at PEGATRON 5G.',
+                topic_zh: 'AI-RAN for ISAC: Empowering Next-Generation Integrated Sensing and Communication Base Stations',
+                topic_en: 'AI-RAN for ISAC: Empowering Next-Generation Integrated Sensing and Communication Base Stations',
+                expertise_zh: '',
+                expertise_en: '',
+                photo_url: ''
+            },
+            {
+                id: 'default-speaker-itri',
+                name_zh: '林萬怡',
+                name_en: 'Wan-Yi Lin',
+                title_zh: '技術經理',
+                title_en: 'Technical Manager',
+                organization_zh: '工業技術研究院 資訊與通訊研究所',
+                organization_en: 'Information and Communications Research Laboratories, ITRI',
+                short_bio_zh: '分享 Intelligent Network Use Case: LLM-Driven Automated App Activation and QoS Optimization。',
+                short_bio_en: 'Speaker for Intelligent Network Use Case: LLM-Driven Automated App Activation and QoS Optimization.',
+                full_bio_zh: '工業技術研究院資訊與通訊研究所技術經理。',
+                full_bio_en: 'Technical Manager at Information and Communications Research Laboratories, ITRI.',
+                topic_zh: 'Intelligent Network Use Case: LLM-Driven Automated App Activation and QoS Optimization',
+                topic_en: 'Intelligent Network Use Case: LLM-Driven Automated App Activation and QoS Optimization',
+                expertise_zh: '',
+                expertise_en: '',
+                photo_url: ''
+            }
+        ]);
 
         function getApiUrl() {
             try {
@@ -5833,7 +5953,9 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             updateHero();
             updateCountdown();
             updateRegisterButton();
+            renderSpeakers();
             renderAgenda();
+            renderTraffic();
             renderNoticeCards();
             initRegisterForm();
             updateTitles();
@@ -6645,29 +6767,32 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         async function loadSpeakers() {
             try {
                 const data = await cachedApiFetch('getSpeakers');
-            siteData.speakers = data.data;
-            renderSpeakers();
+                siteData.speakers = Array.isArray(data.data) ? data.data : [];
+                renderSpeakers();
             } catch (error) {
                 console.error('載入講師資料失敗:', error);
+                siteData.speakers = [];
+                renderSpeakers();
             }
         }
 
         // 渲染講師（第一層：圓形大頭照 + 簡介卡片）
         function renderSpeakers() {
             const container = document.getElementById('speakers-content');
-            const speakers = siteData.speakers || [];
+            const section = document.getElementById('speakers-section');
+            if (section) {
+                section.classList.remove('hidden');
+                section.style.removeProperty('display');
+            }
+            if (!container) return;
+            const speakers = Array.isArray(siteData.speakers) && siteData.speakers.length ? siteData.speakers : DEFAULT_SPEAKERS;
             const lang = currentLang;
 
-            if (speakers.length === 0) {
-                container.innerHTML = `<div class="loading-section">${lang === 'zh' ? '目前沒有講師資料' : 'No speaker information available'}</div>`;
-                return;
-            }
-
             container.innerHTML = speakers.map(sp => {
-                const name = lang === 'zh' ? sp.name_zh : sp.name_en;
-                const title = lang === 'zh' ? sp.title_zh : sp.title_en;
-                const org = lang === 'zh' ? sp.organization_zh : sp.organization_en;
-                const bio = lang === 'zh' ? sp.short_bio_zh : sp.short_bio_en;
+                const name = lang === 'zh' ? (sp.name_zh || sp.name_en || '') : (sp.name_en || sp.name_zh || '');
+                const title = lang === 'zh' ? (sp.title_zh || sp.title_en || '') : (sp.title_en || sp.title_zh || '');
+                const org = lang === 'zh' ? (sp.organization_zh || sp.organization_en || '') : (sp.organization_en || sp.organization_zh || '');
+                const bio = lang === 'zh' ? (sp.short_bio_zh || sp.short_bio_en || '') : (sp.short_bio_en || sp.short_bio_zh || '');
                 const photoHtml = sp.photo_url
                     ? `<img src="${sp.photo_url}" alt="${name}" loading="lazy" decoding="async">`
                     : '<i class="fas fa-user"></i>';
@@ -6819,22 +6944,28 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         async function loadTraffic() {
             try {
                 const data = await cachedApiFetch('getTraffic');
-            siteData.traffic = data.data;
-            renderTraffic();
+                siteData.traffic = Array.isArray(data.data) ? data.data : [];
+                renderTraffic();
             } catch (error) {
                 console.error('載入交通資訊失敗:', error);
+                siteData.traffic = [];
+                renderTraffic();
             }
         }
 
         // 渲染交通資訊（Google Maps iframe 左側 + 資訊卡片右側）
         function renderTraffic() {
             const container = document.getElementById('traffic-content');
-            const traffic = siteData.traffic || [];
+            const section = document.getElementById('traffic-section');
+            if (section) {
+                section.classList.remove('hidden');
+                section.style.removeProperty('display');
+            }
+            const traffic = Array.isArray(siteData.traffic) && siteData.traffic.length ? siteData.traffic : DEFAULT_TRAFFIC_ITEMS;
             const lang = currentLang;
-            const mapsEmbed = siteData.settings && siteData.settings.google_maps_embed;
+            const mapsEmbed = (siteData.settings && siteData.settings.google_maps_embed) || DEFAULT_TRAFFIC_MAP_QUERY;
 
-            if (traffic.length === 0 && !mapsEmbed) {
-                container.innerHTML = '<div class="loading-section">目前沒有交通資訊</div>';
+            if (!container) {
                 return;
             }
 
@@ -6975,16 +7106,17 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
         // 顯示講師詳細資訊（第二層 Modal）
         function showSpeakerDetail(speakerId) {
-            const sp = siteData.speakers.find(s => s.id === speakerId);
+            const speakers = Array.isArray(siteData.speakers) && siteData.speakers.length ? siteData.speakers : DEFAULT_SPEAKERS;
+            const sp = speakers.find(s => s.id === speakerId);
             if (!sp) return;
 
             const lang = currentLang;
-            const name = lang === 'zh' ? sp.name_zh : sp.name_en;
-            const title = lang === 'zh' ? sp.title_zh : sp.title_en;
-            const org = lang === 'zh' ? sp.organization_zh : sp.organization_en;
-            const bio = lang === 'zh' ? sp.full_bio_zh : sp.full_bio_en;
-            const topic = lang === 'zh' ? sp.topic_zh : sp.topic_en;
-            const expertise = lang === 'zh' ? sp.expertise_zh : sp.expertise_en;
+            const name = lang === 'zh' ? (sp.name_zh || sp.name_en || '') : (sp.name_en || sp.name_zh || '');
+            const title = lang === 'zh' ? (sp.title_zh || sp.title_en || '') : (sp.title_en || sp.title_zh || '');
+            const org = lang === 'zh' ? (sp.organization_zh || sp.organization_en || '') : (sp.organization_en || sp.organization_zh || '');
+            const bio = lang === 'zh' ? (sp.full_bio_zh || sp.short_bio_zh || sp.full_bio_en || sp.short_bio_en || '') : (sp.full_bio_en || sp.short_bio_en || sp.full_bio_zh || sp.short_bio_zh || '');
+            const topic = lang === 'zh' ? (sp.topic_zh || sp.topic_en || '') : (sp.topic_en || sp.topic_zh || '');
+            const expertise = lang === 'zh' ? (sp.expertise_zh || sp.expertise_en || '') : (sp.expertise_en || sp.expertise_zh || '');
 
             const photoHtml = sp.photo_url
                 ? `<img src="${sp.photo_url}" alt="${name}">`
