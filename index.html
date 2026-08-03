@@ -5612,9 +5612,12 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             conference_location_zh: '政大公企中心645會議室',
             conference_location_en: 'NCCU Center for Public and Business Administration, Room 645',
             contact_email: 'arlena@impr.com.tw',
-            contact_address_zh: '台北市大安區金華街187號',
+            contact_phone: '02-27635666#111',
+            contact_address_zh: '台北市大安區敦化南路二段1號11樓',
             registration_status: 'open'
         });
+        const FOOTER_CONTACT_PHONE = '02-27635666#111';
+        const FOOTER_CONTACT_ADDRESS_ZH = '台北市大安區敦化南路二段1號11樓';
 
         function getApiUrl() {
             try {
@@ -6317,8 +6320,8 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             }
 
             // 聯絡資訊
-            setSpan('footer-phone', s.contact_phone || '-');
-            setSpan('footer-address', isEn ? (s.contact_address_en || s.contact_address_zh || '-') : (s.contact_address_zh || '-'));
+            setSpan('footer-phone', FOOTER_CONTACT_PHONE);
+            setSpan('footer-address', isEn ? (s.contact_address_en || FOOTER_CONTACT_ADDRESS_ZH) : FOOTER_CONTACT_ADDRESS_ZH);
             const emailEl = document.getElementById('footer-email');
             if (emailEl) {
                 emailEl.textContent = s.contact_email || '-';
