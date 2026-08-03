@@ -5481,7 +5481,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             <div class="container">
                 <div class="section-title">
                     <h2 id="speakers-title">講師介紹</h2>
-                    <p id="speakers-subtitle">（依講程排序）</p>
+                    <p id="speakers-subtitle">依議程順序排列</p>
                 </div>
                 <div id="speakers-content" class="speakers-grid">
                     <!-- 動態載入內容 -->
@@ -5787,7 +5787,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         const CONFERENCE_CONFIG = window.CONFERENCE_CONFIG || {};
         const API_DEFAULT_URL = CONFERENCE_CONFIG.apiUrl || '';
         const API_OVERRIDE_KEY = `GAS_API_URL:${CONFERENCE_CONFIG.siteId || 'conference'}`;
-        const API_CACHE_VERSION = `${CONFERENCE_CONFIG.siteId || 'conference'}:20260803-sig-clean-v2`;
+        const API_CACHE_VERSION = `${CONFERENCE_CONFIG.siteId || 'conference'}:20260803-sig-clean-v3`;
         document.title = CONFERENCE_CONFIG.siteTitle || document.title;
         const API_CACHE_TTL = {
             settings: 2 * 60 * 1000,
@@ -5849,116 +5849,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 content_en: 'The surrounding alleys are one-way streets. To enter the parking lot, please drive through Lane 199, Jinhua St. and turn left onto Lane 193, Jinhua St.'
             }
         ]);
-        const DEFAULT_SPEAKERS = Object.freeze([
-            {
-                id: 'default-speaker-ntt-east',
-                name_zh: '增山大史',
-                name_en: 'Hirofumi Masuyama',
-                title_zh: '擔當部長',
-                title_en: 'General Manager',
-                organization_zh: '日本 NTT EAST',
-                organization_en: 'NTT EAST, Japan',
-                short_bio_zh: '分享 Private AI-RAN in the Era of Physical AI。',
-                short_bio_en: 'Speaker for Private AI-RAN in the Era of Physical AI.',
-                full_bio_zh: '日本 NTT EAST 擔當部長。',
-                full_bio_en: 'General Manager at NTT EAST, Japan.',
-                topic_zh: 'Private AI-RAN in the Era of Physical AI',
-                topic_en: 'Private AI-RAN in the Era of Physical AI',
-                expertise_zh: '',
-                expertise_en: '',
-                photo_url: ''
-            },
-            {
-                id: 'default-speaker-ntust',
-                name_zh: '呂政修',
-                name_en: 'Cheng-Hsiu Lu',
-                title_zh: '院長',
-                title_en: 'Dean',
-                organization_zh: '國立臺灣科技大學 電資學院',
-                organization_en: 'College of Electrical Engineering and Computer Science, National Taiwan University of Science and Technology',
-                short_bio_zh: '分享 AI-Native Sensing and Intent-Driven Agentic Systems for 6G Radio Access Networks。',
-                short_bio_en: 'Speaker for AI-Native Sensing and Intent-Driven Agentic Systems for 6G Radio Access Networks.',
-                full_bio_zh: '國立臺灣科技大學電資學院院長。',
-                full_bio_en: 'Dean of the College of Electrical Engineering and Computer Science, National Taiwan University of Science and Technology.',
-                topic_zh: 'AI-Native Sensing and Intent-Driven Agentic Systems for 6G Radio Access Networks',
-                topic_en: 'AI-Native Sensing and Intent-Driven Agentic Systems for 6G Radio Access Networks',
-                expertise_zh: '',
-                expertise_en: '',
-                photo_url: ''
-            },
-            {
-                id: 'default-speaker-reigns',
-                name_zh: '吳長益',
-                name_en: 'Chang-Yi Wu',
-                title_zh: '經理',
-                title_en: 'Manager',
-                organization_zh: '耀登集團',
-                organization_en: 'REIGNs Group',
-                short_bio_zh: '分享 AI-RAN Commercialization and 6G Opportunities: Insights from O-RAN PlugFest Data。',
-                short_bio_en: 'Speaker for AI-RAN Commercialization and 6G Opportunities: Insights from O-RAN PlugFest Data.',
-                full_bio_zh: '耀登集團經理。',
-                full_bio_en: 'Manager at REIGNs Group.',
-                topic_zh: 'AI-RAN Commercialization and 6G Opportunities: Insights from O-RAN PlugFest Data',
-                topic_en: 'AI-RAN Commercialization and 6G Opportunities: Insights from O-RAN PlugFest Data',
-                expertise_zh: '',
-                expertise_en: '',
-                photo_url: ''
-            },
-            {
-                id: 'default-speaker-osamah',
-                name_zh: 'Osamah Ibrahiem Abdullaziz',
-                name_en: 'Osamah Ibrahiem Abdullaziz',
-                title_zh: '首席策略架構師',
-                title_en: 'Chief Strategy Architect',
-                organization_zh: '現觀科技',
-                organization_en: 'Groundhog Technologies',
-                short_bio_zh: '分享 Networks That Reason: RAN Intent-Driven and Agent-Orchestrated Analytics and Optimization。',
-                short_bio_en: 'Speaker for Networks That Reason: RAN Intent-Driven and Agent-Orchestrated Analytics and Optimization.',
-                full_bio_zh: '現觀科技首席策略架構師。',
-                full_bio_en: 'Chief Strategy Architect at Groundhog Technologies.',
-                topic_zh: 'Networks That Reason: RAN Intent-Driven and Agent-Orchestrated Analytics and Optimization',
-                topic_en: 'Networks That Reason: RAN Intent-Driven and Agent-Orchestrated Analytics and Optimization',
-                expertise_zh: '',
-                expertise_en: '',
-                photo_url: ''
-            },
-            {
-                id: 'default-speaker-pegatron',
-                name_zh: '韓景光',
-                name_en: 'Jing-Guang Han',
-                title_zh: '副總經理',
-                title_en: 'Vice General Manager',
-                organization_zh: '智宏網',
-                organization_en: 'PEGATRON 5G',
-                short_bio_zh: '分享 AI-RAN for ISAC: Empowering Next-Generation Integrated Sensing and Communication Base Stations。',
-                short_bio_en: 'Speaker for AI-RAN for ISAC: Empowering Next-Generation Integrated Sensing and Communication Base Stations.',
-                full_bio_zh: '智宏網副總經理。',
-                full_bio_en: 'Vice General Manager at PEGATRON 5G.',
-                topic_zh: 'AI-RAN for ISAC: Empowering Next-Generation Integrated Sensing and Communication Base Stations',
-                topic_en: 'AI-RAN for ISAC: Empowering Next-Generation Integrated Sensing and Communication Base Stations',
-                expertise_zh: '',
-                expertise_en: '',
-                photo_url: ''
-            },
-            {
-                id: 'default-speaker-itri',
-                name_zh: '林萬怡',
-                name_en: 'Wan-Yi Lin',
-                title_zh: '技術經理',
-                title_en: 'Technical Manager',
-                organization_zh: '工業技術研究院 資訊與通訊研究所',
-                organization_en: 'Information and Communications Research Laboratories, ITRI',
-                short_bio_zh: '分享 Intelligent Network Use Case: LLM-Driven Automated App Activation and QoS Optimization。',
-                short_bio_en: 'Speaker for Intelligent Network Use Case: LLM-Driven Automated App Activation and QoS Optimization.',
-                full_bio_zh: '工業技術研究院資訊與通訊研究所技術經理。',
-                full_bio_en: 'Technical Manager at Information and Communications Research Laboratories, ITRI.',
-                topic_zh: 'Intelligent Network Use Case: LLM-Driven Automated App Activation and QoS Optimization',
-                topic_en: 'Intelligent Network Use Case: LLM-Driven Automated App Activation and QoS Optimization',
-                expertise_zh: '',
-                expertise_en: '',
-                photo_url: ''
-            }
-        ]);
+        const DEFAULT_SPEAKERS = Object.freeze([]);
 
         function getApiUrl() {
             try {
@@ -7971,7 +7862,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 'about-title':         ['活動簡介', 'About'],
                 'about-subtitle':      ['了解本次會議的詳細內容', 'Learn about the conference details'],
                 'speakers-title':      ['講師介紹', 'Speakers'],
-                'speakers-subtitle':   ['（依講程排序）', '(In agenda order)'],
+                'speakers-subtitle':   ['依議程順序排列', 'In agenda order'],
                 'agenda-title':        ['會議議程', 'Conference Agenda'],
                 'agenda-subtitle':     ['完整的會議時程安排', 'Complete conference schedule'],
                 'traffic-title':       ['交通資訊', 'Transportation'],
