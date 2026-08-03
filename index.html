@@ -5787,11 +5787,11 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         const CONFERENCE_CONFIG = window.CONFERENCE_CONFIG || {};
         const API_DEFAULT_URL = CONFERENCE_CONFIG.apiUrl || '';
         const API_OVERRIDE_KEY = `GAS_API_URL:${CONFERENCE_CONFIG.siteId || 'conference'}`;
-        const API_CACHE_VERSION = `${CONFERENCE_CONFIG.siteId || 'conference'}:20260803-sig-clean-v1`;
+        const API_CACHE_VERSION = `${CONFERENCE_CONFIG.siteId || 'conference'}:20260803-sig-clean-v2`;
         document.title = CONFERENCE_CONFIG.siteTitle || document.title;
         const API_CACHE_TTL = {
-            settings: 5 * 60 * 1000,
-            content: 10 * 60 * 1000
+            settings: 2 * 60 * 1000,
+            content: 60 * 1000
         };
         const DEFAULT_ABOUT_ITEMS = Object.freeze([
             {
@@ -6061,6 +6061,22 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         }
 
         async function cachedApiFetch(action, ttlMs = API_CACHE_TTL.content) {
+            const preferFresh = action !== 'getSettings' && action !== 'getFormFields';
+            if (preferFresh) {
+                try {
+                    const fresh = await apiFetch(action, { timeoutMs: 5000 });
+                    writeApiCache(action, fresh);
+                    return fresh;
+                } catch (error) {
+                    const fallback = readApiCache(action, Infinity);
+                    if (fallback) {
+                        usedApiCacheThisLoad = true;
+                        return fallback;
+                    }
+                    throw error;
+                }
+            }
+
             const cached = readApiCache(action, ttlMs);
             if (cached) {
                 usedApiCacheThisLoad = true;
@@ -6637,7 +6653,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 : settings.conference_location_en || '-';
             locationEl.innerHTML = currentLang === 'zh'
                 ? escapeHtml(locationText)
-                : escapeHtml(locationText).replace(/,\s*/g, ',<br>');
+                : escapeHtml(locationText).replace(/,\s*/, ',<br>');
 
             // ── Hero Banner 圖片注入（可重複呼叫，不累積重覆圖片）──
             syncHeroBanner(driveToImgUrl('assets/optimized-images/2026sig-banner-web.jpg'));
@@ -7415,7 +7431,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     </section>`;
             };
             const detailsHtml = [
-                detailBlock('個人簡介', 'Biography', 'full_bio'),
+                detailBlock('個人背景', 'Background', 'full_bio'),
                 detailBlock('議題分享', 'Presentation Topic', 'expertise')
             ].join('') || `
                 <section class="speaker-info-block">
