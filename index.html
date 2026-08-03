@@ -4114,9 +4114,19 @@ body {
 }
 
 #hero-location {
-    white-space: nowrap !important;
+    white-space: normal !important;
     overflow: visible !important;
     text-overflow: clip !important;
+}
+
+body.lang-zh #hero-location,
+html[lang="zh-TW"] #hero-location {
+    white-space: nowrap !important;
+}
+
+body.lang-en #hero-location,
+html[lang="en"] #hero-location {
+    line-height: 1.35 !important;
 }
 
 html[lang="en"] .hero-left,
@@ -5302,7 +5312,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             </button>
             <div class="navbar-menu" id="navbar-menu">
                 <a href="#news" class="navbar-link hidden-site-option" data-section="news" data-zh="最新消息" data-en="News">最新消息</a>
-                <a href="#about-section" class="navbar-link" data-section="about" data-zh="活動簡介" data-en="ABOUT">活動簡介</a>
+                <a href="#about-section" class="navbar-link" data-section="about" data-zh="活動簡介" data-en="About">活動簡介</a>
                 <a href="#speakers-section" class="navbar-link" data-section="speakers" data-zh="講師介紹" data-en="Speakers">講師介紹</a>
                 <a href="#agenda-section" class="navbar-link" data-section="agenda" data-zh="會議議程" data-en="Agenda">會議議程</a>
                 <a href="#register-section" class="navbar-link" data-section="register" data-zh="線上報名" data-en="Register" onclick="scrollToRegForm();return false;">線上報名</a>
@@ -5662,7 +5672,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     <h4 data-zh="快速連結" data-en="Quick Links">快速連結</h4>
                     <ul>
                         <li class="hidden-site-option"><i class="fas fa-newspaper"></i><a href="#news" data-zh="最新消息" data-en="News">最新消息</a></li>
-                        <li><i class="fas fa-info-circle"></i><a href="#about-section" data-zh="活動簡介" data-en="ABOUT">活動簡介</a></li>
+                        <li><i class="fas fa-info-circle"></i><a href="#about-section" data-zh="活動簡介" data-en="About">活動簡介</a></li>
                         <li><i class="fas fa-users"></i><a href="#speakers-section" data-zh="講師介紹" data-en="Speakers">講師介紹</a></li>
                         <li><i class="fas fa-calendar"></i><a href="#agenda-section" data-zh="會議議程" data-en="Agenda">會議議程</a></li>
                         <li><i class="fas fa-edit"></i><a href="#" onclick="scrollToRegForm();return false;" data-zh="線上報名" data-en="Register">線上報名</a></li>
@@ -5787,7 +5797,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             {
                 id: 'default-about',
                 title_zh: '活動簡介',
-                title_en: 'ABOUT',
+                title_en: 'About',
                 content_zh: '本次研討會聚焦 AI-RAN 之商業化與產業應用，探討 O-RAN 生態系在智慧網路、5G/6G、邊緣運算與產業場域中的發展機會，邀集產學研專家分享技術趨勢、應用案例與產業實務。',
                 content_en: 'This seminar focuses on the commercialization and industrial applications of AI-RAN, exploring development opportunities in the O-RAN ecosystem across smart networks, 5G/6G, edge computing, and industry deployments.'
             }
@@ -6621,9 +6631,13 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             } else {
                 document.getElementById('hero-date').textContent = rawDate || '-';
             }
-            document.getElementById('hero-location').textContent = currentLang === 'zh' ?
-                settings.conference_location_zh || '-' :
-                settings.conference_location_en || '-';
+            const locationEl = document.getElementById('hero-location');
+            const locationText = currentLang === 'zh'
+                ? settings.conference_location_zh || '-'
+                : settings.conference_location_en || '-';
+            locationEl.innerHTML = currentLang === 'zh'
+                ? escapeHtml(locationText)
+                : escapeHtml(locationText).replace(/,\s*/g, ',<br>');
 
             // ── Hero Banner 圖片注入（可重複呼叫，不累積重覆圖片）──
             syncHeroBanner(driveToImgUrl('assets/optimized-images/2026sig-banner-web.jpg'));
@@ -7938,7 +7952,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             const titles = {
                 'news-title':          ['最新消息', 'Latest News'],
                 'news-subtitle':       ['會議相關最新公告與資訊', 'Latest announcements and updates'],
-                'about-title':         ['活動簡介', 'ABOUT'],
+                'about-title':         ['活動簡介', 'About'],
                 'about-subtitle':      ['了解本次會議的詳細內容', 'Learn about the conference details'],
                 'speakers-title':      ['講師介紹', 'Speakers'],
                 'speakers-subtitle':   ['（依講程排序）', '(In agenda order)'],
