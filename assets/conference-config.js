@@ -9,7 +9,7 @@ window.CONFERENCE_CONFIG = Object.freeze({
     siteId: '2026sig',
 
     // Google Apps Script 部署為 Web App 後取得的 /exec 網址。
-    apiUrl: 'https://script.google.com/macros/s/AKfycbw2wh9Ud91cJWvMxrm0A8je0EdGU4HY7K6mfQVDxXirYzjdJjfjnsHZY7s4fsCVldo/exec',
+    apiUrl: 'https://script.google.com/macros/s/AKfycbyanPD18kZADKVgNxTGMcHGksqmsAp9lcHQSIMm-1SMKGZxZGWkpd3c1cYZK6yPsPOe4Q/exec',
 
     // API 尚未載入前，瀏覽器分頁顯示的名稱。
     siteTitle: '2026 智慧網路 SIG 研討會｜AI-RAN 商業化與產業應用',
