@@ -5471,7 +5471,9 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     <p id="about-subtitle">了解本次會議的詳細內容</p>
                 </div>
                 <div id="about-content" class="about-grid">
-                    <!-- 動態載入內容 -->
+                    <div class="about-card">
+                        <p>隨著全球通訊技術由 5G 邁向 6G，網路已成為各行各業數位轉型的重要基礎。然而，面對 AI、智慧製造、自駕運輸、沉浸式應用等新興需求，傳統網路架構在效率、韌性、安全性及管理彈性上已逐漸面臨挑戰。未來網路將朝向結合人工智慧（AI）、自動化管理、即時分析與網路虛擬化的「智慧網路（Intelligent Network）」發展，使網路能自主感知環境、自動最佳化資源配置，提升整體網路效能、能源效率與安全韌性，並支撐各類創新應用與商業模式。<br><br>因應全球技術發展趨勢，「5G 產業創新發展聯盟」於 2026 年正式將「開源系統軟體 SIG」更名為「智慧網路 SIG」，由工業技術研究院資通所丁邦安所長擔任法人召集人、和碩聯合科技徐衍珍資深副總擔任業界召集人，共同推動智慧網路關鍵技術發展、產業交流及國際合作，促進臺灣智慧網路生態系的建立與產業發展。<br><br>為持續促進產學研交流與掌握國際發展趨勢，本 SIG 每年定期舉辦「智慧網路 SIG 研討會」。2026 年研討會以 「AI-RAN 之商業化與產業應用（Commercialization and Industrial Applications of AI-RAN）」 為主題，邀請日本 NTT EAST、國內產學研專家及產業領袖，共同分享 AI-RAN、智慧網路等最新技術發展、應用案例與產業趨勢，深入探討 AI 如何驅動未來網路維運、自主最佳化與新興商業模式。<br><br>誠摯邀請產官學研各界先進共襄盛舉，與國內外專家共同交流，掌握智慧網路與 AI-RAN 發展契機，攜手打造臺灣下一世代智慧網路產業生態系。</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -5787,7 +5789,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         const CONFERENCE_CONFIG = window.CONFERENCE_CONFIG || {};
         const API_DEFAULT_URL = CONFERENCE_CONFIG.apiUrl || '';
         const API_OVERRIDE_KEY = `GAS_API_URL:${CONFERENCE_CONFIG.siteId || 'conference'}`;
-        const API_CACHE_VERSION = `${CONFERENCE_CONFIG.siteId || 'conference'}:20260803-sig-clean-v3`;
+        const API_CACHE_VERSION = `${CONFERENCE_CONFIG.siteId || 'conference'}:20260803-about-v4`;
         document.title = CONFERENCE_CONFIG.siteTitle || document.title;
         const API_CACHE_TTL = {
             settings: 2 * 60 * 1000,
@@ -5798,8 +5800,8 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 id: 'default-about',
                 title_zh: '活動簡介',
                 title_en: 'About',
-                content_zh: '本次研討會聚焦 AI-RAN 之商業化與產業應用，探討 O-RAN 生態系在智慧網路、5G/6G、邊緣運算與產業場域中的發展機會，邀集產學研專家分享技術趨勢、應用案例與產業實務。',
-                content_en: 'This seminar focuses on the commercialization and industrial applications of AI-RAN, exploring development opportunities in the O-RAN ecosystem across smart networks, 5G/6G, edge computing, and industry deployments.'
+                content_zh: '隨著全球通訊技術由 5G 邁向 6G，網路已成為各行各業數位轉型的重要基礎。然而，面對 AI、智慧製造、自駕運輸、沉浸式應用等新興需求，傳統網路架構在效率、韌性、安全性及管理彈性上已逐漸面臨挑戰。未來網路將朝向結合人工智慧（AI）、自動化管理、即時分析與網路虛擬化的「智慧網路（Intelligent Network）」發展，使網路能自主感知環境、自動最佳化資源配置，提升整體網路效能、能源效率與安全韌性，並支撐各類創新應用與商業模式。\n\n因應全球技術發展趨勢，「5G 產業創新發展聯盟」於 2026 年正式將「開源系統軟體 SIG」更名為「智慧網路 SIG」，由工業技術研究院資通所丁邦安所長擔任法人召集人、和碩聯合科技徐衍珍資深副總擔任業界召集人，共同推動智慧網路關鍵技術發展、產業交流及國際合作，促進臺灣智慧網路生態系的建立與產業發展。\n\n為持續促進產學研交流與掌握國際發展趨勢，本 SIG 每年定期舉辦「智慧網路 SIG 研討會」。2026 年研討會以 「AI-RAN 之商業化與產業應用（Commercialization and Industrial Applications of AI-RAN）」 為主題，邀請日本 NTT EAST、國內產學研專家及產業領袖，共同分享 AI-RAN、智慧網路等最新技術發展、應用案例與產業趨勢，深入探討 AI 如何驅動未來網路維運、自主最佳化與新興商業模式。\n\n誠摯邀請產官學研各界先進共襄盛舉，與國內外專家共同交流，掌握智慧網路與 AI-RAN 發展契機，攜手打造臺灣下一世代智慧網路產業生態系。',
+                content_en: 'As global communications technology evolves from 5G toward 6G, networks have become the foundation of digital transformation across all industries. However, with the rapid emergence of artificial intelligence (AI), smart manufacturing, autonomous transportation, immersive applications, and other innovative services, conventional network architectures are facing increasing challenges in terms of efficiency, resilience, security, and operational flexibility. Future networks are evolving toward Intelligent Networks that integrate artificial intelligence (AI), automated management, real-time analytics, and network virtualization. These next-generation networks will be capable of autonomously sensing their operating environments, optimizing resource allocation, and enhancing overall network performance, energy efficiency, and cybersecurity resilience, thereby supporting a wide range of innovative applications and new business models.\n\nIn response to these global technology trends, the 5G Industry Innovation Development Alliance officially renamed its Open Source System Software SIG to the Intelligent Network SIG in 2026. The SIG is jointly led by Dr. Pang-An Ting, Director General of the Information and Communications Research Laboratories (ICL), Industrial Technology Research Institute (ITRI), as the institutional convener, and Mr. Yen-Chen Hsu, Senior Vice President of Pegatron Corporation, as the industry convener. Together, they are committed to advancing key intelligent networking technologies, strengthening industry collaboration, promoting international partnerships, and fostering the development of Taiwan\'s intelligent network ecosystem.\n\nTo promote collaboration among academia, industry, and research communities while keeping pace with global technological developments, the SIG organizes the Intelligent Network SIG Symposium annually. The theme of the 2026 Intelligent Network SIG Symposium is "Commercialization and Industrial Applications of AI-RAN." The symposium will feature distinguished speakers from NTT EAST, Japan, together with leading experts and industry leaders from Taiwan\'s academic, research, and industrial sectors. Participants will share the latest technological advances, practical applications, and industry trends in AI-RAN and intelligent networking, while exploring how AI is transforming future network operations, enabling autonomous optimization, and creating new business opportunities.\n\nWe sincerely invite professionals from government, industry, academia, and research institutions to join this symposium. Together with experts from Taiwan and around the world, participants will exchange ideas, explore emerging opportunities in intelligent networking and AI-RAN, and work collaboratively to build Taiwan\'s next-generation intelligent network ecosystem.'
             }
         ]);
         const DEFAULT_SITE_SETTINGS = Object.freeze({
