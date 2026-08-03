@@ -335,8 +335,8 @@ function saveSubscriber_(params) {
 
 function sendRegistrationReceipt_(email, registrant) {
   const settings = getSettings_();
-  const title = settings.conference_title_zh || '會議活動';
-  const contactEmail = settings.contact_email || 'arlena@impr.com.tw';
+  const title = settings.conference_title_zh || '2026 智慧網路 SIG 研討會';
+  const contactEmail = 'arlena@impr.com.tw';
   if (String(settings.receipt_email_enabled || 'true').toLowerCase() === 'false') return null;
 
   const variables = {
@@ -353,41 +353,6 @@ function sendRegistrationReceipt_(email, registrant) {
     conference_location: settings.conference_location_zh || settings.conference_location_en || '',
     contact_email: contactEmail
   };
-  const oldDefaultSubject = '【{{conference_title}}】已收到您的報名資料';
-  const oldDefaultBody = [
-    '{{name}} 您好：',
-    '',
-    '我們已收到您參加「{{conference_title}}」的報名資料。',
-    '主辦單位審核完成後，將再以 Email 通知。',
-    '',
-    '此信由系統自動寄出，請勿直接回覆。'
-  ].join('\n');
-  const requestedBodyWithExtraBlank = [
-    '{{name}} 您好：',
-    '',
-    '感謝您報名參加由工業技術研究院主辦的 「2026 智慧網路 SIG 研討會」！',
-    '',
-    '我們已收到您的報名資料，為確保報名資格及活動品質，主辦單位將進行報名資格審核，並於 2026 年 8 月 31 日（星期一）23:59 前完成審核作業。',
-    '',
-    '審核通過者，將統一寄發 「報名確認信」，信件中將包含您的入場編號及活動相關資訊，敬請留意您的電子信箱。',
-    '',
-    '姓名\t{{name}}',
-    'Email\t{{email}}',
-    '聯絡電話\t{{phone}}',
-    '所屬單位（公司、法人、學校等）\t{{org}}',
-    '職稱\t{{job_title}}',
-    '備註\t{{remarks}}',
-    '',
-    '若您需要更正報名資料，或有任何疑問，歡迎與主辦單位聯繫：',
-    'Email： {{contact_email}}',
-    '再次感謝您的支持與報名，期待與您在研討會相見！',
-    '',
-    '',
-    '敬祝',
-    '順心愉快',
-    '工業技術研究院 資訊與通訊研究所',
-    '2026 智慧網路 SIG 研討會 工作小組 敬上'
-  ].join('\n');
   const defaultSubject = '2026智慧網路 SIG 研討會 - 已收到您的報名資訊';
   const defaultBody = [
     '{{name}} 您好：',
@@ -419,15 +384,16 @@ function sendRegistrationReceipt_(email, registrant) {
   const bodyTemplate = defaultBody;
   const subject = renderTemplate_(subjectTemplate, variables);
   const body = removeDietaryLine_(renderTemplate_(bodyTemplate, variables));
-  const senderName = renderTemplate_(settings.receipt_email_sender_name || '{{conference_title}}', variables);
-  const replyTo = String(settings.receipt_email_reply_to || contactEmail || '').trim().slice(0, 254);
+  const htmlBody = buildReceiptEmailHtml_(variables);
+  const replyTo = contactEmail;
 
   try {
     const mailOptions = {
       to: email,
       subject: subject,
-      htmlBody: textToHtml_(body),
-      name: senderName
+      body: body,
+      htmlBody: htmlBody,
+      name: '2026 智慧網路 SIG 研討會 工作小組'
     };
     if (replyTo && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(replyTo)) mailOptions.replyTo = replyTo;
     MailApp.sendEmail(mailOptions);
@@ -545,6 +511,37 @@ function removeDietaryLine_(text) {
   return String(text || '').split('\n').filter(function(line) {
     return !/(飲食需求|餐食需求|dietary)/i.test(line);
   }).join('\n');
+}
+
+function buildReceiptEmailHtml_(variables) {
+  const row = function(label, value) {
+    return '<tr>' +
+      '<th style="width:190px;padding:10px 12px;border:1px solid #d9e2ec;background:#f3f7fb;color:#12324a;text-align:left;font-weight:700;vertical-align:top;">' + escapeHtml_(label) + '</th>' +
+      '<td style="padding:10px 12px;border:1px solid #d9e2ec;color:#263747;vertical-align:top;white-space:pre-line;">' + escapeHtml_(value || '') + '</td>' +
+    '</tr>';
+  };
+
+  const table = '<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;max-width:680px;margin:18px 0;font-size:15px;line-height:1.7;">' +
+    row('姓名', variables.name) +
+    row('Email', variables.email) +
+    row('聯絡電話', variables.phone) +
+    row('所屬單位（公司、法人、學校等）', variables.org) +
+    row('職稱', variables.job_title) +
+    row('備註', variables.remarks) +
+  '</table>';
+
+  return [
+    '<div style="font-family:Arial, Helvetica, sans-serif;font-size:15px;line-height:1.8;color:#263747;">',
+    '<p>' + escapeHtml_(variables.name) + ' 您好：</p>',
+    '<p>感謝您報名參加由工業技術研究院主辦的 「2026 智慧網路 SIG 研討會」！</p>',
+    '<p>我們已收到您的報名資料，為確保報名資格及活動品質，主辦單位將進行報名資格審核，並於 2026 年 8 月 31 日（星期一）23:59 前完成審核作業。</p>',
+    '<p>審核通過者，將統一寄發 「報名確認信」，信件中將包含您的入場編號及活動相關資訊，敬請留意您的電子信箱。</p>',
+    table,
+    '<p>若您需要更正報名資料，或有任何疑問，歡迎與主辦單位聯繫：<br>Email： ' + escapeHtml_(variables.contact_email) + '</p>',
+    '<p>再次感謝您的支持與報名，期待與您在研討會相見！</p>',
+    '<p>敬祝<br>順心愉快<br>工業技術研究院 資訊與通訊研究所<br>2026 智慧網路 SIG 研討會 工作小組 敬上</p>',
+    '</div>'
+  ].join('');
 }
 
 function textToHtml_(text) {

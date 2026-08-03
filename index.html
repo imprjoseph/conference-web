@@ -5113,7 +5113,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
     <!-- 導航欄 -->
     <nav class="navbar">
         <div class="navbar-content">
-            <a href="#" class="navbar-brand" id="site-title">會議活動</a>
+            <a href="#" class="navbar-brand" id="site-title">2026 智慧網路 SIG 研討會</a>
             <button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="開啟選單" aria-controls="navbar-menu" aria-expanded="false">
                 <span></span>
                 <span></span>
@@ -5205,8 +5205,8 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             <div class="hero-body-wrap">
             <div class="hero-body">
                 <div class="hero-left">
-                    <h1 class="hero-title hidden-site-option" id="hero-title">會議名稱</h1>
-                    <p class="hero-subtitle hidden-site-option" id="hero-subtitle">會議副標題</p>
+                    <h1 class="hero-title hidden-site-option" id="hero-title">2026 智慧網路 SIG 研討會</h1>
+                    <p class="hero-subtitle hidden-site-option" id="hero-subtitle">AI-RAN之商業化與產業應用：O-RAN生態系的發展機會</p>
                     <div class="hero-meta">
                         <div class="hero-meta-item">
                             <div class="hero-meta-icon"><i class="fas fa-calendar-alt"></i></div>
@@ -5435,9 +5435,9 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
                 <!-- 主辦單位 -->
                 <div class="footer-brand">
-                    <h3 id="footer-conf-title">會議名稱</h3>
+                    <h3 id="footer-conf-title">2026 智慧網路 SIG 研討會</h3>
                     <div class="footer-divider"></div>
-                    <p id="footer-conf-subtitle">會議副標題</p>
+                    <p id="footer-conf-subtitle">AI-RAN之商業化與產業應用：O-RAN生態系的發展機會</p>
                     <p style="margin-top:12px;" id="footer-conf-date-loc"></p>
                     <!-- 社群連結（主欄顯示，較顯眼）-->
                     <div class="footer-social-col" id="footer-social-main"></div>
@@ -5596,7 +5596,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         const CONFERENCE_CONFIG = window.CONFERENCE_CONFIG || {};
         const API_DEFAULT_URL = CONFERENCE_CONFIG.apiUrl || '';
         const API_OVERRIDE_KEY = `GAS_API_URL:${CONFERENCE_CONFIG.siteId || 'conference'}`;
-        const API_CACHE_VERSION = `${CONFERENCE_CONFIG.siteId || 'conference'}:20260708-speed-v1`;
+        const API_CACHE_VERSION = `${CONFERENCE_CONFIG.siteId || 'conference'}:20260803-sig-clean-v1`;
         document.title = CONFERENCE_CONFIG.siteTitle || document.title;
         const API_CACHE_TTL = {
             settings: 5 * 60 * 1000,
@@ -5617,11 +5617,50 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         });
 
         function getApiUrl() {
-            const stored = localStorage.getItem(API_OVERRIDE_KEY);
-            return stored || API_DEFAULT_URL;
+            try {
+                const stored = localStorage.getItem(API_OVERRIDE_KEY);
+                if (stored && stored !== API_DEFAULT_URL) {
+                    localStorage.removeItem(API_OVERRIDE_KEY);
+                }
+            } catch (error) {
+                // localStorage 被封鎖時，直接使用正式 API。
+            }
+            return API_DEFAULT_URL;
         }
 
         let activeApiBaseUrl = getApiUrl();
+
+        function isSigConferenceSettings(settings) {
+            const text = [
+                settings && settings.conference_title_zh,
+                settings && settings.conference_title_en,
+                settings && settings.conference_subtitle_zh,
+                settings && settings.conference_subtitle_en
+            ].filter(Boolean).join(' ');
+            if (!text) return true;
+            return /(智慧網路|Smart Networks|SIG|AI-?RAN|O-?RAN)/i.test(text);
+        }
+
+        function clearConferenceCache() {
+            try {
+                const siteId = CONFERENCE_CONFIG.siteId || 'conference';
+                Object.keys(localStorage).forEach(key => {
+                    if (key.startsWith(`${siteId}:`) || key === API_OVERRIDE_KEY) {
+                        localStorage.removeItem(key);
+                    }
+                });
+            } catch (error) {
+                // localStorage 可能被瀏覽器封鎖，清除失敗時略過。
+            }
+        }
+
+        function normalizeSettings(settings) {
+            if (settings && !isSigConferenceSettings(settings)) {
+                clearConferenceCache();
+                return Object.assign({}, DEFAULT_SITE_SETTINGS);
+            }
+            return Object.assign({}, DEFAULT_SITE_SETTINGS, settings || {});
+        }
 
         async function apiFetch(action, init = {}) {
             const url = `${activeApiBaseUrl}?action=${action}`;
@@ -5648,6 +5687,11 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
                 const age = Date.now() - cached.timestamp;
                 if (age > maxAgeMs) return null;
+
+                if (action === 'getSettings' && cached.payload && cached.payload.data && !isSigConferenceSettings(cached.payload.data)) {
+                    localStorage.removeItem(getApiCacheKey(action));
+                    return null;
+                }
 
                 return cached.payload;
             } catch (error) {
@@ -5685,7 +5729,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             const payload = data.data;
             switch (action) {
                 case 'getSettings':
-                    siteData.settings = payload;
+                    siteData.settings = normalizeSettings(payload);
                     checkSiteStatus();
                     applySectionSwitches();
                     updateContent();
@@ -5781,7 +5825,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         });
 
         function renderStaticShell() {
-            siteData.settings = Object.assign({}, DEFAULT_SITE_SETTINGS, siteData.settings || {});
+            siteData.settings = normalizeSettings(siteData.settings || {});
             showLiveContent();
             updateHero();
             updateCountdown();
@@ -5810,7 +5854,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         async function loadSiteData() {
             const staleSettings = readApiCache('getSettings', Infinity);
             if (staleSettings && staleSettings.success && staleSettings.data) {
-                siteData.settings = Object.assign({}, DEFAULT_SITE_SETTINGS, staleSettings.data);
+                siteData.settings = normalizeSettings(staleSettings.data);
                 updateHero();
             }
 
@@ -5838,7 +5882,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     }
 
                     // 成功：先顯示網站，再讓各區資料分段載入，避免首頁卡在載入畫面。
-                    siteData.settings = Object.assign({}, DEFAULT_SITE_SETTINGS, settingsData.data);
+                    siteData.settings = normalizeSettings(settingsData.data);
                     checkSiteStatus();
                     applySectionSwitches();
                     updateHero();
@@ -6179,16 +6223,16 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             const settings = siteData.settings;
 
             document.getElementById('site-title').textContent = currentLang === 'zh' ?
-                settings.conference_title_zh || '會議活動' :
-                settings.conference_title_en || 'Conference';
+                settings.conference_title_zh || DEFAULT_SITE_SETTINGS.conference_title_zh :
+                settings.conference_title_en || DEFAULT_SITE_SETTINGS.conference_title_en;
 
             document.getElementById('hero-title').textContent = currentLang === 'zh' ?
-                settings.conference_title_zh || '會議名稱' :
-                settings.conference_title_en || 'Conference Title';
+                settings.conference_title_zh || DEFAULT_SITE_SETTINGS.conference_title_zh :
+                settings.conference_title_en || DEFAULT_SITE_SETTINGS.conference_title_en;
 
             document.getElementById('hero-subtitle').textContent = keepOranTogether(currentLang === 'zh' ?
-                settings.conference_subtitle_zh || '會議副標題' :
-                settings.conference_subtitle_en || 'Conference Subtitle');
+                settings.conference_subtitle_zh || DEFAULT_SITE_SETTINGS.conference_subtitle_zh :
+                settings.conference_subtitle_en || DEFAULT_SITE_SETTINGS.conference_subtitle_en);
 
             // 日期顯示：解析 conference_date，自動處理 UTC datetime 格式
             const rawDate = settings.conference_date || '';
@@ -6228,7 +6272,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             const titleEl = document.getElementById('footer-conf-title');
             const subEl = document.getElementById('footer-conf-subtitle');
             const dateLoc = document.getElementById('footer-conf-date-loc');
-            if (titleEl) titleEl.textContent = title || (isEn ? 'Conference' : '會議名稱');
+            if (titleEl) titleEl.textContent = title || (isEn ? DEFAULT_SITE_SETTINGS.conference_title_en : DEFAULT_SITE_SETTINGS.conference_title_zh);
             if (subEl) subEl.textContent = keepOranTogether(subtitle || '');
             // footer 日期顯示
             const footerRawDate = s.conference_date || '';
