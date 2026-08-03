@@ -5117,13 +5117,13 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
     padding: 24px 22px !important;
     text-align: left !important;
     border-radius: 14px !important;
-    min-height: 360px !important;
+    min-height: 410px !important;
 }
 
 .speaker-avatar {
-    width: 96px !important;
-    height: 96px !important;
-    margin: 0 auto 18px !important;
+    width: 192px !important;
+    height: 192px !important;
+    margin: 0 auto 22px !important;
 }
 
 .speaker-avatar img {
@@ -5139,7 +5139,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
     justify-content: center !important;
     width: 100% !important;
     height: 100% !important;
-    font-size: 34px !important;
+    font-size: 58px !important;
     font-weight: 900 !important;
     color: #0b3b5f !important;
 }
@@ -5179,6 +5179,87 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
     text-align: left !important;
     text-align-last: auto !important;
     -webkit-line-clamp: 4 !important;
+}
+
+.speaker-modal .speaker-detail-avatar {
+    width: 260px !important;
+    height: 260px !important;
+    font-size: 72px !important;
+}
+
+.speaker-modal .modal-content {
+    max-width: 960px !important;
+    width: min(92vw, 960px) !important;
+    padding: 36px !important;
+}
+
+.speaker-modal .speaker-detail {
+    display: grid !important;
+    grid-template-columns: 260px minmax(0, 1fr) !important;
+    gap: 34px !important;
+    align-items: start !important;
+}
+
+.speaker-modal .speaker-detail-avatar {
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    flex-shrink: 0 !important;
+}
+
+.speaker-modal .speaker-detail-body {
+    min-width: 0 !important;
+}
+
+.speaker-modal .speaker-detail-body h3 {
+    margin: 0 0 22px !important;
+    color: #111827 !important;
+    font-size: 30px !important;
+    line-height: 1.25 !important;
+}
+
+.speaker-modal .speaker-info-block {
+    padding: 0 0 22px !important;
+    margin: 0 0 22px !important;
+    border-bottom: 1px solid #e5edf3 !important;
+}
+
+.speaker-modal .speaker-info-block:last-child {
+    border-bottom: 0 !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.speaker-modal .speaker-section-label {
+    margin: 0 0 10px !important;
+    color: #0b3b5f !important;
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    line-height: 1.35 !important;
+}
+
+.speaker-modal .speaker-detail-body p {
+    margin: 0 !important;
+    color: #374151 !important;
+    font-size: 18px !important;
+    line-height: 1.85 !important;
+    overflow-wrap: anywhere !important;
+}
+
+@media (max-width: 760px) {
+    .speaker-modal .modal-content {
+        padding: 28px 22px !important;
+    }
+
+    .speaker-modal .speaker-detail {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+    }
+
+    .speaker-modal .speaker-detail-avatar {
+        width: 220px !important;
+        height: 220px !important;
+        margin: 0 auto !important;
+    }
 }
 
 </style>
@@ -6288,11 +6369,11 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
             // ── Google Drive /file/d/{ID}/view ──
             let m = url.match(/\/file\/d\/([^\/\?&]+)/);
-            if (m) return `https://lh3.googleusercontent.com/d/${m[1]}`;
+            if (m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w480`;
 
             // ── Google Drive ?id={ID} ──
             m = url.match(/[?&]id=([^&]+)/);
-            if (m) return `https://lh3.googleusercontent.com/d/${m[1]}`;
+            if (m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w480`;
 
             // ── 其他（已是直連，原樣回傳）──
             return url;
@@ -6311,6 +6392,31 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 return text.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part.charAt(0).toUpperCase()).join('');
             }
             return text.charAt(0);
+        }
+
+        function speakerAvatarFallbackHtml(name) {
+            return `<span class="speaker-avatar-initials">${escapeHtml(speakerInitials(name))}</span>`;
+        }
+
+        function speakerPhotoHtml(photoUrl, name, lazy) {
+            if (!photoUrl) return speakerAvatarFallbackHtml(name);
+            const fallback = speakerAvatarFallbackHtml(name).replace(/"/g, '&quot;');
+            const loading = lazy ? ' loading="lazy" decoding="async"' : '';
+            return `<img src="${escapeHtml(photoUrl)}" alt="${escapeHtml(name)}"${loading} onerror="this.parentNode.innerHTML=&quot;${fallback}&quot;">`;
+        }
+
+        function localSpeakerPhotoUrl(speaker) {
+            const key = [
+                speaker && speaker.name_zh,
+                speaker && speaker.name_en
+            ].filter(Boolean).join(' ').toLowerCase();
+            if (/增山|masuyama/.test(key)) return 'assets/speakers/daishi-masuyama.png';
+            if (/呂政修|cheng-hsiu|cheng hsiu|lu/.test(key)) return 'assets/speakers/cheng-hsiu-lu.png';
+            if (/吳長益|chang-yi|chang yi|wu/.test(key)) return 'assets/speakers/chang-yi-wu.png';
+            if (/osamah|abdullaziz/.test(key)) return 'assets/speakers/osamah-abdullaziz.png';
+            if (/韓景光|jing-guang|jing guang|han/.test(key)) return 'assets/speakers/jing-guang-han.png';
+            if (/林萬怡|wan-yi|wan yi|lin/.test(key)) return 'assets/speakers/wan-yi-lin.png';
+            return '';
         }
 
         function syncHeroBanner(heroImgUrl) {
@@ -6872,15 +6978,13 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             const speakers = Array.isArray(siteData.speakers) && siteData.speakers.length ? siteData.speakers : DEFAULT_SPEAKERS;
             const lang = currentLang;
 
-            container.innerHTML = speakers.map(sp => {
+            container.innerHTML = speakers.map((sp, index) => {
                 const name = lang === 'zh' ? (sp.name_zh || sp.name_en || '') : (sp.name_en || sp.name_zh || '');
                 const title = lang === 'zh' ? (sp.title_zh || sp.title_en || '') : (sp.title_en || sp.title_zh || '');
                 const org = lang === 'zh' ? (sp.organization_zh || sp.organization_en || '') : (sp.organization_en || sp.organization_zh || '');
-                const bio = lang === 'zh' ? (sp.short_bio_zh || sp.short_bio_en || '') : (sp.short_bio_en || sp.short_bio_zh || '');
-                const photoUrl = driveToImgUrl(sp.photo_url || '');
-                const photoHtml = photoUrl
-                    ? `<img src="${photoUrl}" alt="${name}" loading="lazy" decoding="async">`
-                    : `<span class="speaker-avatar-initials">${speakerInitials(name)}</span>`;
+                const photoUrl = localSpeakerPhotoUrl(sp) || driveToImgUrl(sp.photo_url || '');
+                const photoHtml = speakerPhotoHtml(photoUrl, name, true);
+                const speakerId = String(sp.id ?? sp.name_en ?? sp.name_zh ?? index);
                 return `
                 <div class="speaker-card">
                     <div class="speaker-avatar">${photoHtml}</div>
@@ -6888,8 +6992,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                         <div class="speaker-org">${org}</div>
                         <div class="speaker-name">${name}</div>
                         <div class="speaker-title">${title}</div>
-                        <div class="speaker-bio">${bio}</div>
-                        <button class="speaker-detail-btn" onclick="showSpeakerDetail('${sp.id}')">
+                        <button class="speaker-detail-btn" data-speaker-id="${escapeHtml(speakerId)}" onclick="showSpeakerDetail(this.dataset.speakerId)">
                             <i class="fas fa-address-card"></i>
                             ${lang === 'zh' ? '查看詳細' : 'View Profile'}
                         </button>
@@ -7194,30 +7297,42 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         // 顯示講師詳細資訊（第二層 Modal）
         function showSpeakerDetail(speakerId) {
             const speakers = Array.isArray(siteData.speakers) && siteData.speakers.length ? siteData.speakers : DEFAULT_SPEAKERS;
-            const sp = speakers.find(s => s.id === speakerId);
+            const lookupId = String(speakerId ?? '');
+            const sp = speakers.find((s, index) => String(s.id ?? s.name_en ?? s.name_zh ?? index) === lookupId);
             if (!sp) return;
 
             const lang = currentLang;
             const name = lang === 'zh' ? (sp.name_zh || sp.name_en || '') : (sp.name_en || sp.name_zh || '');
-            const title = lang === 'zh' ? (sp.title_zh || sp.title_en || '') : (sp.title_en || sp.title_zh || '');
-            const org = lang === 'zh' ? (sp.organization_zh || sp.organization_en || '') : (sp.organization_en || sp.organization_zh || '');
-            const bio = lang === 'zh' ? (sp.full_bio_zh || sp.short_bio_zh || sp.full_bio_en || sp.short_bio_en || '') : (sp.full_bio_en || sp.short_bio_en || sp.full_bio_zh || sp.short_bio_zh || '');
-            const topic = lang === 'zh' ? (sp.topic_zh || sp.topic_en || '') : (sp.topic_en || sp.topic_zh || '');
-            const expertise = lang === 'zh' ? (sp.expertise_zh || sp.expertise_en || '') : (sp.expertise_en || sp.expertise_zh || '');
+            const localizedField = (baseKey) => {
+                const zhValue = sp[`${baseKey}_zh`] || '';
+                const enValue = sp[`${baseKey}_en`] || '';
+                return lang === 'zh' ? (zhValue || enValue) : (enValue || zhValue);
+            };
+            const detailBlock = (labelZh, labelEn, baseKey) => {
+                const text = String(localizedField(baseKey) || '').trim();
+                if (!text) return '';
+                return `
+                    <section class="speaker-info-block">
+                        <div class="speaker-section-label">${lang === 'zh' ? labelZh : labelEn}</div>
+                        <p>${escapeHtml(text).replace(/\n/g, '<br>')}</p>
+                    </section>`;
+            };
+            const detailsHtml = [
+                detailBlock('專長', 'Expertise', 'full_bio'),
+                detailBlock('議題分享', 'Presentation Topic', 'expertise')
+            ].join('') || `
+                <section class="speaker-info-block">
+                    <p>${lang === 'zh' ? '目前尚無詳細資料。' : 'No profile details are available yet.'}</p>
+                </section>`;
 
-            const photoUrl = driveToImgUrl(sp.photo_url || '');
-            const photoHtml = photoUrl
-                ? `<img src="${photoUrl}" alt="${name}">`
-                : `<span class="speaker-avatar-initials">${speakerInitials(name)}</span>`;
-
+            const photoUrl = localSpeakerPhotoUrl(sp) || driveToImgUrl(sp.photo_url || '');
+            const photoHtml = speakerPhotoHtml(photoUrl, name, false);
             document.getElementById('speaker-detail-content').innerHTML = `
                 <div class="speaker-detail">
                     <div class="speaker-detail-avatar">${photoHtml}</div>
                     <div class="speaker-detail-body">
-                        <h3>${name}</h3>
-                        ${bio ? `<div class="speaker-section-label">${lang === 'zh' ? '個人背景' : 'Biography'}</div><p>${bio}</p>` : ''}
-                        ${topic ? `<div class="speaker-section-label">${lang === 'zh' ? '議題' : 'Presentation Topic'}</div><p>${topic}</p>` : ''}
-                        ${expertise ? `<div class="speaker-section-label">${lang === 'zh' ? '議題背景' : 'Expertise'}</div><p>${expertise}</p>` : ''}
+                        <h3>${escapeHtml(name)}</h3>
+                        ${detailsHtml}
                     </div>
                 </div>`;
 
