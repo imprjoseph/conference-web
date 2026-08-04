@@ -5676,18 +5676,22 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                             <div class="traffic-card">
                                 <div class="traffic-icon"><i class="fas fa-map-marker-alt"></i></div>
                                 <div class="traffic-card-body">
-                                    <h3>會場地址</h3>
-                                    <p>台北市大安區金華街187號</p>
+                                    <h3 data-zh="會場地址" data-en="Venue Address">會場地址</h3>
+                                    <p data-zh="台北市大安區金華街187號" data-en="No. 187, Jinhua Street, Da-an District, Taipei City">台北市大安區金華街187號</p>
                                     <a class="traffic-open-map-btn" href="https://maps.google.com/?q=%E5%8F%B0%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E9%87%91%E8%8F%AF%E8%A1%97187%E8%99%9F" target="_blank" rel="noopener">
-                                        <i class="fas fa-external-link-alt"></i> 在 Google Maps 開啟
+                                        <i class="fas fa-external-link-alt"></i> <span data-zh="在 Google Maps 開啟" data-en="Open in Google Maps">在 Google Maps 開啟</span>
                                     </a>
                                 </div>
                             </div>
                             <div class="traffic-card">
                                 <div class="traffic-icon"><i class="fas fa-train"></i></div>
                                 <div class="traffic-card-body">
-                                    <h3>捷運資訊</h3>
-                                    <p style="white-space: pre-line;">● 淡水線(紅線)/蘆洲線(橘線)→東門站3號出口：步行約6-8分鐘
+                                    <h3 data-zh="捷運資訊" data-en="MRT Info">捷運資訊</h3>
+                                    <p style="white-space: pre-line;" data-zh="● 淡水線(紅線)/蘆洲線(橘線)→東門站3號出口：步行約6-8分鐘
+● 新店線(綠線)/蘆洲線(橘線)→古亭站4號出口：至和平東路轉搭214、606公車至公企中心站
+● 新店線(綠線)/蘆洲線(橘線)→古亭站5號出口：沿和平東路左轉金山南路，再至金華街口右轉，步行約12-15分鐘" data-en="Dongmen Station (Red Line 2 / Orange Line 4) - Exit 3: A 6-8 minute walk.
+Guting Station (Green Line 3 / Orange Line 4) - Exit 4: Transfer to Bus 214 or 606 and get off at CPB Center.
+Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">● 淡水線(紅線)/蘆洲線(橘線)→東門站3號出口：步行約6-8分鐘
 ● 新店線(綠線)/蘆洲線(橘線)→古亭站4號出口：至和平東路轉搭214、606公車至公企中心站
 ● 新店線(綠線)/蘆洲線(橘線)→古亭站5號出口：沿和平東路左轉金山南路，再至金華街口右轉，步行約12-15分鐘</p>
                                 </div>
@@ -5695,8 +5699,8 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                             <div class="traffic-card">
                                 <div class="traffic-icon"><i class="fas fa-parking"></i></div>
                                 <div class="traffic-card-body">
-                                    <h3>停車資訊</h3>
-                                    <p>停車場由金華街199巷(單行道)，左轉金華街193巷(單行道)進入</p>
+                                    <h3 data-zh="停車資訊" data-en="Parking Info">停車資訊</h3>
+                                    <p data-zh="停車場由金華街199巷(單行道)，左轉金華街193巷(單行道)進入" data-en="The surrounding alleys are one-way streets. To enter the parking lot, please drive through Lane 199, Jinhua St. and turn left onto Lane 193, Jinhua St.">停車場由金華街199巷(單行道)，左轉金華街193巷(單行道)進入</p>
                                 </div>
                             </div>
                         </div>
@@ -8129,6 +8133,10 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     link.appendChild(span);
                 }
                 span.textContent = isEn ? (link.dataset.en || link.dataset.zh) : link.dataset.zh;
+            });
+
+            document.querySelectorAll('#traffic-content [data-zh][data-en]').forEach(el => {
+                el.textContent = isEn ? (el.dataset.en || el.dataset.zh) : el.dataset.zh;
             });
 
             // ── 浮動按鈕文字 ──
