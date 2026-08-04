@@ -3,6 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <script>
+        try {
+            document.documentElement.dataset.savedLang = localStorage.getItem('conference-lang') === 'en' ? 'en' : 'zh';
+        } catch (error) {
+            document.documentElement.dataset.savedLang = 'zh';
+        }
+    </script>
+    <style>
+        #news-section,
+        #faq-section,
+        #subscribe-section,
+        .footer-organizer-col,
+        .navbar-link[data-section="news"],
+        .navbar-link[data-section="faq"],
+        .navbar-link[data-section="past_events"],
+        .footer-col li:has(a[href="#news"]),
+        .footer-col li:has(a[data-section="past_events"]) {
+            display: none !important;
+        }
+    </style>
     <title>2026 智慧網路 SIG 研討會｜AI-RAN 商業化與產業應用</title>
     <meta name="description" content="2026 智慧網路 SIG 研討會聚焦 AI-RAN 之商業化與產業應用、O-RAN 生態系發展機會，活動於 2026 年 9 月 15 日在政大公企中心 645 會議室舉辦。">
     <meta name="robots" content="index, follow">
@@ -1866,6 +1889,61 @@
             height: auto;
             margin: 0 0 28px;
             border-radius: 10px;
+        }
+
+        .reg-form-header-en {
+            background: linear-gradient(90deg, #0b4f95 0%, #19aee7 70%, #0c5f9f 100%);
+            border-radius: 10px;
+            color: #fff;
+            display: none;
+            margin: 0 0 28px;
+            padding: 22px 26px;
+            text-align: center;
+            font-weight: 800;
+            letter-spacing: 0;
+        }
+
+        .reg-form-header-en strong {
+            display: block;
+            font-size: 28px;
+            line-height: 1.25;
+        }
+
+        .reg-form-header-en span {
+            display: block;
+            font-size: 16px;
+            line-height: 1.45;
+            margin-top: 8px;
+            opacity: .94;
+        }
+
+        @media (max-width: 640px) {
+            .reg-form-header-en {
+                padding: 18px 16px;
+            }
+
+            .reg-form-header-en strong {
+                font-size: 22px;
+            }
+
+            .reg-form-header-en span {
+                font-size: 14px;
+            }
+        }
+
+        html[data-saved-lang="en"] .reg-form-wrap .reg-form-header,
+        body.lang-en .reg-form-wrap .reg-form-header {
+            display: none;
+        }
+
+        html[data-saved-lang="en"] .reg-form-wrap .reg-form-header-en,
+        body.lang-en .reg-form-wrap .reg-form-header-en {
+            display: block;
+        }
+
+        html[data-saved-lang="zh"] .reg-form-wrap .reg-form-header,
+        body.lang-zh .reg-form-wrap .reg-form-header {
+            display: block;
         }
 
         .reg-form-title {
@@ -5522,6 +5600,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 </div>
                 <div class="reg-form-wrap" id="reg-form-wrap">
                     <img class="reg-form-header" src="assets/optimized-images/registration-form-header.jpg" alt="2026 智慧網路 SIG 研討會" loading="lazy" decoding="async">
+                    <div class="reg-form-header-en"><strong>2026 Smart Networks SIG Seminar</strong><span>Online Registration</span></div>
                     <div class="reg-form-subtitle">請填寫以下資料，送出後將自動記錄至系統。標示 <span style="color:#ef4444">*</span> 為必填欄位。</div>
                     <form id="reg-form" novalidate>
                         <div class="reg-field-group full">
@@ -5884,7 +5963,8 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         const CONFERENCE_CONFIG = window.CONFERENCE_CONFIG || {};
         const API_DEFAULT_URL = CONFERENCE_CONFIG.apiUrl || '';
         const API_OVERRIDE_KEY = `GAS_API_URL:${CONFERENCE_CONFIG.siteId || 'conference'}`;
-        const API_CACHE_VERSION = `${CONFERENCE_CONFIG.siteId || 'conference'}:20260804-snapshot-v6`;
+        const API_CACHE_VERSION = `${CONFERENCE_CONFIG.siteId || 'conference'}:20260804-nocache-v7`;
+        const DISABLE_API_CACHE = true;
         document.title = CONFERENCE_CONFIG.siteTitle || document.title;
         const API_CACHE_TTL = {
             settings: 2 * 60 * 1000,
@@ -6019,6 +6099,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         }
 
         function readApiCache(action, maxAgeMs) {
+            if (DISABLE_API_CACHE) return null;
             try {
                 const raw = localStorage.getItem(getApiCacheKey(action));
                 if (!raw) return null;
@@ -6057,6 +6138,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         }
 
         function writeApiCache(action, payload) {
+            if (DISABLE_API_CACHE) return;
             try {
                 if (!payload || payload.success === false) return;
                 localStorage.setItem(getApiCacheKey(action), JSON.stringify({
@@ -6071,23 +6153,11 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         async function cachedApiFetch(action, ttlMs = API_CACHE_TTL.content) {
             const preferFresh = action !== 'getSettings' && action !== 'getFormFields';
             if (preferFresh) {
-                const stale = readApiCache(action, Infinity);
-                if (stale) {
-                    usedApiCacheThisLoad = true;
-                    scheduleFreshApiFetch(action);
-                    return stale;
-                }
-
                 try {
                     const fresh = await apiFetch(action, { timeoutMs: 5000 });
                     writeApiCache(action, fresh);
                     return fresh;
                 } catch (error) {
-                    const fallback = readApiCache(action, Infinity);
-                    if (fallback) {
-                        usedApiCacheThisLoad = true;
-                        return fallback;
-                    }
                     throw error;
                 }
             }
@@ -6118,7 +6188,6 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     break;
                 case 'getNews':
                     siteData.news = payload;
-                    renderNews();
                     break;
                 case 'getAbout':
                     siteData.about = payload;
@@ -6134,7 +6203,6 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     break;
                 case 'getFaq':
                     siteData.faq = payload;
-                    renderFaq();
                     break;
                 case 'getSpeakers':
                     siteData.speakers = payload;
@@ -6153,7 +6221,6 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     break;
                 case 'getPastEvents':
                     siteData.pastEvents = payload;
-                    renderPastEvents();
                     break;
                 case 'getFormFields':
                     initRegisterForm();
@@ -6167,16 +6234,13 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
             const actions = [
                 'getSettings',
-                'getNews',
                 'getAbout',
                 'getSponsors',
                 'getDownloads',
-                'getFaq',
                 'getSpeakers',
                 'getAgenda',
                 'getTraffic',
                 'getPrivacy',
-                'getPastEvents',
                 'getFormFields'
             ];
 
@@ -6194,8 +6258,8 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             forceInitialScrollTop();
-            renderStaticShell();
             initLanguage();
+            renderStaticShell();
             renderAbout();
             initSubscribe();
             initCookieBanner();
@@ -6429,7 +6493,6 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         // 載入所有資料
         async function loadAllData() {
             const primaryLoads = [
-                loadNews(),
                 loadAbout(),
                 loadSpeakers(),
                 loadAgenda(),
@@ -6446,12 +6509,11 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             window.setTimeout(() => {
                 Promise.allSettled([
                     loadSponsors(),
-                    loadDownloads(),
-                    loadFaq(),
-                    loadPastEvents()
+                    loadDownloads()
                 ]).then(() => {
                     applySectionSwitches();
                     updateTitles();
+                    enforceHiddenSiteOptions();
                 });
             }, 1200);
         }
@@ -7683,6 +7745,9 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             const wrap = document.getElementById('reg-form-wrap');
             if (!wrap) return;
             const isZh = currentLang === 'zh';
+            const formHeaderHtml = isZh
+                ? '<img class="reg-form-header" src="assets/optimized-images/registration-form-header.jpg" alt="2026 智慧網路 SIG 研討會" loading="lazy" decoding="async">'
+                : '<div class="reg-form-header-en"><strong>2026 Smart Networks SIG Seminar</strong><span>Online Registration</span></div>';
 
             let fieldsHtml = '';
             let i = 0;
@@ -7701,7 +7766,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             }
 
             wrap.innerHTML = `
-                <img class="reg-form-header" src="assets/optimized-images/registration-form-header.jpg" alt="${isZh ? '2026 智慧網路 SIG 研討會' : '2026 Smart Networks SIG Seminar'}" loading="lazy" decoding="async">
+                ${formHeaderHtml}
                 <div class="reg-form-subtitle">${isZh
                     ? '請填寫以下資料，送出後將自動記錄至系統。標示 <span style="color:#ef4444">*</span> 為必填欄位。'
                     : 'Please complete the form below. Fields marked <span style="color:#ef4444">*</span> are required.'
@@ -7908,6 +7973,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         function setLanguage(lang) {
             currentLang = lang;
             localStorage.setItem('conference-lang', lang);
+            document.documentElement.dataset.savedLang = lang === 'en' ? 'en' : 'zh';
             updateLanguageUI();
             updateContent();
             scheduleHeroBannerCleanup();
@@ -8106,9 +8172,50 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             if (regSub)   regSub.textContent   = isEn
                 ? 'Complete the form below to register. Your data will be recorded directly.'
                 : '填寫下方表單完成報名，資料將直接寫入系統';
+            syncVisibleRegistrationFormLanguage(isEn);
 
             // Footer 多語
             if (siteData.settings) updateFooter();
+        }
+
+        function syncVisibleRegistrationFormLanguage(isEn) {
+            const wrap = document.getElementById('reg-form-wrap');
+            if (!wrap) return;
+
+            const subtitle = wrap.querySelector('.reg-form-subtitle');
+            if (subtitle) {
+                subtitle.innerHTML = isEn
+                    ? 'Please complete the form below. Fields marked <span style="color:#ef4444">*</span> are required.'
+                    : '請填寫以下資料，送出後將自動記錄至系統。標示 <span style="color:#ef4444">*</span> 為必填欄位。';
+            }
+
+            const labels = {
+                name: isEn ? 'Name<span class="required">*</span>' : '姓名<span class="required">*</span>',
+                email: 'Email<span class="required">*</span>',
+                phone: isEn ? 'Phone<span class="required">*</span>' : '聯絡電話<span class="required">*</span>',
+                org: isEn ? 'Organization / Affiliation<span class="required">*</span>' : '所屬單位<span class="reg-label-note">（公司、法人、學校等）</span><span class="required">*</span>',
+                title: isEn ? 'Job Title<span class="required">*</span>' : '職稱<span class="required">*</span>',
+                remarks: isEn ? 'Remarks' : '備註'
+            };
+            Object.entries(labels).forEach(([key, html]) => {
+                const label = wrap.querySelector(`.reg-field--${key} label`);
+                if (label) label.innerHTML = html;
+            });
+
+            const hint = wrap.querySelector('.reg-field--name .field-hint');
+            if (hint) hint.textContent = isEn
+                ? 'If you have a Chinese name, please enter it in Chinese.'
+                : '若有中文姓名請填寫中文姓名';
+
+            const privacy = wrap.querySelector('.reg-privacy-check label');
+            if (privacy) {
+                privacy.innerHTML = isEn
+                    ? 'I have read and agree to the <a href="#" onclick="event.preventDefault();showPrivacyModal();" style="color:var(--primary-color);font-weight:600;">Privacy Policy</a>. I consent to the collection, processing and use of my personal data for event registration and related communications.'
+                    : '本人已閱讀並同意<a href="#" onclick="event.preventDefault();showPrivacyModal();" style="color:var(--primary-color);font-weight:600;">個人資料蒐集告知事項</a>，同意主辦單位依法蒐集、處理及利用本人填寫之個人資料，用於本活動報名確認、出席管理及相關聯繫事宜。';
+            }
+
+            const submitBtn = document.getElementById('reg-submit-btn');
+            if (submitBtn) submitBtn.textContent = isEn ? 'Submit Registration' : '確認送出報名';
         }
 
         // 初始化手機選單
