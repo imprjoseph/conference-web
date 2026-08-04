@@ -5499,7 +5499,11 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     <p id="agenda-subtitle">完整的會議時程安排</p>
                 </div>
                 <div id="agenda-content" class="agenda-container">
-                    <!-- 動態載入內容 -->
+                    <div class="agenda-image-wrap">
+                        <img src="assets/optimized-images/agenda-sig-table-2026.png"
+                             alt="會議議程表"
+                             loading="lazy" decoding="async">
+                    </div>
                 </div>
             </div>
         </section>
@@ -5512,8 +5516,55 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     <p id="reg-section-subtitle">填寫下方表單完成報名，資料將直接寫入系統</p>
                 </div>
                 <div class="reg-form-wrap" id="reg-form-wrap">
-                    <!-- 表單由 JS 動態產生 -->
-                    <div class="loading"><div class="loading-spinner"></div></div>
+                    <div class="reg-form-title">線上報名</div>
+                    <div class="reg-form-subtitle">請填寫以下資料，送出後將自動記錄至系統。標示 <span style="color:#ef4444">*</span> 為必填欄位。</div>
+                    <form id="reg-form" novalidate>
+                        <div class="reg-field-group full">
+                            <div class="reg-field reg-field--name">
+                                <label>姓名<span class="required">*</span></label>
+                                <input type="text" name="name" required>
+                                <div class="field-hint">若有中文姓名請填寫中文姓名</div>
+                            </div>
+                        </div>
+                        <div class="reg-field-group">
+                            <div class="reg-field reg-field--email">
+                                <label>Email<span class="required">*</span></label>
+                                <input type="email" name="email" required>
+                            </div>
+                            <div class="reg-field reg-field--phone">
+                                <label>聯絡電話<span class="required">*</span></label>
+                                <input type="tel" name="phone" required>
+                            </div>
+                        </div>
+                        <div class="reg-field-group">
+                            <div class="reg-field reg-field--org">
+                                <label>所屬單位<span class="reg-label-note">（公司、法人、學校等）</span><span class="required">*</span></label>
+                                <input type="text" name="org" required>
+                            </div>
+                            <div class="reg-field reg-field--title">
+                                <label>職稱<span class="required">*</span></label>
+                                <input type="text" name="title" required>
+                            </div>
+                        </div>
+                        <div class="reg-field-group full">
+                            <div class="reg-field reg-field--remarks">
+                                <label>備註</label>
+                                <textarea name="remarks" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="reg-privacy-check">
+                            <input type="checkbox" id="reg-privacy-cb">
+                            <label for="reg-privacy-cb">
+                                本人已閱讀並同意<a href="#" onclick="event.preventDefault();showPrivacyModal();" style="color:var(--primary-color);font-weight:600;">個人資料蒐集告知事項</a>，同意主辦單位依法蒐集、處理及利用本人填寫之個人資料，用於本活動報名確認、出席管理及相關聯繫事宜。
+                            </label>
+                        </div>
+                        <div class="reg-submit-wrap">
+                            <button type="button" class="reg-submit-btn" id="reg-submit-btn" onclick="submitRegForm()" disabled>
+                                確認送出報名
+                            </button>
+                            <span class="reg-status" id="reg-status"></span>
+                        </div>
+                    </form>
                 </div>
             </div>
         </section>
@@ -5526,7 +5577,42 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     <p id="traffic-subtitle">如何前往會場</p>
                 </div>
                 <div id="traffic-content">
-                    <!-- 動態載入：左側 Google Maps iframe + 右側資訊卡片 -->
+                    <div class="traffic-layout">
+                        <div class="traffic-map-container">
+                            <iframe src="https://maps.google.com/maps?q=%E6%94%BF%E5%A4%A7%E5%85%AC%E4%BC%81%E4%B8%AD%E5%BF%83645%E6%9C%83%E8%AD%B0%E5%AE%A4%20%E5%8F%B0%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E9%87%91%E8%8F%AF%E8%A1%97187%E8%99%9F&output=embed&hl=zh-TW"
+                                    allowfullscreen="" loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade"
+                                    title="Google Maps"></iframe>
+                        </div>
+                        <div class="traffic-info-list">
+                            <div class="traffic-card">
+                                <div class="traffic-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                <div class="traffic-card-body">
+                                    <h3>會場地址</h3>
+                                    <p>台北市大安區金華街187號</p>
+                                    <a class="traffic-open-map-btn" href="https://maps.google.com/?q=%E5%8F%B0%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E9%87%91%E8%8F%AF%E8%A1%97187%E8%99%9F" target="_blank" rel="noopener">
+                                        <i class="fas fa-external-link-alt"></i> 在 Google Maps 開啟
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="traffic-card">
+                                <div class="traffic-icon"><i class="fas fa-train"></i></div>
+                                <div class="traffic-card-body">
+                                    <h3>捷運資訊</h3>
+                                    <p style="white-space: pre-line;">● 淡水線(紅線)/蘆洲線(橘線)→東門站3號出口：步行約6-8分鐘
+● 新店線(綠線)/蘆洲線(橘線)→古亭站4號出口：至和平東路轉搭214、606公車至公企中心站
+● 新店線(綠線)/蘆洲線(橘線)→古亭站5號出口：沿和平東路左轉金山南路，再至金華街口右轉，步行約12-15分鐘</p>
+                                </div>
+                            </div>
+                            <div class="traffic-card">
+                                <div class="traffic-icon"><i class="fas fa-parking"></i></div>
+                                <div class="traffic-card-body">
+                                    <h3>停車資訊</h3>
+                                    <p>停車場由金華街199巷(單行道)，左轉金華街193巷(單行道)進入</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -5789,7 +5875,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         const CONFERENCE_CONFIG = window.CONFERENCE_CONFIG || {};
         const API_DEFAULT_URL = CONFERENCE_CONFIG.apiUrl || '';
         const API_OVERRIDE_KEY = `GAS_API_URL:${CONFERENCE_CONFIG.siteId || 'conference'}`;
-        const API_CACHE_VERSION = `${CONFERENCE_CONFIG.siteId || 'conference'}:20260803-about-v4`;
+        const API_CACHE_VERSION = `${CONFERENCE_CONFIG.siteId || 'conference'}:20260803-snapshot-v5`;
         document.title = CONFERENCE_CONFIG.siteTitle || document.title;
         const API_CACHE_TTL = {
             settings: 2 * 60 * 1000,
@@ -5816,6 +5902,9 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             contact_email: 'arlena@impr.com.tw',
             contact_phone: '02-27635666#111',
             contact_address_zh: '台北市大安區敦化南路二段1號11樓',
+            registration_end_at: '2026-09-10T23:59:00+08:00',
+            event_start_at: '2026-09-15T13:00:00+08:00',
+            event_end_at: '2026-09-15T17:00:00+08:00',
             registration_status: 'open'
         });
         const FOOTER_CONTACT_PHONE = '02-27635666#111';
@@ -5866,6 +5955,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         }
 
         let activeApiBaseUrl = getApiUrl();
+        const pendingFreshApiActions = new Set();
 
         function isSigConferenceSettings(settings) {
             const text = [
@@ -5941,6 +6031,22 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             }
         }
 
+        function scheduleFreshApiFetch(action) {
+            if (pendingFreshApiActions.has(action)) return;
+            pendingFreshApiActions.add(action);
+            apiFetch(action)
+                .then(data => {
+                    writeApiCache(action, data);
+                    applyApiData(action, data);
+                })
+                .catch(error => {
+                    console.warn(`背景更新 ${action} 失敗:`, error.message);
+                })
+                .finally(() => {
+                    pendingFreshApiActions.delete(action);
+                });
+        }
+
         function writeApiCache(action, payload) {
             try {
                 if (!payload || payload.success === false) return;
@@ -5956,6 +6062,13 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         async function cachedApiFetch(action, ttlMs = API_CACHE_TTL.content) {
             const preferFresh = action !== 'getSettings' && action !== 'getFormFields';
             if (preferFresh) {
+                const stale = readApiCache(action, Infinity);
+                if (stale) {
+                    usedApiCacheThisLoad = true;
+                    scheduleFreshApiFetch(action);
+                    return stale;
+                }
+
                 try {
                     const fresh = await apiFetch(action, { timeoutMs: 5000 });
                     writeApiCache(action, fresh);
@@ -6768,19 +6881,29 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             let targetDate;
             let titleText;
 
-            const registrationEnd = settings.registration_end_at ? new Date(settings.registration_end_at) : null;
-            const eventStart = settings.event_start_at ? new Date(settings.event_start_at) : null;
-            const eventEnd = settings.event_end_at ? new Date(settings.event_end_at) : null;
+            const fallbackRegistrationEnd = new Date('2026-09-10T23:59:00+08:00');
+            const fallbackEventStart = new Date('2026-09-15T13:00:00+08:00');
+            const fallbackEventEnd = new Date('2026-09-15T17:00:00+08:00');
+            const parseCountdownDate = (value, fallback = null) => {
+                if (!value) return fallback;
+                const parsed = new Date(value);
+                return Number.isNaN(parsed.getTime()) ? fallback : parsed;
+            };
 
-            if (now < (registrationEnd || new Date())) {
+            const registrationEnd = parseCountdownDate(settings.registration_end_at, fallbackRegistrationEnd);
+            const eventStart = parseCountdownDate(settings.event_start_at, fallbackEventStart);
+            const eventEnd = parseCountdownDate(settings.event_end_at, fallbackEventEnd);
+            const registrationStatus = settings.registration_status || 'open';
+
+            if (registrationStatus === 'open' && registrationEnd && now < registrationEnd) {
                 // 報名期間
                 targetDate = registrationEnd;
                 titleText = currentLang === 'zh' ? '距離報名截止還有' : 'Registration closes in';
-            } else if (now < (eventStart || new Date())) {
+            } else if (eventStart && now < eventStart) {
                 // 報名結束後到活動開始前
                 targetDate = eventStart;
                 titleText = currentLang === 'zh' ? '距離會議開始還有' : 'Event starts in';
-            } else if (now < (eventEnd || new Date())) {
+            } else if (eventEnd && now < eventEnd) {
                 // 活動進行中
                 const isZhP = currentLang === 'zh';
                 document.getElementById('countdown-title').textContent = isZhP ? '活動狀態' : 'EVENT STATUS';
@@ -6807,6 +6930,8 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 return;
             }
 
+            const countdownSection = document.getElementById('countdown-section');
+            if (countdownSection) countdownSection.style.removeProperty('display');
             document.getElementById('countdown-title').textContent = titleText;
 
             // 清除舊的計時器
@@ -6818,7 +6943,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             renderCleanCountdownItems();
 
             // 開始倒數
-            countdownInterval = setInterval(() => {
+            const updateCountdownNumbers = () => {
                 const now = new Date();
                 const diff = targetDate - now;
 
@@ -6837,7 +6962,9 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 if (daysEl) daysEl.textContent = days.toString().padStart(2, '0');
                 if (hoursEl) hoursEl.textContent = hours.toString().padStart(2, '0');
                 if (minutesEl) minutesEl.textContent = minutes.toString().padStart(2, '0');
-            }, 1000);
+            };
+            updateCountdownNumbers();
+            countdownInterval = setInterval(updateCountdownNumbers, 1000);
         }
 
         // 載入最新消息
@@ -7485,16 +7612,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             }
             regSec.classList.remove('hidden');
 
-            // 嘗試從 GAS 取得自訂欄位，失敗則用預設
-            let fields = DEFAULT_FORM_FIELDS;
-            try {
-                const res = await cachedApiFetch('getFormFields', API_CACHE_TTL.settings);
-                if (res.success && Array.isArray(res.data) && res.data.length > 0) {
-                    fields = res.data;
-                }
-            } catch(e) { /* 使用預設欄位 */ }
-
-            fields = fields
+            const normalizeFormFields = fields => fields
                 .filter(field => field.key !== 'dietary')
                 .map(field => {
                     if (field.key === 'name') {
@@ -7507,10 +7625,10 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
                     if (field.key === 'org') {
                         return {
-                        ...field,
-                        label_zh: '所屬單位（公司、法人、學校等）',
-                        label_en: 'Organization / Affiliation',
-                        required: true
+                            ...field,
+                            label_zh: '所屬單位（公司、法人、學校等）',
+                            label_en: 'Organization / Affiliation',
+                            required: true
                         };
                     }
 
@@ -7523,7 +7641,33 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
                     return field;
                 });
-            renderRegForm(fields);
+
+            const hasUserInput = () => {
+                const form = document.getElementById('reg-form');
+                if (!form) return false;
+                return Array.from(form.querySelectorAll('input, textarea, select'))
+                    .some(el => (el.type === 'checkbox' && el.checked) || (el.value && el.value.trim()));
+            };
+
+            if (hasUserInput()) return;
+
+            renderRegForm(normalizeFormFields(DEFAULT_FORM_FIELDS));
+
+            const cachedFields = readApiCache('getFormFields', Infinity);
+            if (cachedFields && cachedFields.success && Array.isArray(cachedFields.data) && cachedFields.data.length > 0 && !hasUserInput()) {
+                renderRegForm(normalizeFormFields(cachedFields.data));
+                scheduleFreshApiFetch('getFormFields');
+                return;
+            }
+
+            // 嘗試從 GAS 取得自訂欄位，背景回來後再更新；若使用者已開始填寫就不覆蓋。
+            try {
+                const res = await apiFetch('getFormFields', { timeoutMs: 5000 });
+                writeApiCache('getFormFields', res);
+                if (res.success && Array.isArray(res.data) && res.data.length > 0 && !hasUserInput()) {
+                    renderRegForm(normalizeFormFields(res.data));
+                }
+            } catch(e) { /* 使用預設欄位 */ }
         }
 
         function renderRegForm(fields) {
