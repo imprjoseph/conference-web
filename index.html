@@ -1860,6 +1860,14 @@
             margin: 0 auto;
         }
 
+        .reg-form-header {
+            display: block;
+            width: 100%;
+            height: auto;
+            margin: 0 0 28px;
+            border-radius: 10px;
+        }
+
         .reg-form-title {
             font-size: 22px;
             font-weight: 700;
@@ -5311,7 +5319,6 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 <span></span>
             </button>
             <div class="navbar-menu" id="navbar-menu">
-                <a href="#news" class="navbar-link hidden-site-option" data-section="news" data-zh="最新消息" data-en="News">最新消息</a>
                 <a href="#about-section" class="navbar-link" data-section="about" data-zh="活動簡介" data-en="About">活動簡介</a>
                 <a href="#speakers-section" class="navbar-link" data-section="speakers" data-zh="講師介紹" data-en="Speakers">講師介紹</a>
                 <a href="#agenda-section" class="navbar-link" data-section="agenda" data-zh="會議議程" data-en="Agenda">會議議程</a>
@@ -5319,8 +5326,6 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 <a href="#traffic-section" class="navbar-link" data-section="traffic" data-zh="交通資訊" data-en="Transportation">交通資訊</a>
                 <a href="#sponsors-section" class="navbar-link" data-section="sponsors" data-zh="贊助單位" data-en="Sponsors">贊助單位</a>
                 <a href="#" class="navbar-link" data-section="downloads" data-zh="下載專區" data-en="Downloads" onclick="openDownloads();return false;">下載專區</a>
-                <a href="#faq" class="navbar-link hidden-site-option" data-section="faq" data-zh="常見問題" data-en="FAQ">常見問題</a>
-                <a href="#" class="navbar-link" id="past-events-nav-link" data-section="past_events" data-zh="歷年會議" data-en="Past Events" onclick="openPastEventsAlbum(event)">歷年會議</a>
                 <div class="language-switch">
                     <button class="lang-btn active" data-lang="zh">中文</button>
                     <button class="lang-btn" data-lang="en">English</button>
@@ -5451,7 +5456,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
 
         <!-- 最新消息 -->
-        <section id="news-section" class="section hidden hidden-site-option">
+        <section id="news-section" class="section hidden hidden-site-option" style="display:none;">
             <div class="container">
                 <div class="section-title">
                     <h2 id="news-title">最新消息</h2>
@@ -5516,7 +5521,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     <p id="reg-section-subtitle">填寫下方表單完成報名，資料將直接寫入系統</p>
                 </div>
                 <div class="reg-form-wrap" id="reg-form-wrap">
-                    <div class="reg-form-title">線上報名</div>
+                    <img class="reg-form-header" src="assets/optimized-images/registration-form-header.jpg" alt="2026 智慧網路 SIG 研討會" loading="lazy" decoding="async">
                     <div class="reg-form-subtitle">請填寫以下資料，送出後將自動記錄至系統。標示 <span style="color:#ef4444">*</span> 為必填欄位。</div>
                     <form id="reg-form" novalidate>
                         <div class="reg-field-group full">
@@ -5672,7 +5677,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         </section>
 
         <!-- ══ FAQ ══ -->
-        <section id="faq-section" class="section hidden hidden-site-option">
+        <section id="faq-section" class="section hidden hidden-site-option" style="display:none;">
             <div class="container">
                 <div class="section-title">
                     <h2 id="faq-title">常見問題</h2>
@@ -5683,7 +5688,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         </section>
 
         <!-- ══ Email 訂閱 + 活動提示 ══ -->
-        <section id="subscribe-section" class="section hidden hidden-site-option">
+        <section id="subscribe-section" class="section hidden hidden-site-option" style="display:none;">
             <div class="container">
                 <div class="subscribe-layout">
                     <!-- 左欄：Email 訂閱 -->
@@ -5723,7 +5728,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 </div>
 
                 <!-- 主辦 / 協辦單位 -->
-                <div class="footer-col footer-organizer-col hidden-site-option">
+                <div class="footer-col footer-organizer-col hidden-site-option" style="display:none;">
                     <h4 data-zh="主辦單位" data-en="Organizer">主辦單位</h4>
                     <!-- Logo 顯示（有設定時取代文字）-->
                     <div id="footer-organizer-logo-wrap"
@@ -5759,14 +5764,12 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 <div class="footer-col">
                     <h4 data-zh="快速連結" data-en="Quick Links">快速連結</h4>
                     <ul>
-                        <li class="hidden-site-option"><i class="fas fa-newspaper"></i><a href="#news" data-zh="最新消息" data-en="News">最新消息</a></li>
                         <li><i class="fas fa-info-circle"></i><a href="#about-section" data-zh="活動簡介" data-en="About">活動簡介</a></li>
                         <li><i class="fas fa-users"></i><a href="#speakers-section" data-zh="講師介紹" data-en="Speakers">講師介紹</a></li>
                         <li><i class="fas fa-calendar"></i><a href="#agenda-section" data-zh="會議議程" data-en="Agenda">會議議程</a></li>
                         <li><i class="fas fa-edit"></i><a href="#" onclick="scrollToRegForm();return false;" data-zh="線上報名" data-en="Register">線上報名</a></li>
                         <li><i class="fas fa-map"></i><a href="#traffic-section" data-zh="交通資訊" data-en="Transportation">交通資訊</a></li>
                         <li><i class="fas fa-download"></i><a href="#" data-section="downloads" onclick="openDownloads();return false;" data-zh="下載專區" data-en="Downloads">下載專區</a></li>
-                        <li><i class="fas fa-images"></i><a href="#" data-section="past_events" onclick="openPastEventsAlbum(event)" data-zh="歷年會議" data-en="Past Events">歷年會議</a></li>
                     </ul>
                 </div>
             </div>
@@ -7692,7 +7695,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             }
 
             wrap.innerHTML = `
-                <div class="reg-form-title">${isZh ? '線上報名' : 'Online Registration'}</div>
+                <img class="reg-form-header" src="assets/optimized-images/registration-form-header.jpg" alt="${isZh ? '2026 智慧網路 SIG 研討會' : '2026 Smart Networks SIG Seminar'}" loading="lazy" decoding="async">
                 <div class="reg-form-subtitle">${isZh
                     ? '請填寫以下資料，送出後將自動記錄至系統。標示 <span style="color:#ef4444">*</span> 為必填欄位。'
                     : 'Please complete the form below. Fields marked <span style="color:#ef4444">*</span> are required.'
@@ -7945,9 +7948,8 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             const showDl = !settingIsFalse(s.show_downloads) && hasDownloads;
             setLinkVisibility('a[data-section="downloads"]', showDl);
 
-            // 歷年會議
-            const hasPastEvents = !Array.isArray(siteData.pastEvents) || siteData.pastEvents.length > 0;
-            const showPast = !settingIsFalse(s.show_past_events) && hasPastEvents;
+            // 歷年會議目前不在本會議頁面顯示，避免後台舊資料更新時重新跑出來。
+            const showPast = false;
             const pastNavLink = document.getElementById('past-events-nav-link');
             if (pastNavLink) pastNavLink.style.setProperty('display', showPast ? '' : 'none', 'important');
             setLinkVisibility('a[data-section="past_events"]', showPast);
@@ -7960,8 +7962,10 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 '#subscribe-section',
                 '.navbar-link[data-section="news"]',
                 '.navbar-link[data-section="faq"]',
+                '.navbar-link[data-section="past_events"]',
                 '.footer-organizer-col',
-                '.footer-col li:has(a[href="#news"])'
+                '.footer-col li:has(a[href="#news"])',
+                '.footer-col li:has(a[data-section="past_events"])'
             ];
 
             selectors.forEach(selector => {
