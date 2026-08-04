@@ -21,8 +21,12 @@
         .navbar-link[data-section="news"],
         .navbar-link[data-section="faq"],
         .navbar-link[data-section="past_events"],
+        .navbar-link[data-section="sponsors"],
+        .navbar-link[data-section="downloads"],
         .footer-col li:has(a[href="#news"]),
-        .footer-col li:has(a[data-section="past_events"]) {
+        .footer-col li:has(a[data-section="past_events"]),
+        .footer-col li:has(a[data-section="sponsors"]),
+        .footer-col li:has(a[data-section="downloads"]) {
             display: none !important;
         }
     </style>
@@ -5402,8 +5406,8 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 <a href="#agenda-section" class="navbar-link" data-section="agenda" data-zh="會議議程" data-en="Agenda">會議議程</a>
                 <a href="#register-section" class="navbar-link" data-section="register" data-zh="線上報名" data-en="Register" onclick="scrollToRegForm();return false;">線上報名</a>
                 <a href="#traffic-section" class="navbar-link" data-section="traffic" data-zh="交通資訊" data-en="Transportation">交通資訊</a>
-                <a href="#sponsors-section" class="navbar-link" data-section="sponsors" data-zh="贊助單位" data-en="Sponsors">贊助單位</a>
-                <a href="#" class="navbar-link" data-section="downloads" data-zh="下載專區" data-en="Downloads" onclick="openDownloads();return false;">下載專區</a>
+                <a href="#sponsors-section" class="navbar-link hidden-site-option" data-section="sponsors" data-zh="贊助單位" data-en="Sponsors">贊助單位</a>
+                <a href="#" class="navbar-link hidden-site-option" data-section="downloads" data-zh="下載專區" data-en="Downloads" onclick="openDownloads();return false;">下載專區</a>
                 <div class="language-switch">
                     <button class="lang-btn active" data-lang="zh">中文</button>
                     <button class="lang-btn" data-lang="en">English</button>
@@ -5607,7 +5611,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                             <div class="reg-field reg-field--name">
                                 <label>姓名<span class="required">*</span></label>
                                 <input type="text" name="name" required>
-                                <div class="field-hint">若有中文姓名請填寫中文姓名</div>
+                                <div class="field-hint">若有中文姓名者，請填寫中文姓名；若無中文姓名，請填寫與護照相同的姓名。</div>
                             </div>
                         </div>
                         <div class="reg-field-group">
@@ -5848,7 +5852,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                         <li><i class="fas fa-calendar"></i><a href="#agenda-section" data-zh="會議議程" data-en="Agenda">會議議程</a></li>
                         <li><i class="fas fa-edit"></i><a href="#" onclick="scrollToRegForm();return false;" data-zh="線上報名" data-en="Register">線上報名</a></li>
                         <li><i class="fas fa-map"></i><a href="#traffic-section" data-zh="交通資訊" data-en="Transportation">交通資訊</a></li>
-                        <li><i class="fas fa-download"></i><a href="#" data-section="downloads" onclick="openDownloads();return false;" data-zh="下載專區" data-en="Downloads">下載專區</a></li>
+                        <li class="hidden-site-option"><i class="fas fa-download"></i><a href="#" data-section="downloads" onclick="openDownloads();return false;" data-zh="下載專區" data-en="Downloads">下載專區</a></li>
                     </ul>
                 </div>
             </div>
@@ -7689,8 +7693,8 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                     if (field.key === 'name') {
                         return {
                             ...field,
-                            hint_zh: '若有中文姓名請填寫中文姓名',
-                            hint_en: 'If you have a Chinese name, please enter it in Chinese.'
+                            hint_zh: '若有中文姓名者，請填寫中文姓名；若無中文姓名，請填寫與護照相同的姓名。',
+                            hint_en: 'If you have a Chinese name, please enter it in Chinese. If you do not have a Chinese name, please enter your name exactly as shown on your passport.'
                         };
                     }
 
@@ -8010,13 +8014,14 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             };
 
             // 贊助單位
-            const showSponsors = !settingIsFalse(s.show_sponsors);
+            const hasSponsors = Array.isArray(siteData.sponsors) && siteData.sponsors.length > 0;
+            const showSponsors = !settingIsFalse(s.show_sponsors) && hasSponsors;
             const sponsorsSec = document.getElementById('sponsors-section');
             if (sponsorsSec) sponsorsSec.style.setProperty('display', showSponsors ? '' : 'none', 'important');
             setLinkVisibility('a[data-section="sponsors"], a[href="#sponsors-section"]', showSponsors);
 
             // 下載專區
-            const hasDownloads = !Array.isArray(siteData.downloads) || siteData.downloads.length > 0;
+            const hasDownloads = Array.isArray(siteData.downloads) && siteData.downloads.length > 0;
             const showDl = !settingIsFalse(s.show_downloads) && hasDownloads;
             setLinkVisibility('a[data-section="downloads"]', showDl);
 
@@ -8204,8 +8209,8 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
             const hint = wrap.querySelector('.reg-field--name .field-hint');
             if (hint) hint.textContent = isEn
-                ? 'If you have a Chinese name, please enter it in Chinese.'
-                : '若有中文姓名請填寫中文姓名';
+                ? 'If you have a Chinese name, please enter it in Chinese. If you do not have a Chinese name, please enter your name exactly as shown on your passport.'
+                : '若有中文姓名者，請填寫中文姓名；若無中文姓名，請填寫與護照相同的姓名。';
 
             const privacy = wrap.querySelector('.reg-privacy-check label');
             if (privacy) {
@@ -8302,7 +8307,11 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         async function loadSponsors() {
             try {
                 const res = await cachedApiFetch('getSponsors');
-                if (res.success) { siteData.sponsors = res.data; renderSponsors(); }
+                if (res.success) {
+                    siteData.sponsors = res.data;
+                    renderSponsors();
+                    if (siteData.settings) applySectionSwitches();
+                }
             } catch(e) { console.error('載入贊助商失敗:', e); }
         }
         function renderSponsors() {
