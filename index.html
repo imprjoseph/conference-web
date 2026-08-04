@@ -5866,7 +5866,13 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
         forceInitialScrollTop();
 
         // 全域變數
-        let currentLang = 'zh';
+        let currentLang = (() => {
+            try {
+                return localStorage.getItem('conference-lang') === 'en' ? 'en' : 'zh';
+            } catch (error) {
+                return 'zh';
+            }
+        })();
         let siteData = {};
         let countdownInterval;
         let usedApiCacheThisLoad = false;
