@@ -5269,10 +5269,20 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 }
 
 .speaker-org {
-    min-height: 38px !important;
-    font-size: 18px !important;
-    font-weight: 800 !important;
-    line-height: 1.45 !important;
+    min-height: 52px !important;
+    font-size: 22px !important;
+    font-weight: 950 !important;
+    line-height: 1.35 !important;
+    color: #050b14 !important;
+    letter-spacing: 0 !important;
+    overflow-wrap: normal !important;
+    word-break: keep-all !important;
+    line-break: strict !important;
+    text-wrap: balance;
+}
+
+.speaker-org .company-term {
+    white-space: nowrap;
 }
 
 .speaker-name {
@@ -5620,8 +5630,8 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                                 <input type="email" name="email" required>
                             </div>
                             <div class="reg-field reg-field--phone">
-                                <label>聯絡電話<span class="required">*</span></label>
-                                <input type="tel" name="phone" required>
+                                <label>聯絡電話</label>
+                                <input type="tel" name="phone">
                             </div>
                         </div>
                         <div class="reg-field-group">
@@ -7199,7 +7209,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                 <div class="speaker-card">
                     <div class="speaker-avatar">${photoHtml}</div>
                     <div class="speaker-content">
-                        <div class="speaker-org">${org}</div>
+                        <div class="speaker-org">${formatSpeakerOrgHtml(org)}</div>
                         <div class="speaker-name">${name}</div>
                         <div class="speaker-title">${title}</div>
                         <button class="speaker-detail-btn" data-speaker-id="${escapeHtml(speakerId)}" onclick="showSpeakerDetail(this.dataset.speakerId)">
@@ -7230,6 +7240,26 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                 '"': '&quot;',
                 "'": '&#39;'
             }[char]));
+        }
+
+        function formatSpeakerOrgHtml(value) {
+            const protectedTerms = [
+                '股份有限公司',
+                '株式會社',
+                '工業技術研究院',
+                '東日本電信電話',
+                '有限会社',
+                '株式会社',
+                'Co., Ltd.',
+                'Corporation',
+                'Institute'
+            ];
+            let html = escapeHtml(value);
+            protectedTerms.forEach(term => {
+                const escapedTerm = escapeHtml(term);
+                html = html.replaceAll(escapedTerm, `<span class="company-term">${escapedTerm}</span>`);
+            });
+            return html;
         }
 
         function formatAgendaTime(value) {
@@ -7561,7 +7591,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
         const DEFAULT_FORM_FIELDS = [
             { key: 'name',     label_zh: '姓名',       label_en: 'Name',         type: 'text',   required: true,  half: false },
             { key: 'email',    label_zh: 'Email',       label_en: 'Email',         type: 'email',  required: true,  half: true  },
-            { key: 'phone',    label_zh: '聯絡電話',    label_en: 'Phone',         type: 'tel',    required: true,  half: true  },
+            { key: 'phone',    label_zh: '聯絡電話',    label_en: 'Phone',         type: 'tel',    required: false, half: true  },
             { key: 'org',      label_zh: '所屬單位（公司、法人、學校等）', label_en: 'Organization / Affiliation', type: 'text', required: true, half: true },
             { key: 'title',    label_zh: '職稱',        label_en: 'Job Title',     type: 'text',   required: true,  half: true  },
             { key: 'remarks',  label_zh: '備註',        label_en: 'Remarks',       type: 'textarea',required: false, half: false },
@@ -8205,7 +8235,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             const labels = {
                 name: isEn ? 'Name<span class="required">*</span>' : '姓名<span class="required">*</span>',
                 email: 'Email<span class="required">*</span>',
-                phone: isEn ? 'Phone<span class="required">*</span>' : '聯絡電話<span class="required">*</span>',
+                phone: isEn ? 'Phone' : '聯絡電話',
                 org: isEn ? 'Organization / Affiliation<span class="required">*</span>' : '所屬單位<span class="reg-label-note">（公司、法人、學校等）</span><span class="required">*</span>',
                 title: isEn ? 'Job Title<span class="required">*</span>' : '職稱<span class="required">*</span>',
                 remarks: isEn ? 'Remarks' : '備註'
