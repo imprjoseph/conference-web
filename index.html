@@ -3073,8 +3073,9 @@ body {
     position: relative !important;
     overflow: hidden !important;
     line-height: 0 !important;
-    z-index: 1 !important;
+    z-index: 0 !important;
     margin-bottom: 0 !important;
+    pointer-events: none !important;
 }
 
 /* loading skeleton */
@@ -3136,7 +3137,7 @@ body {
     border-top: 1px solid #cbd9e2 !important;
     box-shadow: none !important;
     position: relative !important;
-    z-index: 0 !important;
+    z-index: 2 !important;
     margin-top: 0 !important;
     padding-top: 18px !important;
 }
@@ -5957,6 +5958,10 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
 
         function forceInitialScrollTop() {
             if (!isInitialPageLoad) return;
+            if (window.scrollY > 120) {
+                isInitialPageLoad = false;
+                return;
+            }
             window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
         }
 
@@ -6093,7 +6098,16 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                 clearConferenceCache();
                 return Object.assign({}, DEFAULT_SITE_SETTINGS);
             }
-            return Object.assign({}, DEFAULT_SITE_SETTINGS, settings || {});
+            const normalized = Object.assign({}, DEFAULT_SITE_SETTINGS, settings || {});
+            if (!String(normalized.registration_status || '').trim()) {
+                normalized.registration_status = DEFAULT_SITE_SETTINGS.registration_status;
+            }
+            return normalized;
+        }
+
+        function getEffectiveRegistrationStatus(settings = siteData.settings || {}) {
+            const status = String(settings.registration_status || '').trim();
+            return ['open', 'coming_soon', 'closed'].includes(status) ? status : 'open';
         }
 
         async function apiFetch(action, init = {}) {
@@ -6284,7 +6298,10 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             initMobileMenu();
             loadSiteData();
             requestAnimationFrame(forceInitialScrollTop);
-            window.setTimeout(forceInitialScrollTop, 250);
+            window.setTimeout(() => {
+                forceInitialScrollTop();
+                isInitialPageLoad = false;
+            }, 250);
         });
 
         function renderStaticShell() {
@@ -6361,11 +6378,10 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                     updateTitles();
                     scheduleHeroBannerCleanup();
                     showLoading(false);
-                    forceInitialScrollTop();
-                    window.setTimeout(() => {
+                    if (isInitialPageLoad) {
                         forceInitialScrollTop();
                         isInitialPageLoad = false;
-                    }, 600);
+                    }
 
                     if (siteData.settings.site_status === 'live') {
                         startContentLoad();
@@ -6871,7 +6887,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
         // 更新報名按鈕狀態
         function updateRegisterButton() {
             const settings = siteData.settings || {};
-            const status = settings.registration_status;
+            const status = getEffectiveRegistrationStatus(settings);
             const btn = document.getElementById('register-btn');
             const btnText = document.getElementById('register-btn-text');
             const floatingWrap = document.getElementById('floating-register');
@@ -6982,7 +6998,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             const registrationEnd = parseCountdownDate(settings.registration_end_at, fallbackRegistrationEnd);
             const eventStart = parseCountdownDate(settings.event_start_at, fallbackEventStart);
             const eventEnd = parseCountdownDate(settings.event_end_at, fallbackEventEnd);
-            const registrationStatus = settings.registration_status || 'open';
+            const registrationStatus = getEffectiveRegistrationStatus(settings);
 
             if (registrationStatus === 'open' && registrationEnd && now < registrationEnd) {
                 // 報名期間
@@ -7710,7 +7726,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
 
         async function initRegisterForm() {
             const settings = siteData.settings || {};
-            const regStatus = settings.registration_status;
+            const regStatus = getEffectiveRegistrationStatus(settings);
             const regSec = document.getElementById('register-section');
             if (!regSec) return;
 
@@ -7971,7 +7987,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
 
         // 顯示個資宣告 Modal
         function showPrivacyModal() {
-            if (siteData.settings.registration_status !== 'open') return;
+            if (getEffectiveRegistrationStatus(siteData.settings) !== 'open') return;
 
             const modal = document.getElementById('privacy-modal');
             const title = document.getElementById('privacy-title');
@@ -8178,7 +8194,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                 const s = siteData.settings || {};
                 const regEnd = s.registration_end_at ? new Date(s.registration_end_at) : null;
                 const isExpired = regEnd && new Date() > regEnd;
-                floatingLabel.textContent = getRegisterLabels(s.registration_status, isExpired, currentLang).floating;
+                floatingLabel.textContent = getRegisterLabels(getEffectiveRegistrationStatus(s), isExpired, currentLang).floating;
             }
 
             // ── 個資 Modal 按鈕文字 ──
@@ -8849,13 +8865,14 @@ function preventHeroInfoOverlap() {
 
     if (heroBanner) {
         heroBanner.style.marginBottom = "0";
-        heroBanner.style.zIndex = "1";
+        heroBanner.style.zIndex = "0";
+        heroBanner.style.pointerEvents = "none";
     }
 
     if (heroBodyWrap) {
         heroBodyWrap.style.marginTop = "0";
         heroBodyWrap.style.paddingTop = "18px";
-        heroBodyWrap.style.zIndex = "0";
+        heroBodyWrap.style.zIndex = "2";
     }
 
     if (heroBody) {
