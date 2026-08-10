@@ -5658,7 +5658,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                             </label>
                         </div>
                         <div class="reg-submit-wrap">
-                            <button type="button" class="reg-submit-btn" id="reg-submit-btn" onclick="submitRegForm()" disabled>
+                            <button type="button" class="reg-submit-btn" id="reg-submit-btn" onclick="submitRegForm()">
                                 確認送出報名
                             </button>
                             <span class="reg-status" id="reg-status"></span>
@@ -7837,16 +7837,20 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                         </label>
                     </div>
                     <div class="reg-submit-wrap">
-                        <button type="button" class="reg-submit-btn" id="reg-submit-btn" onclick="submitRegForm()" disabled>
+                        <button type="button" class="reg-submit-btn" id="reg-submit-btn" onclick="submitRegForm()">
                             ${isZh ? '確認送出報名' : 'Submit Registration'}
                         </button>
                         <span class="reg-status" id="reg-status"></span>
                     </div>
                 </form>`;
 
-            // 勾選同意才啟用送出
+            // 勾選同意後清除提醒；送出按鈕保持可點擊，由 submitRegForm 顯示明確提示。
             document.getElementById('reg-privacy-cb').addEventListener('change', function() {
-                document.getElementById('reg-submit-btn').disabled = !this.checked;
+                const status = document.getElementById('reg-status');
+                if (this.checked && status) {
+                    status.textContent = '';
+                    status.className = 'reg-status';
+                }
             });
         }
 
@@ -7894,6 +7898,14 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             const btn  = document.getElementById('reg-submit-btn');
             const status = document.getElementById('reg-status');
             const isZh = currentLang === 'zh';
+            const privacyCheckbox = document.getElementById('reg-privacy-cb');
+
+            if (privacyCheckbox && !privacyCheckbox.checked) {
+                status.textContent = isZh ? '⚠️ 請先勾選個人資料蒐集告知事項' : '⚠️ Please agree to the personal data collection notice first';
+                status.className = 'reg-status error';
+                privacyCheckbox.focus();
+                return;
+            }
 
             // 前端驗證
             let valid = true;
