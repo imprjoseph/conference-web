@@ -6603,12 +6603,35 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             return `<img src="${escapeHtml(photoUrl)}" alt="${escapeHtml(name)}"${loading} onerror="this.parentNode.innerHTML=&quot;${fallback}&quot;">`;
         }
 
+        function normalizeSpeakerDisplay(speaker) {
+            if (!speaker || typeof speaker !== 'object') return speaker;
+            const key = [
+                speaker.organization_zh,
+                speaker.organization_en,
+                speaker.name_zh,
+                speaker.name_en,
+                speaker.title_zh,
+                speaker.title_en
+            ].filter(Boolean).join(' ').toLowerCase();
+            if (!/(ntt|東日本|增山|mashiyama|masuyama)/.test(key)) return speaker;
+
+            return {
+                ...speaker,
+                organization_zh: 'NTT東日本株式会社（NTT EAST, Inc.）\n新事業開發總部 無線與物聯網事業部',
+                organization_en: 'NTT EAST, Inc.\nNew Business Development Headquarters, Wireless & IoT Business Division',
+                name_zh: '增山 大志 Daishi Mashiyama',
+                name_en: 'Daishi Mashiyama',
+                title_zh: '擔當部長',
+                title_en: 'Senior Manager'
+            };
+        }
+
         function localSpeakerPhotoUrl(speaker) {
             const key = [
                 speaker && speaker.name_zh,
                 speaker && speaker.name_en
             ].filter(Boolean).join(' ').toLowerCase();
-            if (/增山|masuyama/.test(key)) return 'assets/speakers/daishi-masuyama.png';
+            if (/增山|masuyama|mashiyama/.test(key)) return 'assets/speakers/daishi-masuyama.png';
             if (/呂政修|cheng-hsiu|cheng hsiu|lu/.test(key)) return 'assets/speakers/cheng-hsiu-lu.png';
             if (/吳長益|chang-yi|chang yi|wu/.test(key)) return 'assets/speakers/chang-yi-wu.png';
             if (/osamah|abdullaziz/.test(key)) return 'assets/speakers/osamah-abdullaziz.png';
@@ -7214,7 +7237,8 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             const speakers = Array.isArray(siteData.speakers) && siteData.speakers.length ? siteData.speakers : DEFAULT_SPEAKERS;
             const lang = currentLang;
 
-            container.innerHTML = speakers.map((sp, index) => {
+            container.innerHTML = speakers.map((rawSpeaker, index) => {
+                const sp = normalizeSpeakerDisplay(rawSpeaker);
                 const name = lang === 'zh' ? (sp.name_zh || sp.name_en || '') : (sp.name_en || sp.name_zh || '');
                 const title = lang === 'zh' ? (sp.title_zh || sp.title_en || '') : (sp.title_en || sp.title_zh || '');
                 const org = lang === 'zh' ? (sp.organization_zh || sp.organization_en || '') : (sp.organization_en || sp.organization_zh || '');
@@ -7226,8 +7250,8 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                     <div class="speaker-avatar">${photoHtml}</div>
                     <div class="speaker-content">
                         <div class="speaker-org">${formatSpeakerOrgHtml(org)}</div>
-                        <div class="speaker-name">${name}</div>
-                        <div class="speaker-title">${title}</div>
+                        <div class="speaker-name">${formatSpeakerTextHtml(name)}</div>
+                        <div class="speaker-title">${formatSpeakerTextHtml(title)}</div>
                         <button class="speaker-detail-btn" data-speaker-id="${escapeHtml(speakerId)}" onclick="showSpeakerDetail(this.dataset.speakerId)">
                             <i class="fas fa-address-card"></i>
                             ${lang === 'zh' ? '查看詳細' : 'View Profile'}
@@ -7275,7 +7299,11 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                 const escapedTerm = escapeHtml(term);
                 html = html.replaceAll(escapedTerm, `<span class="company-term">${escapedTerm}</span>`);
             });
-            return html;
+            return html.replace(/\r?\n/g, '<br>');
+        }
+
+        function formatSpeakerTextHtml(value) {
+            return escapeHtml(value).replace(/\r?\n/g, '<br>');
         }
 
         function formatAgendaTime(value) {
@@ -7556,8 +7584,9 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
         function showSpeakerDetail(speakerId) {
             const speakers = Array.isArray(siteData.speakers) && siteData.speakers.length ? siteData.speakers : DEFAULT_SPEAKERS;
             const lookupId = String(speakerId ?? '');
-            const sp = speakers.find((s, index) => String(s.id ?? s.name_en ?? s.name_zh ?? index) === lookupId);
-            if (!sp) return;
+            const rawSpeaker = speakers.find((s, index) => String(s.id ?? s.name_en ?? s.name_zh ?? index) === lookupId);
+            if (!rawSpeaker) return;
+            const sp = normalizeSpeakerDisplay(rawSpeaker);
 
             const lang = currentLang;
             const name = lang === 'zh' ? (sp.name_zh || sp.name_en || '') : (sp.name_en || sp.name_zh || '');
@@ -7589,7 +7618,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                 <div class="speaker-detail">
                     <div class="speaker-detail-avatar">${photoHtml}</div>
                     <div class="speaker-detail-body">
-                        <h3>${escapeHtml(name)}</h3>
+                        <h3>${formatSpeakerTextHtml(name)}</h3>
                         ${detailsHtml}
                     </div>
                 </div>`;
@@ -7947,10 +7976,13 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
 
                 if (json.success) {
                     const emailFailed = json.email_sent === false;
+                    const emailErrorText = json.email_error
+                        ? (isZh ? `（原因：${json.email_error}）` : ` (${json.email_error})`)
+                        : '';
                     const successText = emailFailed
                         ? (isZh
-                            ? '感謝您提供報名資訊，系統已收到資料，但收件通知信暫時未能成功寄出。主辦單位審核完成後，仍會依您提供的 Email 寄發報名成功信函。'
-                            : 'Thank you. We have received your registration information, but the receipt notice could not be sent at this time. The organizer will still email the registration approval notice after review.')
+                            ? `感謝您提供報名資訊，系統已收到資料，但收件通知信暫時未能成功寄出${emailErrorText}。主辦單位審核完成後，仍會依您提供的 Email 寄發報名成功信函。`
+                            : `Thank you. We have received your registration information, but the receipt notice could not be sent at this time${emailErrorText}. The organizer will still email the registration approval notice after review.`)
                         : (isZh
                             ? '感謝您提供報名資訊，系統已寄出收件通知。主辦單位審核完成後，將再以 Email 寄發報名成功信函。'
                             : 'Thank you. We have received your registration information and sent a receipt notice. The organizer will email the registration approval notice after review.');
