@@ -310,14 +310,19 @@ function saveRegistrant_(params) {
 
   cache.put(rateKey, '1', 600);
 
-  return { message: '已收到報名資料', email_sent: sendRegistrationReceipt_(email, {
+  const receiptResult = sendRegistrationReceipt_(email, {
     name: name,
     email: email,
     phone: cleanText_(params.phone, 50),
     org: org,
     title: title,
     remarks: cleanText_(params.remarks, 1000)
-  }) };
+  });
+  return {
+    message: '已收到報名資料',
+    email_sent: receiptResult.sent,
+    email_error: receiptResult.error || ''
+  };
 }
 
 function saveSubscriber_(params) {
@@ -337,7 +342,9 @@ function sendRegistrationReceipt_(email, registrant) {
   const settings = getSettings_();
   const title = settings.conference_title_zh || '2026 智慧網路 SIG 研討會';
   const contactEmail = 'arlena@impr.com.tw';
-  if (String(settings.receipt_email_enabled || 'true').toLowerCase() === 'false') return null;
+  if (String(settings.receipt_email_enabled || 'true').toLowerCase() === 'false') {
+    return { sent: false, error: 'receipt_email_disabled' };
+  }
 
   const variables = {
     name: registrant.name || '',
@@ -390,6 +397,7 @@ function sendRegistrationReceipt_(email, registrant) {
   try {
     const mailOptions = {
       to: email,
+      bcc: contactEmail,
       subject: subject,
       body: body,
       htmlBody: htmlBody,
@@ -397,10 +405,10 @@ function sendRegistrationReceipt_(email, registrant) {
     };
     if (replyTo && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(replyTo)) mailOptions.replyTo = replyTo;
     MailApp.sendEmail(mailOptions);
-    return true;
+    return { sent: true, error: '' };
   } catch (error) {
     console.error('報名通知信寄送失敗：' + error.message);
-    return false;
+    return { sent: false, error: error.message || String(error) };
   }
 }
 
