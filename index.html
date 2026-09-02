@@ -6613,17 +6613,26 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                 speaker.title_zh,
                 speaker.title_en
             ].filter(Boolean).join(' ').toLowerCase();
-            if (!/(ntt|東日本|增山|mashiyama|masuyama)/.test(key)) return speaker;
+            if (/(ntt|東日本|增山|mashiyama|masuyama)/.test(key)) {
+                return {
+                    ...speaker,
+                    organization_zh: 'NTT東日本株式会社（NTT EAST, Inc.）\n新事業開發總部 無線與物聯網事業部',
+                    organization_en: 'NTT EAST, Inc.\nNew Business Development Headquarters, Wireless & IoT Business Division',
+                    name_zh: '增山大史',
+                    name_en: 'Daishi Mashiyama',
+                    title_zh: '擔當部長',
+                    title_en: 'Senior Manager'
+                };
+            }
 
-            return {
-                ...speaker,
-                organization_zh: 'NTT東日本株式会社（NTT EAST, Inc.）\n新事業開發總部 無線與物聯網事業部',
-                organization_en: 'NTT EAST, Inc.\nNew Business Development Headquarters, Wireless & IoT Business Division',
-                name_zh: '增山 大志 Daishi Mashiyama',
-                name_en: 'Daishi Mashiyama',
-                title_zh: '擔當部長',
-                title_en: 'Senior Manager'
-            };
+            if (/耀登科技股份有限公司|耀睿科技|auden|auray|吳長益|johnny wu/.test(key)) {
+                return {
+                    ...speaker,
+                    organization_zh: '耀登集團 耀睿科技'
+                };
+            }
+
+            return speaker;
         }
 
         function localSpeakerPhotoUrl(speaker) {
