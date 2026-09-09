@@ -1965,6 +1965,24 @@
             border-bottom: 1px solid var(--border-color);
         }
 
+        .hero-email-note {
+            margin: 0 auto 22px;
+            padding: 14px 16px;
+            border: 1px solid rgba(14, 116, 144, 0.18);
+            border-radius: 8px;
+            background: rgba(14, 165, 233, 0.08);
+            color: #0f3554;
+            font-size: 14px;
+            line-height: 1.7;
+            text-align: left;
+            max-width: 1180px;
+        }
+
+        .hero-email-note i {
+            color: var(--primary-color);
+            margin-right: 6px;
+        }
+
         .reg-field-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -4991,6 +5009,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 .livestream-notice,
 .subscribe-box p,
 .reg-form-subtitle,
+.hero-email-note,
 .reg-field label,
 .reg-field input,
 .reg-field select,
@@ -5492,6 +5511,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
             </div>
             <!-- ② 資訊列：Banner 正下方，左欄文字 + 右欄倒數 -->
             <div class="hero-body-wrap">
+            <div class="hero-email-note" id="hero-email-note"><i class="fas fa-envelope"></i>報名成功通知已寄出。請查 Email；未收到請查垃圾郵件。仍找不到請聯繫 arlena@impr.com.tw。</div>
             <div class="hero-body">
                 <div class="hero-left">
                     <h1 class="hero-title hidden-site-option" id="hero-title">2026 智慧網路 SIG 研討會</h1>
@@ -5526,7 +5546,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 <!-- 右欄：倒數計時 -->
                 <div class="hero-right">
                     <div class="countdown" id="countdown-section">
-                        <div class="countdown-title" id="countdown-title">距離報名截止還有</div>
+                        <div class="countdown-title" id="countdown-title">距離會議開始還有</div>
                         <div class="countdown-timer" id="countdown-timer">
                             <div class="countdown-item">
                                 <span class="countdown-number" id="days">00</span>
@@ -7013,12 +7033,11 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
 
         // 更新倒數計時
         function updateCountdown() {
-            const settings = siteData.settings;
+            const settings = siteData.settings || {};
             const now = new Date();
             let targetDate;
             let titleText;
 
-            const fallbackRegistrationEnd = new Date('2026-09-10T23:59:00+08:00');
             const fallbackEventStart = new Date('2026-09-15T13:00:00+08:00');
             const fallbackEventEnd = new Date('2026-09-15T17:00:00+08:00');
             const parseCountdownDate = (value, fallback = null) => {
@@ -7026,18 +7045,21 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                 const parsed = new Date(value);
                 return Number.isNaN(parsed.getTime()) ? fallback : parsed;
             };
+            const hasValidConfiguredEventDate = (value) => {
+                if (!value) return false;
+                const parsed = new Date(value);
+                return !Number.isNaN(parsed.getTime()) && parsed.getFullYear() >= 2026;
+            };
 
-            const registrationEnd = parseCountdownDate(settings.registration_end_at, fallbackRegistrationEnd);
-            const eventStart = parseCountdownDate(settings.event_start_at, fallbackEventStart);
-            const eventEnd = parseCountdownDate(settings.event_end_at, fallbackEventEnd);
-            const registrationStatus = getEffectiveRegistrationStatus(settings);
+            const eventStart = hasValidConfiguredEventDate(settings.event_start_at)
+                ? parseCountdownDate(settings.event_start_at, fallbackEventStart)
+                : fallbackEventStart;
+            const eventEnd = hasValidConfiguredEventDate(settings.event_end_at)
+                ? parseCountdownDate(settings.event_end_at, fallbackEventEnd)
+                : fallbackEventEnd;
 
-            if (registrationStatus === 'open' && registrationEnd && now < registrationEnd) {
-                // 報名期間
-                targetDate = registrationEnd;
-                titleText = currentLang === 'zh' ? '距離報名截止還有' : 'Registration closes in';
-            } else if (eventStart && now < eventStart) {
-                // 報名結束後到活動開始前
+            if (eventStart && now < eventStart) {
+                // 活動開始前
                 targetDate = eventStart;
                 titleText = currentLang === 'zh' ? '距離會議開始還有' : 'Event starts in';
             } else if (eventEnd && now < eventEnd) {
@@ -7990,11 +8012,11 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                         : '';
                     const successText = emailFailed
                         ? (isZh
-                            ? `感謝您提供報名資訊，系統已收到資料，但收件通知信暫時未能成功寄出${emailErrorText}。主辦單位審核完成後，仍會依您提供的 Email 寄發報名成功信函。`
-                            : `Thank you. We have received your registration information, but the receipt notice could not be sent at this time${emailErrorText}. The organizer will still email the registration approval notice after review.`)
+                            ? `感謝您提供報名資訊，系統已收到資料，但報名通知信暫時未能成功寄出${emailErrorText}。若有任何疑問，請通知 arlena@impr.com.tw。`
+                            : `Thank you. We have received your registration information, but the registration notice could not be sent at this time${emailErrorText}. Please contact arlena@impr.com.tw if you have any questions.`)
                         : (isZh
-                            ? '感謝您提供報名資訊，系統已寄出收件通知。主辦單位審核完成後，將再以 Email 寄發報名成功信函。'
-                            : 'Thank you. We have received your registration information and sent a receipt notice. The organizer will email the registration approval notice after review.');
+                            ? '感謝您提供報名資訊，報名成功通知已寄出。'
+                            : 'Thank you. Your registration confirmation has been sent.');
 
                     // 成功：顯示感謝畫面
                     document.getElementById('reg-form-wrap').innerHTML = `
@@ -8241,6 +8263,13 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             // ── 浮動按鈕文字 ──
             const agendaLinkText = document.getElementById('agenda-link-text');
             if (agendaLinkText) agendaLinkText.textContent = isEn ? 'View Agenda' : '查看議程';
+
+            const heroEmailNote = document.getElementById('hero-email-note');
+            if (heroEmailNote) {
+                heroEmailNote.innerHTML = isEn
+                    ? '<i class="fas fa-envelope"></i>Registration confirmation has been sent. Check your email and spam folder. Still missing? Contact arlena@impr.com.tw.'
+                    : '<i class="fas fa-envelope"></i>報名成功通知已寄出。請查 Email；未收到請查垃圾郵件。仍找不到請聯繫 arlena@impr.com.tw。';
+            }
 
             const floatingLabel = document.getElementById('floating-btn-label');
             if (floatingLabel) {
