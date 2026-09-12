@@ -1983,6 +1983,31 @@
             margin-right: 6px;
         }
 
+        .reg-closed-note {
+            margin: 0 0 24px;
+            padding: 16px 18px;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            border-radius: 8px;
+            background: #f8fafc;
+            color: #334155;
+            font-size: 15px;
+            line-height: 1.7;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .reg-form-wrap.is-closed {
+            opacity: 0.88;
+        }
+
+        .reg-form-wrap.is-closed input,
+        .reg-form-wrap.is-closed select,
+        .reg-form-wrap.is-closed textarea {
+            background: #f1f5f9;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
         .reg-field-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -6130,6 +6155,18 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             return ['open', 'coming_soon', 'closed'].includes(status) ? status : 'open';
         }
 
+        function getRegistrationEndDate(settings = siteData.settings || {}) {
+            const configured = settings.registration_end_at ? new Date(settings.registration_end_at) : null;
+            if (configured && !Number.isNaN(configured.getTime())) return configured;
+            return new Date(DEFAULT_SITE_SETTINGS.registration_end_at);
+        }
+
+        function isRegistrationClosed(settings = siteData.settings || {}) {
+            const status = getEffectiveRegistrationStatus(settings);
+            const regEnd = getRegistrationEndDate(settings);
+            return status !== 'open' || (regEnd && new Date() > regEnd);
+        }
+
         async function apiFetch(action, init = {}) {
             const url = `${activeApiBaseUrl}?action=${action}`;
             const controller = new AbortController();
@@ -6956,8 +6993,8 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
 
             // ── 時間判斷：若報名截止時間已過，強制隱藏 ──
             const now = new Date();
-            const regEnd = settings.registration_end_at ? new Date(settings.registration_end_at) : null;
-            const isExpired = regEnd && now > regEnd;
+            const regEnd = getRegistrationEndDate(settings);
+            const isExpired = isRegistrationClosed(settings);
 
             // ── 更新文字 ──
             const lang = currentLang;
@@ -7787,14 +7824,11 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
         async function initRegisterForm() {
             const settings = siteData.settings || {};
             const regStatus = getEffectiveRegistrationStatus(settings);
+            const closed = isRegistrationClosed(settings);
             const regSec = document.getElementById('register-section');
             if (!regSec) return;
 
-            // 只在報名開放時顯示
-            if (regStatus !== 'open') {
-                regSec.classList.add('hidden');
-                return;
-            }
+            // 報名截止後仍顯示表單區，但欄位改為不可填寫。
             regSec.classList.remove('hidden');
 
             const normalizeFormFields = fields => fields
@@ -7836,11 +7870,11 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
 
             if (hasUserInput()) return;
 
-            renderRegForm(normalizeFormFields(DEFAULT_FORM_FIELDS));
+            renderRegForm(normalizeFormFields(DEFAULT_FORM_FIELDS), { closed });
 
             const cachedFields = readApiCache('getFormFields', Infinity);
             if (cachedFields && cachedFields.success && Array.isArray(cachedFields.data) && cachedFields.data.length > 0 && !hasUserInput()) {
-                renderRegForm(normalizeFormFields(cachedFields.data));
+                renderRegForm(normalizeFormFields(cachedFields.data), { closed });
                 scheduleFreshApiFetch('getFormFields');
                 return;
             }
@@ -7850,15 +7884,17 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                 const res = await apiFetch('getFormFields', { timeoutMs: 5000 });
                 writeApiCache('getFormFields', res);
                 if (res.success && Array.isArray(res.data) && res.data.length > 0 && !hasUserInput()) {
-                    renderRegForm(normalizeFormFields(res.data));
+                    renderRegForm(normalizeFormFields(res.data), { closed: isRegistrationClosed(siteData.settings || settings) });
                 }
             } catch(e) { /* 使用預設欄位 */ }
         }
 
-        function renderRegForm(fields) {
+        function renderRegForm(fields, options = {}) {
             const wrap = document.getElementById('reg-form-wrap');
             if (!wrap) return;
             const isZh = currentLang === 'zh';
+            const closed = Boolean(options.closed);
+            wrap.classList.toggle('is-closed', closed);
             const formHeaderHtml = isZh
                 ? '<img class="reg-form-header" src="assets/optimized-images/registration-form-header.jpg" alt="2026 智慧網路 SIG 研討會" loading="lazy" decoding="async">'
                 : '<div class="reg-form-header-en"><strong>2026 Smart Networks SIG Seminar</strong><span>Online Registration</span></div>';
@@ -7871,10 +7907,10 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                 const isPair = f.half && next && next.half;
 
                 if (isPair) {
-                    fieldsHtml += `<div class="reg-field-group">${fieldHtml(f, isZh)}${fieldHtml(next, isZh)}</div>`;
+                    fieldsHtml += `<div class="reg-field-group">${fieldHtml(f, isZh, closed)}${fieldHtml(next, isZh, closed)}</div>`;
                     i += 2;
                 } else {
-                    fieldsHtml += `<div class="reg-field-group full">${fieldHtml(f, isZh)}</div>`;
+                    fieldsHtml += `<div class="reg-field-group full">${fieldHtml(f, isZh, closed)}</div>`;
                     i++;
                 }
             }
@@ -7885,10 +7921,11 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                     ? '請填寫以下資料，送出後將自動記錄至系統。標示 <span style="color:#ef4444">*</span> 為必填欄位。'
                     : 'Please complete the form below. Fields marked <span style="color:#ef4444">*</span> are required.'
                 }</div>
+                ${closed ? `<div class="reg-closed-note">${isZh ? '報名已截止，線上報名表目前不開放填寫。' : 'Registration is closed. This online form is no longer accepting responses.'}</div>` : ''}
                 <form id="reg-form" novalidate>
                     ${fieldsHtml}
                     <div class="reg-privacy-check">
-                        <input type="checkbox" id="reg-privacy-cb">
+                        <input type="checkbox" id="reg-privacy-cb" ${closed ? 'disabled' : ''}>
                         <label for="reg-privacy-cb">
                             ${isZh
                                 ? '本人已閱讀並同意<a href="#" onclick="event.preventDefault();showPrivacyModal();" style="color:var(--primary-color);font-weight:600;">個人資料蒐集告知事項</a>，同意主辦單位依法蒐集、處理及利用本人填寫之個人資料，用於本活動報名確認、出席管理及相關聯繫事宜。'
@@ -7897,8 +7934,8 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                         </label>
                     </div>
                     <div class="reg-submit-wrap">
-                        <button type="button" class="reg-submit-btn" id="reg-submit-btn" onclick="submitRegForm()">
-                            ${isZh ? '確認送出報名' : 'Submit Registration'}
+                        <button type="button" class="reg-submit-btn" id="reg-submit-btn" onclick="submitRegForm()" ${closed ? 'disabled' : ''}>
+                            ${closed ? (isZh ? '報名已截止' : 'Registration Closed') : (isZh ? '確認送出報名' : 'Submit Registration')}
                         </button>
                         <span class="reg-status" id="reg-status"></span>
                     </div>
@@ -7914,7 +7951,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             });
         }
 
-        function fieldHtml(f, isZh) {
+        function fieldHtml(f, isZh, disabled = false) {
             const label = isZh ? f.label_zh : (f.label_en || f.label_zh);
             const labelHtml = String(f.key || '') === 'org' && isZh
                 ? '所屬單位<span class="reg-label-note">（公司、法人、學校等）</span>'
@@ -7926,13 +7963,14 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             const fieldKey = String(f.key || '').replace(/[^a-zA-Z0-9_-]/g, '');
             const fieldClass = `reg-field reg-field--${fieldKey}`;
             const requiredAttr = f.required ? 'required' : '';
+            const disabledAttr = disabled ? 'disabled' : '';
 
             if (f.type === 'select') {
                 const opts = (isZh ? f.options_zh : f.options_en) || [];
                 const optsHtml = opts.map(o => `<option>${escapeHtml(o)}</option>`).join('');
                 return `<div class="${fieldClass}">
                     <label>${labelHtml}${req}</label>
-                    <select name="${escapeHtml(f.key)}" ${requiredAttr}>
+                    <select name="${escapeHtml(f.key)}" ${requiredAttr} ${disabledAttr}>
                         <option value="">${isZh ? '請選擇' : 'Select...'}</option>
                         ${optsHtml}
                     </select>
@@ -7941,13 +7979,13 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             } else if (f.type === 'textarea') {
                 return `<div class="${fieldClass}">
                     <label>${labelHtml}${req}</label>
-                    <textarea name="${escapeHtml(f.key)}" placeholder="${escapeHtml(placeholder)}" rows="3" ${requiredAttr}></textarea>
+                    <textarea name="${escapeHtml(f.key)}" placeholder="${escapeHtml(placeholder)}" rows="3" ${requiredAttr} ${disabledAttr}></textarea>
                     ${hintHtml}
                 </div>`;
             } else {
                 return `<div class="${fieldClass}">
                     <label>${labelHtml}${req}</label>
-                    <input type="${escapeHtml(f.type)}" name="${escapeHtml(f.key)}" placeholder="${escapeHtml(placeholder)}" ${requiredAttr}>
+                    <input type="${escapeHtml(f.type)}" name="${escapeHtml(f.key)}" placeholder="${escapeHtml(placeholder)}" ${requiredAttr} ${disabledAttr}>
                     ${hintHtml}
                 </div>`;
             }
@@ -7959,6 +7997,14 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             const status = document.getElementById('reg-status');
             const isZh = currentLang === 'zh';
             const privacyCheckbox = document.getElementById('reg-privacy-cb');
+
+            if (isRegistrationClosed(siteData.settings || {})) {
+                if (status) {
+                    status.textContent = isZh ? '報名已截止' : 'Registration is closed';
+                    status.className = 'reg-status error';
+                }
+                return;
+            }
 
             if (privacyCheckbox && !privacyCheckbox.checked) {
                 status.textContent = isZh ? '⚠️ 請先勾選個人資料蒐集告知事項' : '⚠️ Please agree to the personal data collection notice first';
@@ -8062,7 +8108,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
 
         // 顯示個資宣告 Modal
         function showPrivacyModal() {
-            if (getEffectiveRegistrationStatus(siteData.settings) !== 'open') return;
+            if (isRegistrationClosed(siteData.settings || {})) return;
 
             const modal = document.getElementById('privacy-modal');
             const title = document.getElementById('privacy-title');
@@ -8274,8 +8320,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             const floatingLabel = document.getElementById('floating-btn-label');
             if (floatingLabel) {
                 const s = siteData.settings || {};
-                const regEnd = s.registration_end_at ? new Date(s.registration_end_at) : null;
-                const isExpired = regEnd && new Date() > regEnd;
+                const isExpired = isRegistrationClosed(s);
                 floatingLabel.textContent = getRegisterLabels(getEffectiveRegistrationStatus(s), isExpired, currentLang).floating;
             }
 
