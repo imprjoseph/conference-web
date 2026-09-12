@@ -6064,6 +6064,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             event_end_at: '2026-09-15T17:00:00+08:00',
             registration_status: 'open'
         });
+        const REGISTRATION_FORCE_CLOSED = true;
         const FOOTER_CONTACT_PHONE = '02-27635666#111';
         const FOOTER_CONTACT_ADDRESS_ZH = '台北市大安區敦化南路二段1號11樓';
         const DEFAULT_TRAFFIC_MAP_QUERY = '政大公企中心645會議室 台北市大安區金華街187號';
@@ -6162,6 +6163,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
         }
 
         function isRegistrationClosed(settings = siteData.settings || {}) {
+            if (REGISTRATION_FORCE_CLOSED) return true;
             const status = getEffectiveRegistrationStatus(settings);
             const regEnd = getRegistrationEndDate(settings);
             return status !== 'open' || (regEnd && new Date() > regEnd);
@@ -8375,6 +8377,22 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                     : '請填寫以下資料，送出後將自動記錄至系統。標示 <span style="color:#ef4444">*</span> 為必填欄位。';
             }
 
+            const closed = isRegistrationClosed(siteData.settings || {});
+            wrap.classList.toggle('is-closed', closed);
+            let closedNote = wrap.querySelector('.reg-closed-note');
+            if (closed && !closedNote) {
+                closedNote = document.createElement('div');
+                closedNote.className = 'reg-closed-note';
+                const form = wrap.querySelector('#reg-form');
+                if (form) wrap.insertBefore(closedNote, form);
+            }
+            if (closedNote) {
+                closedNote.textContent = isEn
+                    ? 'Registration is closed. This online form is no longer accepting responses.'
+                    : '報名已截止，線上報名表目前不開放填寫。';
+                closedNote.style.display = closed ? '' : 'none';
+            }
+
             const labels = {
                 name: isEn ? 'Name<span class="required">*</span>' : '姓名<span class="required">*</span>',
                 email: 'Email<span class="required">*</span>',
@@ -8401,7 +8419,16 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             }
 
             const submitBtn = document.getElementById('reg-submit-btn');
-            if (submitBtn) submitBtn.textContent = isEn ? 'Submit Registration' : '確認送出報名';
+            if (submitBtn) {
+                submitBtn.textContent = closed
+                    ? (isEn ? 'Registration Closed' : '報名已截止')
+                    : (isEn ? 'Submit Registration' : '確認送出報名');
+                submitBtn.disabled = closed;
+            }
+
+            wrap.querySelectorAll('input, select, textarea').forEach(el => {
+                el.disabled = closed;
+            });
         }
 
         // 初始化手機選單
