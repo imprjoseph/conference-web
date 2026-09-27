@@ -968,17 +968,6 @@
             margin-bottom: 20px;
         }
 
-        .past-event-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        .past-event-link:hover {
-            text-decoration: underline;
-        }
-
         /* 浮動報名按鈕 */
         /* ── 最新消息 ── */
         .news-list {
@@ -5550,11 +5539,12 @@ body.archive-mode .past-events-grid {
 
 body.archive-mode .past-event-card {
     display: grid;
-    grid-template-columns: 300px minmax(0, 1fr);
+    grid-template-columns: 1fr;
     width: 100%;
     min-height: 280px;
     border: 1px solid #d8e3ea;
     border-radius: 8px;
+    overflow: hidden;
     box-shadow: 0 10px 30px rgba(15, 47, 73, .07);
 }
 
@@ -5564,9 +5554,10 @@ body.archive-mode .past-event-card:hover {
 }
 
 body.archive-mode .past-event-image {
-    width: 300px;
-    height: 100%;
-    min-height: 280px;
+    width: 100%;
+    height: auto;
+    min-height: 220px;
+    aspect-ratio: 3 / 1;
     background: #123f63;
     color: #8fe3dc;
     font-size: 38px;
@@ -5575,7 +5566,7 @@ body.archive-mode .past-event-image {
 body.archive-mode .past-event-content {
     display: flex;
     flex-direction: column;
-    padding: 34px 38px;
+    padding: 36px 42px 32px;
 }
 
 body.archive-mode .past-event-year {
@@ -5630,15 +5621,10 @@ body.archive-mode .archive-event-meta-item span {
     line-height: 1.45;
 }
 
-body.archive-mode .past-event-link,
 body.archive-mode .past-event-unavailable {
     margin-top: auto;
     font-size: 14px;
     font-weight: 700;
-}
-
-body.archive-mode .past-event-link {
-    color: #0b6f69;
 }
 
 body.archive-mode .past-event-unavailable {
@@ -5676,7 +5662,9 @@ body.archive-mode .archive-event-details > summary::after {
 body.archive-mode .archive-event-details[open] > summary::after { transform: rotate(180deg); }
 
 body.archive-mode .archive-detail-body {
-    padding: 6px 28px 30px;
+    width: min(1100px, calc(100% - 56px));
+    margin: 0 auto;
+    padding: 10px 0 48px;
 }
 
 body.archive-mode .archive-detail-nav {
@@ -5706,9 +5694,11 @@ body.archive-mode .archive-detail-section + .archive-detail-section {
 }
 
 body.archive-mode .archive-detail-section h4 {
-    margin: 0 0 16px;
+    margin: 0 0 20px;
+    padding-left: 14px;
+    border-left: 4px solid #15a89b;
     color: #102f49;
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 800;
 }
 
@@ -5717,35 +5707,6 @@ body.archive-mode .archive-detail-section > p {
     color: #536a7c;
     font-size: 15px;
     line-height: 1.8;
-}
-
-body.archive-mode .archive-stats {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 12px;
-    margin-top: 22px;
-}
-
-body.archive-mode .archive-stat {
-    padding: 18px;
-    border-left: 4px solid #15a89b;
-    background: #f2f7f8;
-}
-
-body.archive-mode .archive-stat strong {
-    display: block;
-    color: #102f49;
-    font-size: 24px;
-    line-height: 1.2;
-}
-
-body.archive-mode .archive-stat span {
-    display: block;
-    margin-top: 7px;
-    color: #607487;
-    font-size: 13px;
-    font-weight: 700;
-    line-height: 1.45;
 }
 
 body.archive-mode .archive-speakers {
@@ -5818,7 +5779,19 @@ body.archive-mode .archive-photo-grid {
     gap: 14px;
 }
 
-body.archive-mode .archive-photo-grid img {
+body.archive-mode .archive-photo-item {
+    margin: 0;
+}
+
+body.archive-mode .archive-photo-item.is-featured {
+    grid-column: 1 / -1;
+}
+
+body.archive-mode .archive-photo-item.is-wide {
+    grid-column: 1 / -1;
+}
+
+body.archive-mode .archive-photo-item img {
     display: block;
     width: 100%;
     aspect-ratio: 4 / 3;
@@ -5826,18 +5799,32 @@ body.archive-mode .archive-photo-grid img {
     border-radius: 6px;
 }
 
-body.archive-mode .archive-album-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 18px;
-    padding: 10px 14px;
-    border-radius: 4px;
-    background: #0b6f69;
-    color: #fff;
+body.archive-mode .archive-photo-item.is-featured img {
+    aspect-ratio: 16 / 8;
+}
+
+body.archive-mode .archive-photo-item.is-wide img {
+    aspect-ratio: 16 / 9;
+}
+
+body.archive-mode .archive-photo-item figcaption {
+    padding: 9px 2px 2px;
+    color: #536a7c;
     font-size: 14px;
-    font-weight: 800;
-    text-decoration: none;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+body.archive-mode .archive-summary-copy p + p {
+    margin-top: 14px;
+}
+
+body.archive-mode .archive-summary-copy p {
+    margin: 0;
+    color: #435d70;
+    font-size: 17px;
+    line-height: 1.9;
+    text-align: justify;
 }
 
 body.archive-mode .archive-empty {
@@ -5897,8 +5884,9 @@ body.archive-mode .footer-col:last-child {
 
     body.archive-mode .past-event-image {
         width: 100%;
-        height: 120px;
-        min-height: 120px;
+        height: auto;
+        min-height: 118px;
+        aspect-ratio: 3 / 1;
     }
 
     body.archive-mode .past-event-content { padding: 26px 22px; }
@@ -5906,9 +5894,8 @@ body.archive-mode .footer-col:last-child {
     body.archive-mode .archive-event-meta { grid-template-columns: 1fr; }
 
     body.archive-mode .archive-speakers { grid-template-columns: 1fr; }
-    body.archive-mode .archive-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     body.archive-mode .archive-photo-grid { grid-template-columns: 1fr; }
-    body.archive-mode .archive-detail-body { padding: 4px 18px 24px; }
+    body.archive-mode .archive-detail-body { width: calc(100% - 36px); padding: 4px 0 28px; }
     body.archive-mode .archive-event-details > summary { padding: 16px 18px; }
     body.archive-mode .archive-agenda-row { grid-template-columns: 92px minmax(0, 1fr); }
 
@@ -6515,14 +6502,8 @@ body.archive-mode .footer-col:last-child {
                 time_en: '1:00–5:00 PM',
                 location_zh: '政大公企中心 645 會議室',
                 location_en: 'NCCU Center for Public and Business Administration, Room 645',
-                summary_zh: '本屆研討會以「AI-RAN 之商業化與產業應用：O-RAN 生態系的發展機會」為主軸，集結臺灣、日本產學研專家，從 AI-RAN、O-RAN、6G、ISAC、Agentic AI、自主網路及企業專網等面向，探討人工智慧與行動通訊網路融合下的技術發展與商業化機會。活動實際出席 54 人、涵蓋 20 家企業及機構；29 份有效問卷顯示六場專題平均 4.80 分，97.1% 評分為 4 或 5 分。',
-                summary_en: 'Centered on “Commercialization and Industrial Applications of AI-RAN: Development Opportunities in the O-RAN Ecosystem,” the seminar brought together experts from Taiwan and Japan to discuss AI-RAN, O-RAN, 6G, ISAC, agentic AI, autonomous networks, and private networks. The event welcomed 54 participants from 20 companies and institutions. Across 29 valid survey responses, the six sessions received an average score of 4.80/5, with 97.1% of ratings at 4 or 5.',
-                stats: [
-                    { value: '54', label_zh: '實際出席人數', label_en: 'Attendees' },
-                    { value: '20', label_zh: '企業及機構', label_en: 'Organizations' },
-                    { value: '4.80/5', label_zh: '專題平均評分', label_en: 'Average session score' },
-                    { value: '97.1%', label_zh: '評分為 4 或 5 分', label_en: 'Ratings of 4 or 5' }
-                ],
+                summary_zh: '本屆研討會以「AI-RAN 之商業化與產業應用：O-RAN 生態系的發展機會」為主軸，邀集臺灣與日本產學研專家，聚焦人工智慧與行動通訊網路深度融合後的技術演進、產業應用及商業化路徑。會議由實體 AI、AI 原生無線接取網路與 O-RAN 開放架構出發，進一步延伸至 6G、整合感測與通訊（ISAC）、Agentic AI、自主網路及企業專網等重要議題。\n\n六場專題依序探討 Private AI-RAN 在 Physical AI 時代的角色、面向 6G 的 AI 原生感測與意圖驅動代理系統、AI-RAN 商業化及 O-RAN PlugFest 實測經驗、具推理能力的網路與代理協作分析、ISAC 基地台的整合應用，以及由大型語言模型驅動的應用啟用與服務品質最佳化。講師並從電信營運、學術研究、測試驗證、網路分析與系統整合等不同角度分享實務觀察。\n\n會議交流顯示，AI-RAN 正由技術探索逐步走向實際部署與商業應用；未來網路也將朝向 AI 原生、意圖驅動與高度自主化發展。O-RAN 的開放架構有助於多供應商整合、測試驗證與創新服務落地，ISAC 則使基地台從通訊設備進一步成為感測、運算與智慧服務平台。產業競爭的核心，將由單純追求傳輸效能，擴展至人工智慧、軟體、資料與跨領域整合能力。',
+                summary_en: 'The seminar focused on “Commercialization and Industrial Applications of AI-RAN: Development Opportunities in the O-RAN Ecosystem.” Experts from Taiwan and Japan examined the technical evolution, industrial applications, and commercialization paths emerging from the deeper integration of artificial intelligence and mobile networks. Beginning with Physical AI, AI-native radio access networks, and open O-RAN architecture, the program extended to 6G, integrated sensing and communication (ISAC), agentic AI, autonomous networks, and private networks.\n\nThe six sessions covered Private AI-RAN in the era of Physical AI; AI-native sensing and intent-driven agentic systems for 6G; AI-RAN commercialization and lessons from O-RAN PlugFest; reasoning networks and agent-orchestrated analytics; ISAC-enabled base stations; and LLM-driven application activation and QoS optimization. Speakers contributed perspectives from telecommunications operations, academic research, testing and validation, network analytics, and systems integration.\n\nThe discussions highlighted that AI-RAN is progressing from technical exploration toward deployment and commercial use, while future networks are becoming AI-native, intent-driven, and increasingly autonomous. Open O-RAN architecture will remain important for multi-vendor integration, validation, and service innovation. ISAC can further transform base stations into sensing, computing, and intelligent service platforms. Industry competitiveness will therefore depend not only on transmission performance, but also on capabilities in AI, software, data, and cross-domain integration.',
                 speakers: [
                     { name_zh: '增山大史 Daishi Mashiyama', name_en: 'Daishi Mashiyama', organization_zh: 'NTT東日本株式会社（NTT EAST, Inc.）', organization_en: 'NTT EAST, Inc.', title_zh: '擔當部長', title_en: 'Executive Manager', photo: 'assets/speakers/daishi-masuyama.png' },
                     { name_zh: '呂政修', name_en: 'Cheng-Hsiu Lu', organization_zh: '國立臺灣科技大學 電資學院', organization_en: 'National Taiwan University of Science and Technology', title_zh: '院長', title_en: 'Dean', photo: 'assets/speakers/cheng-hsiu-lu.png' },
@@ -6541,14 +6522,15 @@ body.archive-mode .footer-col:last-child {
                 ],
                 agenda_image_url: 'assets/optimized-images/agenda-sig-table-2026.jpg',
                 photos: [
-                    'https://drive.google.com/thumbnail?id=1BThmScsZu-L3XUOkihT0c1xndk-s3J2m&sz=w1200',
-                    'https://drive.google.com/thumbnail?id=1v3VO8gLNNoxTtBnjUX-AkWWOHsbmilj1&sz=w1200',
-                    'https://drive.google.com/thumbnail?id=1xqdIgJXKsdLbTjv-bKwHFOlyAX2-Yeyy&sz=w1200',
-                    'https://drive.google.com/thumbnail?id=1tAxrF_QJB8pJpYaQ5ZliRB-MBmO1Yxa_&sz=w1200',
-                    'https://drive.google.com/thumbnail?id=1v9xHeqZ71cAh3KZbMjdAV7WiN3OUgKrH&sz=w1200',
-                    'https://drive.google.com/thumbnail?id=1gsOIl8HJMWQSOvuwi2vzvDGWjkU_XiyU&sz=w1200'
+                    { url: 'assets/archive/2026/group-photo.jpg', caption_zh: '與會貴賓與講師大合照', caption_en: 'Group photo with guests and speakers', featured: true },
+                    { url: 'assets/archive/2026/networking.jpg', caption_zh: '產業交流與技術展示現場', caption_en: 'Industry networking and technology showcase', wide: true },
+                    { url: 'assets/archive/2026/daishi-mashiyama.jpg', caption_zh: '增山大史專題分享', caption_en: 'Presentation by Daishi Mashiyama' },
+                    { url: 'assets/archive/2026/cheng-hsiu-lu.jpg', caption_zh: '呂政修專題分享', caption_en: 'Presentation by Cheng-Hsiu Lu' },
+                    { url: 'assets/archive/2026/chang-yi-wu.jpg', caption_zh: '吳長益專題分享', caption_en: 'Presentation by Chang-Yi Wu' },
+                    { url: 'assets/archive/2026/osamah-abdullaziz.jpg', caption_zh: 'Osamah Ibrahiem Abdullaziz 專題分享', caption_en: 'Presentation by Osamah Ibrahiem Abdullaziz' },
+                    { url: 'assets/archive/2026/jing-guang-han.jpg', caption_zh: '韓景光專題分享', caption_en: 'Presentation by Jing-Guang Han' },
+                    { url: 'assets/archive/2026/wan-yi-lin.jpg', caption_zh: '林萬怡專題分享', caption_en: 'Presentation by Wan-Yi Lin' }
                 ],
-                album_url: 'https://drive.google.com/drive/folders/1oh07P0NF1e1FHDNWvIMFcMzqhPBRy-8i?usp=drive_link',
                 featured_image_url: 'assets/optimized-images/2026sig-banner-web.jpg',
                 sort_order: 1,
                 is_visible: true
@@ -6572,7 +6554,6 @@ body.archive-mode .footer-col:last-child {
                 agenda: [],
                 agenda_image_url: '',
                 photos: [],
-                album_url: '',
                 featured_image_url: '',
                 sort_order: 2,
                 is_visible: true
@@ -8197,7 +8178,6 @@ body.archive-mode .footer-col:last-child {
                 const speakers = Array.isArray(event.speakers) ? event.speakers : [];
                 const agenda = Array.isArray(event.agenda) ? event.agenda : [];
                 const photos = Array.isArray(event.photos) ? event.photos : [];
-                const stats = Array.isArray(event.stats) ? event.stats : [];
                 const emptyText = isZh ? '資料整理中，將於確認後更新。' : 'Records are being compiled and will be updated when available.';
                 const speakersHtml = speakers.length ? `<div class="archive-speakers">${speakers.map(speaker => `
                     <div class="archive-speaker">
@@ -8214,12 +8194,21 @@ body.archive-mode .footer-col:last-child {
                     </div>
                     ${event.agenda_image_url ? `<img class="archive-agenda-image" src="${event.agenda_image_url}" alt="${escapeHtml(isZh ? '會議議程表' : 'Conference agenda')}" loading="lazy" decoding="async">` : ''}`
                     : `<div class="archive-empty">${emptyText}</div>`;
-                const photosHtml = photos.length ? `<div class="archive-photo-grid">${photos.map((photo, index) => `
-                    <img src="${photo}" alt="${escapeHtml((isZh ? '活動照片 ' : 'Event photo ') + (index + 1))}" loading="lazy" decoding="async">`).join('')}</div>
-                    ${event.album_url ? `<a class="archive-album-link" href="${event.album_url}" target="_blank" rel="noopener"><i class="fas fa-images"></i> ${isZh ? '查看完整活動相簿' : 'View full photo album'}</a>` : ''}`
+                const photosHtml = photos.length ? `<div class="archive-photo-grid">${photos.map((photo, index) => {
+                    const photoData = typeof photo === 'string' ? { url: photo } : photo;
+                    const caption = isZh ? photoData.caption_zh : photoData.caption_en;
+                    const alt = caption || ((isZh ? '活動照片 ' : 'Event photo ') + (index + 1));
+                    return `<figure class="archive-photo-item${photoData.featured ? ' is-featured' : ''}${photoData.wide ? ' is-wide' : ''}">
+                        <img src="${photoData.url}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async">
+                        ${caption ? `<figcaption>${escapeHtml(caption)}</figcaption>` : ''}
+                    </figure>`;
+                }).join('')}</div>`
                     : `<div class="archive-empty">${emptyText}</div>`;
-                const statsHtml = stats.length ? `<div class="archive-stats">${stats.map(stat => `
-                    <div class="archive-stat"><strong>${escapeHtml(stat.value)}</strong><span>${escapeHtml(isZh ? stat.label_zh : stat.label_en)}</span></div>`).join('')}</div>` : '';
+                const summaryHtml = String(isZh ? event.summary_zh : event.summary_en)
+                    .split(/\n\s*\n/)
+                    .filter(Boolean)
+                    .map(paragraph => `<p>${escapeHtml(paragraph)}</p>`)
+                    .join('');
 
                 return `
                 <div class="past-event-card">
@@ -8244,11 +8233,8 @@ body.archive-mode .footer-col:last-child {
                             </div>
                         </div>
                         <div class="past-event-desc">${escapeHtml(lang === 'zh' ? event.description_zh : event.description_en)}</div>
-                        ${event.album_url
-                            ? `<a href="${event.album_url}" target="_blank" rel="noopener" class="past-event-link"><i class="fas fa-external-link-alt"></i> ${lang === 'zh' ? '查看活動紀錄' : 'View event records'}</a>`
-                            : ''}
                     </div>
-                    <details class="archive-event-details">
+                    <details class="archive-event-details"${Number(event.year) === 2026 ? ' open' : ''}>
                         <summary>${isZh ? '查看完整會議資料' : 'View conference details'}</summary>
                         <div class="archive-detail-body">
                             <nav class="archive-detail-nav" aria-label="${isZh ? '會議資料分類' : 'Conference detail sections'}">
@@ -8259,8 +8245,7 @@ body.archive-mode .footer-col:last-child {
                             </nav>
                             <section class="archive-detail-section" id="${eventKey}-summary">
                                 <h4>${isZh ? '會議摘要' : 'Conference Summary'}</h4>
-                                <p>${escapeHtml(isZh ? event.summary_zh : event.summary_en)}</p>
-                                ${statsHtml}
+                                <div class="archive-summary-copy">${summaryHtml}</div>
                             </section>
                             <section class="archive-detail-section" id="${eventKey}-speakers">
                                 <h4>${isZh ? '講師' : 'Speakers'}</h4>
@@ -9432,51 +9417,10 @@ body.archive-mode .footer-col:last-child {
             });
         }
 
-        // 歷年會議：選單點擊後開啟雲端相簿
+        // 歷年會議：移動至站內會議紀錄，不開啟外部相簿。
         async function openPastEventsAlbum(e) {
             e.preventDefault();
-            if (!Array.isArray(siteData.pastEvents) || siteData.pastEvents.length === 0) {
-                try {
-                    const data = await cachedApiFetch('getPastEvents');
-                    siteData.pastEvents = Array.isArray(data.data) ? data.data : [];
-                } catch (error) {
-                    console.error('載入歷年會議失敗:', error);
-                }
-            }
-            const events = siteData.pastEvents || [];
-            if (events.length === 0) {
-                alert(currentLang === 'zh' ? '目前沒有歷年會議資料' : 'No past events available');
-                return;
-            }
-            // 若只有一筆，直接開啟；多筆則顯示選擇清單
-            if (events.length === 1) {
-                if (events[0].album_url) window.open(events[0].album_url, '_blank', 'noopener');
-                else alert(currentLang === 'zh' ? '尚未設定相簿連結' : 'Album URL not set');
-                return;
-            }
-            // 多筆：用 Modal 顯示列表
-            const lang = currentLang;
-            const listHtml = events.map(ev => `
-                <div style="padding:12px 0; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        <div style="font-weight:600; color:#1f2937;">${ev.year} ${lang === 'zh' ? ev.title_zh : ev.title_en}</div>
-                        <div style="font-size:13px; color:#6b7280;">${lang === 'zh' ? ev.description_zh : ev.description_en}</div>
-                    </div>
-                    ${ev.album_url
-                        ? `<a href="${ev.album_url}" target="_blank" rel="noopener"
-                             style="background:#1e40af;color:#fff;padding:7px 16px;border-radius:8px;font-size:13px;text-decoration:none;white-space:nowrap;margin-left:16px;">
-                             <i class="fas fa-images"></i> ${lang === 'zh' ? '開啟相簿' : 'Open Album'}
-                           </a>`
-                        : `<span style="color:#9ca3af;font-size:13px;margin-left:16px;">${lang === 'zh' ? '無相簿' : 'N/A'}</span>`
-                    }
-                </div>`).join('');
-
-            document.getElementById('speaker-detail-content').innerHTML = `
-                <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;">
-                    ${lang === 'zh' ? '歷年會議相簿' : 'Past Event Albums'}
-                </h2>
-                ${listHtml}`;
-            document.getElementById('speaker-modal').classList.add('show');
+            document.getElementById('past-events-section')?.scrollIntoView({ behavior: 'smooth' });
         }
 
         // 解析日期，自動處理多種格式與時區問題
