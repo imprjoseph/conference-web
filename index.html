@@ -5566,14 +5566,15 @@ body.archive-mode #past-events-subtitle {
 }
 
 body.archive-mode .past-events-grid {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
-    gap: 22px;
+    grid-template-columns: 1fr;
+    gap: 34px;
 }
 
 body.archive-mode .past-event-card {
     display: grid;
-    grid-template-columns: 136px minmax(0, 1fr);
-    min-height: 210px;
+    grid-template-columns: 300px minmax(0, 1fr);
+    width: 100%;
+    min-height: 280px;
     border: 1px solid #d8e3ea;
     border-radius: 8px;
     box-shadow: 0 10px 30px rgba(15, 47, 73, .07);
@@ -5585,9 +5586,9 @@ body.archive-mode .past-event-card:hover {
 }
 
 body.archive-mode .past-event-image {
-    width: 136px;
+    width: 300px;
     height: 100%;
-    min-height: 210px;
+    min-height: 280px;
     background: #123f63;
     color: #8fe3dc;
     font-size: 38px;
@@ -5596,7 +5597,7 @@ body.archive-mode .past-event-image {
 body.archive-mode .past-event-content {
     display: flex;
     flex-direction: column;
-    padding: 26px 28px;
+    padding: 34px 38px;
 }
 
 body.archive-mode .past-event-year {
@@ -5610,15 +5611,45 @@ body.archive-mode .past-event-year {
 body.archive-mode .past-event-title {
     margin-bottom: 10px;
     color: #102f49;
-    font-size: 22px;
+    font-size: 28px;
     font-weight: 800;
 }
 
 body.archive-mode .past-event-desc {
     margin-bottom: 18px;
     color: #607487;
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.7;
+}
+
+body.archive-mode .archive-event-meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 8px 0 20px;
+}
+
+body.archive-mode .archive-event-meta-item {
+    padding: 12px 14px;
+    border-left: 3px solid #15a89b;
+    background: #f2f7f8;
+}
+
+body.archive-mode .archive-event-meta-item small {
+    display: block;
+    margin-bottom: 4px;
+    color: #718594;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+body.archive-mode .archive-event-meta-item span {
+    display: block;
+    color: #173b55;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.45;
 }
 
 body.archive-mode .past-event-link,
@@ -5848,6 +5879,10 @@ body.archive-mode .footer-col:last-child {
         height: 120px;
         min-height: 120px;
     }
+
+    body.archive-mode .past-event-content { padding: 26px 22px; }
+    body.archive-mode .past-event-title { font-size: 23px; }
+    body.archive-mode .archive-event-meta { grid-template-columns: 1fr; }
 
     body.archive-mode .archive-speakers { grid-template-columns: 1fr; }
     body.archive-mode .archive-photo-grid { grid-template-columns: 1fr; }
@@ -6131,58 +6166,6 @@ body.archive-mode .footer-col:last-child {
                             <span class="reg-status" id="reg-status"></span>
                         </div>
                     </form>
-                </div>
-            </div>
-        </section>
-
-        <!-- 交通資訊 -->
-        <section id="traffic-section" class="section hidden">
-            <div class="container">
-                <div class="section-title">
-                    <h2 id="traffic-title">交通資訊</h2>
-                    <p id="traffic-subtitle">如何前往會場</p>
-                </div>
-                <div id="traffic-content">
-                    <div class="traffic-layout">
-                        <div class="traffic-map-container">
-                            <iframe src="https://maps.google.com/maps?q=%E6%94%BF%E5%A4%A7%E5%85%AC%E4%BC%81%E4%B8%AD%E5%BF%83645%E6%9C%83%E8%AD%B0%E5%AE%A4%20%E5%8F%B0%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E9%87%91%E8%8F%AF%E8%A1%97187%E8%99%9F&output=embed&hl=zh-TW"
-                                    allowfullscreen="" loading="lazy"
-                                    referrerpolicy="no-referrer-when-downgrade"
-                                    title="Google Maps"></iframe>
-                        </div>
-                        <div class="traffic-info-list">
-                            <div class="traffic-card">
-                                <div class="traffic-icon"><i class="fas fa-map-marker-alt"></i></div>
-                                <div class="traffic-card-body">
-                                    <h3 data-zh="會場地址" data-en="Venue Address">會場地址</h3>
-                                    <p data-zh="台北市大安區金華街187號" data-en="No. 187, Jinhua Street, Da-an District, Taipei City">台北市大安區金華街187號</p>
-                                    <a class="traffic-open-map-btn" href="https://maps.google.com/?q=%E5%8F%B0%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E9%87%91%E8%8F%AF%E8%A1%97187%E8%99%9F" target="_blank" rel="noopener">
-                                        <i class="fas fa-external-link-alt"></i> <span data-zh="在 Google Maps 開啟" data-en="Open in Google Maps">在 Google Maps 開啟</span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="traffic-card">
-                                <div class="traffic-icon"><i class="fas fa-train"></i></div>
-                                <div class="traffic-card-body">
-                                    <h3 data-zh="捷運資訊" data-en="MRT Info">捷運資訊</h3>
-                                    <p style="white-space: pre-line;" data-zh="● 淡水線(紅線)/蘆洲線(橘線)→東門站3號出口：步行約6-8分鐘
-● 新店線(綠線)/蘆洲線(橘線)→古亭站4號出口：至和平東路轉搭214、606公車至公企中心站
-● 新店線(綠線)/蘆洲線(橘線)→古亭站5號出口：沿和平東路左轉金山南路，再至金華街口右轉，步行約12-15分鐘" data-en="Dongmen Station (Red Line 2 / Orange Line 4) - Exit 3: A 6-8 minute walk.
-Guting Station (Green Line 3 / Orange Line 4) - Exit 4: Transfer to Bus 214 or 606 and get off at CPB Center.
-Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">● 淡水線(紅線)/蘆洲線(橘線)→東門站3號出口：步行約6-8分鐘
-● 新店線(綠線)/蘆洲線(橘線)→古亭站4號出口：至和平東路轉搭214、606公車至公企中心站
-● 新店線(綠線)/蘆洲線(橘線)→古亭站5號出口：沿和平東路左轉金山南路，再至金華街口右轉，步行約12-15分鐘</p>
-                                </div>
-                            </div>
-                            <div class="traffic-card">
-                                <div class="traffic-icon"><i class="fas fa-parking"></i></div>
-                                <div class="traffic-card-body">
-                                    <h3 data-zh="停車資訊" data-en="Parking Info">停車資訊</h3>
-                                    <p data-zh="停車場由金華街199巷(單行道)，左轉金華街193巷(單行道)進入" data-en="The surrounding alleys are one-way streets. To enter the parking lot, please drive through Lane 199, Jinhua St. and turn left onto Lane 193, Jinhua St.">停車場由金華街199巷(單行道)，左轉金華街193巷(單行道)進入</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
@@ -6504,6 +6487,12 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                 title_en: '2026 Smart Networks SIG Seminar',
                 description_zh: '主題：AI-RAN 之商業化與產業應用：O-RAN 生態系的發展機會。活動日期：2026 年 9 月 15 日。',
                 description_en: 'Theme: Commercialization and Industrial Applications of AI-RAN: Development Opportunities in the O-RAN Ecosystem. Event date: September 15, 2026.',
+                date_zh: '2026 年 9 月 15 日（星期二）',
+                date_en: 'Tuesday, September 15, 2026',
+                time_zh: '13:00–17:00',
+                time_en: '1:00–5:00 PM',
+                location_zh: '政大公企中心 645 會議室',
+                location_en: 'NCCU Center for Public and Business Administration, Room 645',
                 summary_zh: '本屆研討會聚焦 AI-RAN、智慧網路與 O-RAN 生態系，邀集日本 NTT EAST 及國內產學研專家，分享最新技術發展、產業應用與商業化機會。',
                 summary_en: 'This seminar focused on AI-RAN, intelligent networking, and the O-RAN ecosystem, bringing together experts from NTT EAST and Taiwan\'s industry, academia, and research communities.',
                 speakers: [
@@ -6536,6 +6525,12 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                 title_en: '2025 Open Source System Software SIG Seminar',
                 description_zh: '5G 產業創新發展聯盟開源系統軟體 SIG 年度會議資料與活動紀錄。',
                 description_en: 'Annual conference information and event records from the Open Source System Software SIG of the 5G Industry Innovation Development Alliance.',
+                date_zh: '資料整理中',
+                date_en: 'To be updated',
+                time_zh: '資料整理中',
+                time_en: 'To be updated',
+                location_zh: '資料整理中',
+                location_en: 'To be updated',
                 summary_zh: '2025 年度會議資料正持續彙整，後續將補充會議摘要、講師、議程與活動照片。',
                 summary_en: 'The 2025 conference archive is being compiled. The summary, speakers, agenda, and event photos will be added when available.',
                 speakers: [],
@@ -8195,6 +8190,20 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                     <div class="past-event-content">
                         <div class="past-event-year">${escapeHtml(String(event.year || ''))}</div>
                         <div class="past-event-title">${escapeHtml(lang === 'zh' ? event.title_zh : event.title_en)}</div>
+                        <div class="archive-event-meta">
+                            <div class="archive-event-meta-item">
+                                <small>${isZh ? '會議日期' : 'Date'}</small>
+                                <span>${escapeHtml(isZh ? event.date_zh : event.date_en)}</span>
+                            </div>
+                            <div class="archive-event-meta-item">
+                                <small>${isZh ? '會議時間' : 'Time'}</small>
+                                <span>${escapeHtml(isZh ? event.time_zh : event.time_en)}</span>
+                            </div>
+                            <div class="archive-event-meta-item">
+                                <small>${isZh ? '會議地點' : 'Venue'}</small>
+                                <span>${escapeHtml(isZh ? event.location_zh : event.location_en)}</span>
+                            </div>
+                        </div>
                         <div class="past-event-desc">${escapeHtml(lang === 'zh' ? event.description_zh : event.description_en)}</div>
                         ${event.album_url
                             ? `<a href="${event.album_url}" target="_blank" rel="noopener" class="past-event-link"><i class="fas fa-external-link-alt"></i> ${lang === 'zh' ? '查看活動紀錄' : 'View event records'}</a>`
