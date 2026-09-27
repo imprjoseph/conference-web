@@ -5440,14 +5440,268 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
     }
 }
 
+/* 會議結束後的封存模式：僅保留歷年會議資料，避免現行活動資訊再次閃現。 */
+body.archive-mode .navbar-link:not([data-section="past_events"]),
+body.archive-mode #hero-section,
+body.archive-mode #news-section,
+body.archive-mode #about-section,
+body.archive-mode #speakers-section,
+body.archive-mode #agenda-section,
+body.archive-mode #register-section,
+body.archive-mode #traffic-section,
+body.archive-mode #stats-section,
+body.archive-mode #sponsors-section,
+body.archive-mode #downloads-section,
+body.archive-mode #livestream-section,
+body.archive-mode #faq-section,
+body.archive-mode #subscribe-section,
+body.archive-mode #floating-register,
+body.archive-mode .footer-brand,
+body.archive-mode .footer-organizer-col,
+body.archive-mode .footer-grid > .footer-col:not(:last-child),
+body.archive-mode .footer-col:last-child li:not(:has(a[data-section="past_events"])) {
+    display: none !important;
+}
+
+body.archive-mode #closed-state {
+    min-height: auto;
+    padding: 0;
+    color: #fff;
+    background: #0b3b5f;
+    text-align: left;
+}
+
+body.archive-mode .archive-hero-inner {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 88px 0 76px;
+    position: relative;
+}
+
+body.archive-mode .archive-hero-inner::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 38%;
+    height: 4px;
+    background: #15a89b;
+}
+
+body.archive-mode .archive-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    color: #8fe3dc;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+body.archive-mode .archive-eyebrow::before {
+    content: '';
+    width: 34px;
+    height: 2px;
+    background: currentColor;
+}
+
+body.archive-mode #closed-title {
+    max-width: 820px;
+    margin: 0;
+    color: #fff;
+    font-size: clamp(34px, 5vw, 58px);
+    line-height: 1.18;
+    font-weight: 800;
+}
+
+body.archive-mode #closed-message {
+    max-width: 660px;
+    margin: 22px 0 0;
+    color: #d8e8f2;
+    font-size: 18px;
+    line-height: 1.8;
+}
+
+body.archive-mode .archive-jump-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+    padding: 12px 18px;
+    border: 1px solid rgba(255,255,255,.34);
+    border-radius: 6px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background .2s, border-color .2s;
+}
+
+body.archive-mode .archive-jump-link:hover {
+    background: rgba(255,255,255,.1);
+    border-color: rgba(255,255,255,.7);
+}
+
+body.archive-mode #past-events-section {
+    display: block !important;
+    padding: 76px 0 92px;
+    background: #f5f8fa;
+}
+
+body.archive-mode #past-events-section .section-title {
+    max-width: none;
+    margin-bottom: 34px;
+    text-align: left;
+}
+
+body.archive-mode #past-events-title {
+    color: #102f49;
+    font-size: 34px;
+}
+
+body.archive-mode #past-events-subtitle {
+    margin-top: 8px;
+    color: #607487;
+    font-size: 16px;
+}
+
+body.archive-mode .past-events-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+    gap: 22px;
+}
+
+body.archive-mode .past-event-card {
+    display: grid;
+    grid-template-columns: 136px minmax(0, 1fr);
+    min-height: 210px;
+    border: 1px solid #d8e3ea;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(15, 47, 73, .07);
+}
+
+body.archive-mode .past-event-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(15, 47, 73, .12);
+}
+
+body.archive-mode .past-event-image {
+    width: 136px;
+    height: 100%;
+    min-height: 210px;
+    background: #123f63;
+    color: #8fe3dc;
+    font-size: 38px;
+}
+
+body.archive-mode .past-event-content {
+    display: flex;
+    flex-direction: column;
+    padding: 26px 28px;
+}
+
+body.archive-mode .past-event-year {
+    margin-bottom: 7px;
+    color: #0d8178;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0;
+}
+
+body.archive-mode .past-event-title {
+    margin-bottom: 10px;
+    color: #102f49;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+body.archive-mode .past-event-desc {
+    margin-bottom: 18px;
+    color: #607487;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+body.archive-mode .past-event-link,
+body.archive-mode .past-event-unavailable {
+    margin-top: auto;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+body.archive-mode .past-event-link {
+    color: #0b6f69;
+}
+
+body.archive-mode .past-event-unavailable {
+    color: #8394a3;
+}
+
+body.archive-mode .footer-grid {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 60px;
+}
+
+body.archive-mode .site-footer {
+    margin-top: 0;
+    padding-top: 46px;
+    background: #0a263c;
+}
+
+body.archive-mode .footer-bottom {
+    border-top: 0;
+}
+
+body.archive-mode .footer-brand {
+    display: block !important;
+}
+
+body.archive-mode .footer-brand .footer-divider,
+body.archive-mode #footer-conf-subtitle,
+body.archive-mode #footer-conf-date-loc,
+body.archive-mode #footer-social-main {
+    display: none !important;
+}
+
+body.archive-mode .footer-col:last-child {
+    max-width: 320px;
+}
+
+@media (max-width: 700px) {
+    body.archive-mode .archive-hero-inner {
+        width: min(100% - 36px, 1180px);
+        padding: 62px 0 56px;
+    }
+
+    body.archive-mode #closed-title { font-size: 34px; }
+    body.archive-mode #closed-message { font-size: 16px; }
+    body.archive-mode #past-events-section { padding: 58px 0 68px; }
+    body.archive-mode #past-events-title { font-size: 28px; }
+
+    body.archive-mode .past-event-card {
+        grid-template-columns: 1fr;
+    }
+
+    body.archive-mode .past-event-image {
+        width: 100%;
+        height: 120px;
+        min-height: 120px;
+    }
+
+    body.archive-mode .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+}
+
 </style>
 
 </head>
-<body>
+<body class="archive-mode">
     <!-- 導航欄 -->
     <nav class="navbar">
         <div class="navbar-content">
-            <a href="#" class="navbar-brand" id="site-title">2026 智慧網路 SIG 研討會</a>
+            <a href="#past-events-section" class="navbar-brand" id="site-title">智慧網路 SIG 歷年會議</a>
             <button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="開啟選單" aria-controls="navbar-menu" aria-expanded="false">
                 <span></span>
                 <span></span>
@@ -5459,7 +5713,7 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
                 <a href="#agenda-section" class="navbar-link" data-section="agenda" data-zh="會議議程" data-en="Agenda">會議議程</a>
                 <a href="#register-section" class="navbar-link" data-section="register" data-zh="線上報名" data-en="Register" onclick="scrollToRegForm();return false;">線上報名</a>
                 <a href="#traffic-section" class="navbar-link" data-section="traffic" data-zh="交通資訊" data-en="Transportation">交通資訊</a>
-                <a href="#" class="navbar-link" data-section="past_events" data-zh="歷年會議" data-en="Past Events" onclick="openPastEventsAlbum(event);return false;">歷年會議</a>
+                <a href="#past-events-section" class="navbar-link" data-section="past_events" data-zh="歷年會議" data-en="Past Events">歷年會議</a>
                 <a href="#sponsors-section" class="navbar-link hidden-site-option" data-section="sponsors" data-zh="贊助單位" data-en="Sponsors">贊助單位</a>
                 <a href="#" class="navbar-link hidden-site-option" data-section="downloads" data-zh="下載專區" data-en="Downloads" onclick="openDownloads();return false;">下載專區</a>
                 <div class="language-switch">
@@ -5517,10 +5771,13 @@ html[lang="zh-TW"] .hero-meta-item:has(#hero-location) {
 
         <!-- 活動結束狀態 -->
         <div id="closed-state" class="status-page hidden">
-            <div>
-                <div class="status-icon">🎉</div>
-                <h1 class="status-title" id="closed-title">活動已圓滿結束</h1>
-                <p class="status-message" id="closed-message">感謝您的參與，歡迎關注我們下次的活動。</p>
+            <div class="archive-hero-inner">
+                <div class="archive-eyebrow" id="archive-eyebrow">SMART NETWORKS SIG ARCHIVE</div>
+                <h1 class="status-title" id="closed-title">2026 智慧網路 SIG 研討會已圓滿結束</h1>
+                <p class="status-message" id="closed-message">感謝各界先進參與。歷屆活動內容與相關紀錄，請於下方查閱。</p>
+                <a class="archive-jump-link" href="#past-events-section" id="archive-jump-link">
+                    <span>瀏覽歷屆活動</span><i class="fas fa-arrow-down"></i>
+                </a>
             </div>
         </div>
 
@@ -5764,8 +6021,18 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             </div>
         </section>
 
-        <!-- 歷年會議：改為選單直接連結，不顯示 section -->
-        <div id="past-events-section" class="hidden"></div>
+        <!-- 歷年會議 -->
+        <section id="past-events-section" class="section hidden">
+            <div class="container">
+                <div class="section-title">
+                    <h2 id="past-events-title">歷年會議</h2>
+                    <p id="past-events-subtitle">回顧過往活動資料</p>
+                </div>
+                <div id="past-events-content" class="past-events-grid">
+                    <div class="loading-section">正在載入歷年會議資料...</div>
+                </div>
+            </div>
+        </section>
     
 
 
@@ -5911,7 +6178,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                         <li><i class="fas fa-calendar"></i><a href="#agenda-section" data-zh="會議議程" data-en="Agenda">會議議程</a></li>
                         <li><i class="fas fa-edit"></i><a href="#" onclick="scrollToRegForm();return false;" data-zh="線上報名" data-en="Register">線上報名</a></li>
                         <li><i class="fas fa-map"></i><a href="#traffic-section" data-zh="交通資訊" data-en="Transportation">交通資訊</a></li>
-                        <li><i class="fas fa-images"></i><a href="#" data-section="past_events" onclick="openPastEventsAlbum(event);return false;" data-zh="歷年會議" data-en="Past Events">歷年會議</a></li>
+                        <li><i class="fas fa-images"></i><a href="#past-events-section" data-section="past_events" data-zh="歷年會議" data-en="Past Events">歷年會議</a></li>
                         <li class="hidden-site-option"><i class="fas fa-download"></i><a href="#" data-section="downloads" onclick="openDownloads();return false;" data-zh="下載專區" data-en="Downloads">下載專區</a></li>
                     </ul>
                 </div>
@@ -6064,6 +6331,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             event_end_at: '2026-09-15T17:00:00+08:00',
             registration_status: 'open'
         });
+        const ARCHIVE_ONLY = true;
         const REGISTRATION_FORCE_CLOSED = true;
         const FOOTER_CONTACT_PHONE = '02-27635666#111';
         const FOOTER_CONTACT_ADDRESS_ZH = '台北市大安區敦化南路二段1號11樓';
@@ -6483,6 +6751,10 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
 
         // 檢查網站狀態
         function checkSiteStatus() {
+            if (ARCHIVE_ONLY) {
+                showArchivePage();
+                return;
+            }
             const status = siteData.settings.site_status;
 
             if (status === 'draft') {
@@ -6492,6 +6764,31 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             } else if (status === 'live') {
                 showLiveContent();
             }
+        }
+
+        // 會議結束後固定顯示歷屆資料，不受後台舊的 live 狀態影響。
+        function showArchivePage() {
+            document.body.classList.add('archive-mode');
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('draft-state').classList.add('hidden');
+            document.getElementById('closed-state').classList.remove('hidden');
+            document.getElementById('past-events-section').classList.remove('hidden');
+
+            const isZh = currentLang === 'zh';
+            document.getElementById('site-title').textContent = isZh ? '智慧網路 SIG 歷年會議' : 'Smart Networks SIG Archives';
+            document.getElementById('archive-eyebrow').textContent = 'SMART NETWORKS SIG ARCHIVE';
+            document.getElementById('closed-title').textContent = isZh
+                ? '2026 智慧網路 SIG 研討會已圓滿結束'
+                : 'The 2026 Smart Networks SIG Seminar has concluded';
+            document.getElementById('closed-message').textContent = isZh
+                ? '感謝各界先進參與。歷屆活動內容與相關紀錄，請於下方查閱。'
+                : 'Thank you for joining us. Browse previous events and related records below.';
+            const jumpText = document.querySelector('#archive-jump-link span');
+            if (jumpText) jumpText.textContent = isZh ? '瀏覽歷屆活動' : 'Browse past events';
+            const footerTitle = document.getElementById('footer-conf-title');
+            if (footerTitle) footerTitle.textContent = isZh ? '智慧網路 SIG 歷屆活動專區' : 'Smart Networks SIG Archives';
+
+            if (!Array.isArray(siteData.pastEvents)) loadPastEvents();
         }
 
         // 顯示建置中頁面
@@ -6585,6 +6882,12 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
 
         // 載入所有資料
         async function loadAllData() {
+            if (ARCHIVE_ONLY) {
+                await loadPastEvents();
+                updateTitles();
+                showArchivePage();
+                return;
+            }
             const primaryLoads = [
                 loadAbout(),
                 loadSpeakers(),
@@ -7624,10 +7927,10 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             }
         }
 
-        // 渲染歷年會議（section 已移除，只保留資料供相簿選單使用）
+        // 渲染歷年會議
         function renderPastEvents() {
             const container = document.getElementById('past-events-content');
-            if (!container) return; // section 已改為雲端連結，不需 render
+            if (!container) return;
             const events = siteData.pastEvents || [];
             const lang = currentLang;
 
@@ -7639,13 +7942,15 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             container.innerHTML = events.map(event => `
                 <div class="past-event-card">
                     <div class="past-event-image">
-                        ${event.featured_image_url ? `<img src="${event.featured_image_url}" alt="${lang === 'zh' ? event.title_zh : event.title_en}" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover;">` : '<i class="fas fa-images"></i>'}
+                        ${event.featured_image_url ? `<img src="${event.featured_image_url}" alt="${escapeHtml(lang === 'zh' ? event.title_zh : event.title_en)}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">` : '<i class="fas fa-landmark"></i>'}
                     </div>
                     <div class="past-event-content">
-                        <div class="past-event-year">${event.year}</div>
-                        <div class="past-event-title">${lang === 'zh' ? event.title_zh : event.title_en}</div>
-                        <div class="past-event-desc">${lang === 'zh' ? event.description_zh : event.description_en}</div>
-                        ${event.album_url ? `<a href="${event.album_url}" target="_blank" class="past-event-link"><i class="fas fa-external-link-alt"></i> ${lang === 'zh' ? '查看相簿' : 'View Album'}</a>` : ''}
+                        <div class="past-event-year">${escapeHtml(String(event.year || ''))}</div>
+                        <div class="past-event-title">${escapeHtml(lang === 'zh' ? event.title_zh : event.title_en)}</div>
+                        <div class="past-event-desc">${escapeHtml(lang === 'zh' ? event.description_zh : event.description_en)}</div>
+                        ${event.album_url
+                            ? `<a href="${event.album_url}" target="_blank" rel="noopener" class="past-event-link"><i class="fas fa-external-link-alt"></i> ${lang === 'zh' ? '查看活動紀錄' : 'View event records'}</a>`
+                            : `<span class="past-event-unavailable">${lang === 'zh' ? '活動資料整理中' : 'Records being prepared'}</span>`}
                     </div>
                 </div>
             `).join('');
@@ -8224,6 +8529,12 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
         }
 
         function updateContent() {
+            if (ARCHIVE_ONLY) {
+                renderPastEvents();
+                updateTitles();
+                showArchivePage();
+                return;
+            }
             if (siteData.settings) {
                 updateHero();
                 updateCountdown();
@@ -8278,7 +8589,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                 'qr-title':            ['掃碼報名', 'Scan to Register'],
                 'qr-subtitle':         ['使用手機掃描 QR Code 快速進入報名頁', 'Scan the QR Code with your phone'],
                 'qr-label':            ['立即報名', 'Register Now'],
-                'past-events-subtitle':['回顧過往精彩活動', 'Review past wonderful events']
+                'past-events-subtitle':['瀏覽歷屆會議內容與活動紀錄', 'Browse previous conferences and event records']
             };
 
             Object.keys(titles).forEach(id => {
