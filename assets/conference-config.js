@@ -12,6 +12,6 @@ window.CONFERENCE_CONFIG = Object.freeze({
     apiUrl: 'https://script.google.com/macros/s/AKfycbyanPD18kZADKVgNxTGMcHGksqmsAp9lcHQSIMm-1SMKGZxZGWkpd3c1cYZK6yPsPOe4Q/exec',
 
     // API 尚未載入前，瀏覽器分頁顯示的名稱。
-    siteTitle: '2026 智慧網路 SIG 研討會｜AI-RAN 商業化與產業應用',
+    siteTitle: '智慧網路 SIG｜歷屆會議',
     adminTitle: '會議網站管理後台'
 });
