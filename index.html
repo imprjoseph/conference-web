@@ -5636,6 +5636,167 @@ body.archive-mode .past-event-unavailable {
     color: #8394a3;
 }
 
+body.archive-mode .archive-event-details {
+    grid-column: 1 / -1;
+    border-top: 1px solid #d8e3ea;
+    background: #fff;
+}
+
+body.archive-mode .archive-event-details > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 28px;
+    color: #0b6f69;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    list-style: none;
+}
+
+body.archive-mode .archive-event-details > summary::-webkit-details-marker { display: none; }
+
+body.archive-mode .archive-event-details > summary::after {
+    content: '\f078';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    transition: transform .2s;
+}
+
+body.archive-mode .archive-event-details[open] > summary::after { transform: rotate(180deg); }
+
+body.archive-mode .archive-detail-body {
+    padding: 6px 28px 30px;
+}
+
+body.archive-mode .archive-detail-nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 26px;
+    padding-bottom: 14px;
+    overflow-x: auto;
+    border-bottom: 1px solid #e3ebf0;
+}
+
+body.archive-mode .archive-detail-nav a {
+    flex: 0 0 auto;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background: #edf4f6;
+    color: #274960;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+body.archive-mode .archive-detail-section + .archive-detail-section {
+    margin-top: 34px;
+    padding-top: 30px;
+    border-top: 1px solid #e3ebf0;
+}
+
+body.archive-mode .archive-detail-section h4 {
+    margin: 0 0 16px;
+    color: #102f49;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+body.archive-mode .archive-detail-section > p {
+    margin: 0;
+    color: #536a7c;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+body.archive-mode .archive-speakers {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+body.archive-mode .archive-speaker {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 13px;
+    align-items: center;
+    padding: 14px;
+    border: 1px solid #e0e9ee;
+    border-radius: 6px;
+    background: #f9fbfc;
+}
+
+body.archive-mode .archive-speaker img {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #e8eef2;
+}
+
+body.archive-mode .archive-speaker strong {
+    display: block;
+    color: #102f49;
+    font-size: 15px;
+    line-height: 1.35;
+}
+
+body.archive-mode .archive-speaker span {
+    display: block;
+    margin-top: 3px;
+    color: #627789;
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+body.archive-mode .archive-agenda-list {
+    border-top: 1px solid #d8e3ea;
+}
+
+body.archive-mode .archive-agenda-row {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: 18px;
+    padding: 13px 0;
+    border-bottom: 1px solid #d8e3ea;
+    color: #274960;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+body.archive-mode .archive-agenda-row strong { color: #0b6f69; }
+
+body.archive-mode .archive-agenda-image {
+    display: block;
+    width: 100%;
+    margin-top: 18px;
+    border: 1px solid #d8e3ea;
+}
+
+body.archive-mode .archive-photo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+body.archive-mode .archive-photo-grid img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 1;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+body.archive-mode .archive-empty {
+    padding: 18px;
+    border: 1px dashed #c8d5dd;
+    border-radius: 6px;
+    background: #f8fafb;
+    color: #748796;
+    font-size: 14px;
+}
+
 body.archive-mode .footer-grid {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
@@ -5688,6 +5849,12 @@ body.archive-mode .footer-col:last-child {
         min-height: 120px;
     }
 
+    body.archive-mode .archive-speakers { grid-template-columns: 1fr; }
+    body.archive-mode .archive-photo-grid { grid-template-columns: 1fr; }
+    body.archive-mode .archive-detail-body { padding: 4px 18px 24px; }
+    body.archive-mode .archive-event-details > summary { padding: 16px 18px; }
+    body.archive-mode .archive-agenda-row { grid-template-columns: 92px minmax(0, 1fr); }
+
     body.archive-mode .footer-grid {
         grid-template-columns: 1fr;
         gap: 28px;
@@ -5701,7 +5868,7 @@ body.archive-mode .footer-col:last-child {
     <!-- 導航欄 -->
     <nav class="navbar">
         <div class="navbar-content">
-            <a href="#past-events-section" class="navbar-brand" id="site-title">智慧網路 SIG 歷年會議</a>
+            <a href="#past-events-section" class="navbar-brand" id="site-title">智慧網路 SIG 歷屆會議</a>
             <button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="開啟選單" aria-controls="navbar-menu" aria-expanded="false">
                 <span></span>
                 <span></span>
@@ -5712,8 +5879,7 @@ body.archive-mode .footer-col:last-child {
                 <a href="#speakers-section" class="navbar-link" data-section="speakers" data-zh="講師介紹" data-en="Speakers">講師介紹</a>
                 <a href="#agenda-section" class="navbar-link" data-section="agenda" data-zh="會議議程" data-en="Agenda">會議議程</a>
                 <a href="#register-section" class="navbar-link" data-section="register" data-zh="線上報名" data-en="Register" onclick="scrollToRegForm();return false;">線上報名</a>
-                <a href="#traffic-section" class="navbar-link" data-section="traffic" data-zh="交通資訊" data-en="Transportation">交通資訊</a>
-                <a href="#past-events-section" class="navbar-link" data-section="past_events" data-zh="歷年會議" data-en="Past Events">歷年會議</a>
+                <a href="#past-events-section" class="navbar-link" data-section="past_events" data-zh="歷屆會議" data-en="Past Conferences">歷屆會議</a>
                 <a href="#sponsors-section" class="navbar-link hidden-site-option" data-section="sponsors" data-zh="贊助單位" data-en="Sponsors">贊助單位</a>
                 <a href="#" class="navbar-link hidden-site-option" data-section="downloads" data-zh="下載專區" data-en="Downloads" onclick="openDownloads();return false;">下載專區</a>
                 <div class="language-switch">
@@ -5773,8 +5939,8 @@ body.archive-mode .footer-col:last-child {
         <div id="closed-state" class="status-page hidden">
             <div class="archive-hero-inner">
                 <div class="archive-eyebrow" id="archive-eyebrow">SMART NETWORKS SIG ARCHIVE</div>
-                <h1 class="status-title" id="closed-title">2026 智慧網路 SIG 研討會已圓滿結束</h1>
-                <p class="status-message" id="closed-message">感謝各界先進參與。歷屆活動內容與相關紀錄，請於下方查閱。</p>
+                <h1 class="status-title" id="closed-title">智慧網路 SIG 歷屆會議</h1>
+                <p class="status-message" id="closed-message">2026 年會議已圓滿結束。2025、2026 年活動內容與相關紀錄，請於下方查閱。</p>
                 <a class="archive-jump-link" href="#past-events-section" id="archive-jump-link">
                     <span>瀏覽歷屆活動</span><i class="fas fa-arrow-down"></i>
                 </a>
@@ -6025,8 +6191,8 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
         <section id="past-events-section" class="section hidden">
             <div class="container">
                 <div class="section-title">
-                    <h2 id="past-events-title">歷年會議</h2>
-                    <p id="past-events-subtitle">回顧過往活動資料</p>
+                    <h2 id="past-events-title">歷屆會議</h2>
+                    <p id="past-events-subtitle">會議摘要、講師、議程與照片</p>
                 </div>
                 <div id="past-events-content" class="past-events-grid">
                     <div class="loading-section">正在載入歷年會議資料...</div>
@@ -6177,8 +6343,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                         <li><i class="fas fa-users"></i><a href="#speakers-section" data-zh="講師介紹" data-en="Speakers">講師介紹</a></li>
                         <li><i class="fas fa-calendar"></i><a href="#agenda-section" data-zh="會議議程" data-en="Agenda">會議議程</a></li>
                         <li><i class="fas fa-edit"></i><a href="#" onclick="scrollToRegForm();return false;" data-zh="線上報名" data-en="Register">線上報名</a></li>
-                        <li><i class="fas fa-map"></i><a href="#traffic-section" data-zh="交通資訊" data-en="Transportation">交通資訊</a></li>
-                        <li><i class="fas fa-images"></i><a href="#past-events-section" data-section="past_events" data-zh="歷年會議" data-en="Past Events">歷年會議</a></li>
+                        <li><i class="fas fa-images"></i><a href="#past-events-section" data-section="past_events" data-zh="歷屆會議" data-en="Past Conferences">歷屆會議</a></li>
                         <li class="hidden-site-option"><i class="fas fa-download"></i><a href="#" data-section="downloads" onclick="openDownloads();return false;" data-zh="下載專區" data-en="Downloads">下載專區</a></li>
                     </ul>
                 </div>
@@ -6331,6 +6496,58 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             event_end_at: '2026-09-15T17:00:00+08:00',
             registration_status: 'open'
         });
+        const ARCHIVE_EVENTS = Object.freeze([
+            {
+                id: 'archive-2026',
+                year: 2026,
+                title_zh: '2026 智慧網路 SIG 研討會',
+                title_en: '2026 Smart Networks SIG Seminar',
+                description_zh: '主題：AI-RAN 之商業化與產業應用：O-RAN 生態系的發展機會。活動日期：2026 年 9 月 15 日。',
+                description_en: 'Theme: Commercialization and Industrial Applications of AI-RAN: Development Opportunities in the O-RAN Ecosystem. Event date: September 15, 2026.',
+                summary_zh: '本屆研討會聚焦 AI-RAN、智慧網路與 O-RAN 生態系，邀集日本 NTT EAST 及國內產學研專家，分享最新技術發展、產業應用與商業化機會。',
+                summary_en: 'This seminar focused on AI-RAN, intelligent networking, and the O-RAN ecosystem, bringing together experts from NTT EAST and Taiwan\'s industry, academia, and research communities.',
+                speakers: [
+                    { name_zh: '增山大史 Daishi Mashiyama', name_en: 'Daishi Mashiyama', organization_zh: 'NTT東日本株式会社（NTT EAST, Inc.）', organization_en: 'NTT EAST, Inc.', title_zh: '擔當部長', title_en: 'Executive Manager', photo: 'assets/speakers/daishi-masuyama.png' },
+                    { name_zh: '呂政修', name_en: 'Cheng-Hsiu Lu', organization_zh: '國立臺灣科技大學 電資學院', organization_en: 'National Taiwan University of Science and Technology', title_zh: '院長', title_en: 'Dean', photo: 'assets/speakers/cheng-hsiu-lu.png' },
+                    { name_zh: '吳長益', name_en: 'Chang-Yi Wu', organization_zh: '耀登集團 耀睿科技', organization_en: 'Auray Technology', title_zh: 'OTIC 實驗室經理', title_en: 'OTIC Laboratory Manager', photo: 'assets/speakers/chang-yi-wu.png' },
+                    { name_zh: 'Osamah Ibrahiem Abdullaziz', name_en: 'Osamah Ibrahiem Abdullaziz', organization_zh: '現觀科技', organization_en: 'Groundhog Technologies', title_zh: '首席策略架構師', title_en: 'Chief Strategy Architect', photo: 'assets/speakers/osamah-abdullaziz.png' },
+                    { name_zh: '韓景光', name_en: 'Jing-Guang Han', organization_zh: '智宏網', organization_en: 'Ubiik', title_zh: '副總經理', title_en: 'Vice President', photo: 'assets/speakers/jing-guang-han.png' },
+                    { name_zh: '林萬怡', name_en: 'Wan-Yi Lin', organization_zh: '工業技術研究院 資訊與通訊研究所', organization_en: 'Information and Communications Research Laboratories, ITRI', title_zh: '技術經理', title_en: 'Technical Manager', photo: 'assets/speakers/wan-yi-lin.png' }
+                ],
+                agenda: [
+                    { time: '13:45–14:10', title: 'Private AI-RAN in the Era of Physical AI' },
+                    { time: '14:10–14:35', title: 'AI-Native Sensing and Intent-Driven Agentic Systems for 6G Radio Access Networks' },
+                    { time: '14:35–15:00', title: 'AI-RAN Commercialization and 6G Opportunities: Insights from O-RAN PlugFest Data' },
+                    { time: '15:20–15:45', title: 'Networks That Reason: RAN Intent-Driven and Agent-Orchestrated Analytics and Optimization' },
+                    { time: '15:45–16:10', title: 'AI-RAN for ISAC: Empowering Next-Generation Integrated Sensing and Communication Base Stations' },
+                    { time: '16:10–16:35', title: 'Intelligent Network Use Case: LLM-Driven Automated App Activation and QoS Optimization' }
+                ],
+                agenda_image_url: 'assets/optimized-images/agenda-sig-table-2026.jpg',
+                photos: ['assets/optimized-images/2026sig-banner-web.jpg'],
+                album_url: '',
+                featured_image_url: 'assets/optimized-images/2026sig-banner-web.jpg',
+                sort_order: 1,
+                is_visible: true
+            },
+            {
+                id: 'archive-2025',
+                year: 2025,
+                title_zh: '2025 開源系統軟體 SIG 研討會',
+                title_en: '2025 Open Source System Software SIG Seminar',
+                description_zh: '5G 產業創新發展聯盟開源系統軟體 SIG 年度會議資料與活動紀錄。',
+                description_en: 'Annual conference information and event records from the Open Source System Software SIG of the 5G Industry Innovation Development Alliance.',
+                summary_zh: '2025 年度會議資料正持續彙整，後續將補充會議摘要、講師、議程與活動照片。',
+                summary_en: 'The 2025 conference archive is being compiled. The summary, speakers, agenda, and event photos will be added when available.',
+                speakers: [],
+                agenda: [],
+                agenda_image_url: '',
+                photos: [],
+                album_url: '',
+                featured_image_url: '',
+                sort_order: 2,
+                is_visible: true
+            }
+        ]);
         const ARCHIVE_ONLY = true;
         const REGISTRATION_FORCE_CLOSED = true;
         const FOOTER_CONTACT_PHONE = '02-27635666#111';
@@ -6775,14 +6992,14 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             document.getElementById('past-events-section').classList.remove('hidden');
 
             const isZh = currentLang === 'zh';
-            document.getElementById('site-title').textContent = isZh ? '智慧網路 SIG 歷年會議' : 'Smart Networks SIG Archives';
+            document.getElementById('site-title').textContent = isZh ? '智慧網路 SIG 歷屆會議' : 'Smart Networks SIG Archives';
             document.getElementById('archive-eyebrow').textContent = 'SMART NETWORKS SIG ARCHIVE';
             document.getElementById('closed-title').textContent = isZh
-                ? '2026 智慧網路 SIG 研討會已圓滿結束'
-                : 'The 2026 Smart Networks SIG Seminar has concluded';
+                ? '智慧網路 SIG 歷屆會議'
+                : 'Smart Networks SIG Conference Archive';
             document.getElementById('closed-message').textContent = isZh
-                ? '感謝各界先進參與。歷屆活動內容與相關紀錄，請於下方查閱。'
-                : 'Thank you for joining us. Browse previous events and related records below.';
+                ? '2026 年會議已圓滿結束。2025、2026 年活動內容與相關紀錄，請於下方查閱。'
+                : 'The 2026 conference has concluded. Browse conference information and records from 2025 and 2026 below.';
             const jumpText = document.querySelector('#archive-jump-link span');
             if (jumpText) jumpText.textContent = isZh ? '瀏覽歷屆活動' : 'Browse past events';
             const footerTitle = document.getElementById('footer-conf-title');
@@ -7917,6 +8134,11 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
 
         // 載入歷年會議
         async function loadPastEvents() {
+            if (ARCHIVE_ONLY) {
+                siteData.pastEvents = ARCHIVE_EVENTS.map(event => ({ ...event }));
+                renderPastEvents();
+                return;
+            }
             try {
                 const data = await cachedApiFetch('getPastEvents');
             siteData.pastEvents = data.data;
@@ -7933,13 +8155,39 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
             if (!container) return;
             const events = siteData.pastEvents || [];
             const lang = currentLang;
+            const isZh = lang === 'zh';
 
             if (events.length === 0) {
                 container.innerHTML = '<div class="loading-section">目前沒有歷年會議資料</div>';
                 return;
             }
 
-            container.innerHTML = events.map(event => `
+            container.innerHTML = events.map(event => {
+                const eventKey = String(event.id || event.year || '').replace(/[^a-zA-Z0-9_-]/g, '');
+                const speakers = Array.isArray(event.speakers) ? event.speakers : [];
+                const agenda = Array.isArray(event.agenda) ? event.agenda : [];
+                const photos = Array.isArray(event.photos) ? event.photos : [];
+                const emptyText = isZh ? '資料整理中，將於確認後更新。' : 'Records are being compiled and will be updated when available.';
+                const speakersHtml = speakers.length ? `<div class="archive-speakers">${speakers.map(speaker => `
+                    <div class="archive-speaker">
+                        <img src="${speaker.photo}" alt="${escapeHtml(isZh ? speaker.name_zh : speaker.name_en)}" loading="lazy" decoding="async">
+                        <div>
+                            <strong>${escapeHtml(isZh ? speaker.name_zh : speaker.name_en)}</strong>
+                            <span>${escapeHtml(isZh ? speaker.organization_zh : speaker.organization_en)}</span>
+                            <span>${escapeHtml(isZh ? speaker.title_zh : speaker.title_en)}</span>
+                        </div>
+                    </div>`).join('')}</div>` : `<div class="archive-empty">${emptyText}</div>`;
+                const agendaHtml = agenda.length ? `
+                    <div class="archive-agenda-list">${agenda.map(item => `
+                        <div class="archive-agenda-row"><strong>${escapeHtml(item.time)}</strong><span>${escapeHtml(item.title)}</span></div>`).join('')}
+                    </div>
+                    ${event.agenda_image_url ? `<img class="archive-agenda-image" src="${event.agenda_image_url}" alt="${escapeHtml(isZh ? '會議議程表' : 'Conference agenda')}" loading="lazy" decoding="async">` : ''}`
+                    : `<div class="archive-empty">${emptyText}</div>`;
+                const photosHtml = photos.length ? `<div class="archive-photo-grid">${photos.map((photo, index) => `
+                    <img src="${photo}" alt="${escapeHtml((isZh ? '活動照片 ' : 'Event photo ') + (index + 1))}" loading="lazy" decoding="async">`).join('')}</div>`
+                    : `<div class="archive-empty">${emptyText}</div>`;
+
+                return `
                 <div class="past-event-card">
                     <div class="past-event-image">
                         ${event.featured_image_url ? `<img src="${event.featured_image_url}" alt="${escapeHtml(lang === 'zh' ? event.title_zh : event.title_en)}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">` : '<i class="fas fa-landmark"></i>'}
@@ -7950,10 +8198,37 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                         <div class="past-event-desc">${escapeHtml(lang === 'zh' ? event.description_zh : event.description_en)}</div>
                         ${event.album_url
                             ? `<a href="${event.album_url}" target="_blank" rel="noopener" class="past-event-link"><i class="fas fa-external-link-alt"></i> ${lang === 'zh' ? '查看活動紀錄' : 'View event records'}</a>`
-                            : `<span class="past-event-unavailable">${lang === 'zh' ? '活動資料整理中' : 'Records being prepared'}</span>`}
+                            : ''}
                     </div>
+                    <details class="archive-event-details">
+                        <summary>${isZh ? '查看完整會議資料' : 'View conference details'}</summary>
+                        <div class="archive-detail-body">
+                            <nav class="archive-detail-nav" aria-label="${isZh ? '會議資料分類' : 'Conference detail sections'}">
+                                <a href="#${eventKey}-summary">${isZh ? '會議摘要' : 'Summary'}</a>
+                                <a href="#${eventKey}-speakers">${isZh ? '講師' : 'Speakers'}</a>
+                                <a href="#${eventKey}-agenda">${isZh ? '議程' : 'Agenda'}</a>
+                                <a href="#${eventKey}-photos">${isZh ? '照片' : 'Photos'}</a>
+                            </nav>
+                            <section class="archive-detail-section" id="${eventKey}-summary">
+                                <h4>${isZh ? '會議摘要' : 'Conference Summary'}</h4>
+                                <p>${escapeHtml(isZh ? event.summary_zh : event.summary_en)}</p>
+                            </section>
+                            <section class="archive-detail-section" id="${eventKey}-speakers">
+                                <h4>${isZh ? '講師' : 'Speakers'}</h4>
+                                ${speakersHtml}
+                            </section>
+                            <section class="archive-detail-section" id="${eventKey}-agenda">
+                                <h4>${isZh ? '議程' : 'Agenda'}</h4>
+                                ${agendaHtml}
+                            </section>
+                            <section class="archive-detail-section" id="${eventKey}-photos">
+                                <h4>${isZh ? '照片與視覺資料' : 'Photos & Visuals'}</h4>
+                                ${photosHtml}
+                            </section>
+                        </div>
+                    </details>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         // 顯示講師詳細資訊（第二層 Modal）
@@ -8575,7 +8850,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                 'agenda-subtitle':     ['完整的會議時程安排', 'Complete conference schedule'],
                 'traffic-title':       ['交通資訊', 'Transportation'],
                 'traffic-subtitle':    ['如何前往會場', 'How to get to the venue'],
-                'past-events-title':   ['歷年會議', 'Past Events'],
+                'past-events-title':   ['歷屆會議', 'Past Conferences'],
                 'sponsors-title':      ['贊助單位', 'Sponsors'],
                 'sponsors-subtitle':   ['感謝各單位的支持與贊助', 'Thank you to all our sponsors'],
                 'downloads-title':     ['下載專區', 'Downloads'],
@@ -8589,7 +8864,7 @@ Guting Station (Green Line 3 / Orange Line 4) - Exit 5: A 12-15 minute walk.">�
                 'qr-title':            ['掃碼報名', 'Scan to Register'],
                 'qr-subtitle':         ['使用手機掃描 QR Code 快速進入報名頁', 'Scan the QR Code with your phone'],
                 'qr-label':            ['立即報名', 'Register Now'],
-                'past-events-subtitle':['瀏覽歷屆會議內容與活動紀錄', 'Browse previous conferences and event records']
+                'past-events-subtitle':['會議摘要、講師、議程與照片', 'Summaries, speakers, agendas, and photos']
             };
 
             Object.keys(titles).forEach(id => {
