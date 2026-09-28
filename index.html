@@ -8240,7 +8240,7 @@ body.archive-mode .footer-col:last-child {
                         </div>
                         <div class="past-event-desc">${escapeHtml(lang === 'zh' ? event.description_zh : event.description_en)}</div>
                     </div>
-                    <details class="archive-event-details"${Number(event.year) === 2026 ? ' open' : ''}>
+                    <details class="archive-event-details">
                         <summary>${isZh ? '查看完整會議資料' : 'View conference details'}</summary>
                         <div class="archive-detail-body">
                             <nav class="archive-detail-nav" aria-label="${isZh ? '會議資料分類' : 'Conference detail sections'}">
