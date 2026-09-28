@@ -5533,19 +5533,24 @@ body.archive-mode #past-events-subtitle {
 }
 
 body.archive-mode .past-events-grid {
-    grid-template-columns: 1fr;
-    gap: 34px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
 }
 
 body.archive-mode .past-event-card {
     display: grid;
     grid-template-columns: 1fr;
     width: 100%;
-    min-height: 280px;
+    min-height: 0;
     border: 1px solid #d8e3ea;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(15, 47, 73, .07);
+}
+
+body.archive-mode .past-event-card:has(.archive-event-details[open]) {
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(280px, .78fr) minmax(0, 1.22fr);
 }
 
 body.archive-mode .past-event-card:hover {
@@ -5556,17 +5561,22 @@ body.archive-mode .past-event-card:hover {
 body.archive-mode .past-event-image {
     width: 100%;
     height: auto;
-    min-height: 220px;
-    aspect-ratio: 3 / 1;
+    min-height: 0;
+    aspect-ratio: 16 / 6;
     background: #123f63;
     color: #8fe3dc;
     font-size: 38px;
 }
 
+body.archive-mode .past-event-card:has(.archive-event-details[open]) .past-event-image {
+    min-height: 250px;
+    aspect-ratio: auto;
+}
+
 body.archive-mode .past-event-content {
     display: flex;
     flex-direction: column;
-    padding: 36px 42px 32px;
+    padding: 24px 26px 22px;
 }
 
 body.archive-mode .past-event-year {
@@ -5580,26 +5590,26 @@ body.archive-mode .past-event-year {
 body.archive-mode .past-event-title {
     margin-bottom: 10px;
     color: #102f49;
-    font-size: 28px;
+    font-size: 23px;
     font-weight: 800;
 }
 
 body.archive-mode .past-event-desc {
-    margin-bottom: 18px;
+    margin-bottom: 14px;
     color: #607487;
-    font-size: 16px;
-    line-height: 1.7;
+    font-size: 14px;
+    line-height: 1.6;
 }
 
 body.archive-mode .archive-event-meta {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-    margin: 8px 0 20px;
+    gap: 8px;
+    margin: 6px 0 14px;
 }
 
 body.archive-mode .archive-event-meta-item {
-    padding: 12px 14px;
+    padding: 10px 11px;
     border-left: 3px solid #15a89b;
     background: #f2f7f8;
 }
@@ -5616,7 +5626,7 @@ body.archive-mode .archive-event-meta-item small {
 body.archive-mode .archive-event-meta-item span {
     display: block;
     color: #173b55;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     line-height: 1.45;
 }
@@ -5906,6 +5916,15 @@ body.archive-mode .footer-col:last-child {
     body.archive-mode #past-events-title { font-size: 28px; }
 
     body.archive-mode .past-event-card {
+        grid-template-columns: 1fr;
+    }
+
+    body.archive-mode .past-events-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.archive-mode .past-event-card:has(.archive-event-details[open]) {
+        grid-column: auto;
         grid-template-columns: 1fr;
     }
 
@@ -6529,10 +6548,10 @@ body.archive-mode .footer-col:last-child {
                 time_en: '1:00–5:00 PM',
                 location_zh: '政大公企中心 645 會議室',
                 location_en: 'NCCU Center for Public and Business Administration, Room 645',
-                introduction_zh: '本屆研討會以「AI-RAN 之商業化與產業應用：O-RAN 生態系的發展機會」為主軸，邀集臺灣與日本產學研專家，聚焦人工智慧與行動通訊網路深度融合後的技術演進、產業應用及商業化路徑。會議由實體 AI、AI 原生無線接取網路與 O-RAN 開放架構出發，進一步延伸至 6G、整合感測與通訊（ISAC）、Agentic AI、自主網路及企業專網等重要議題。\n\n六場專題依序探討 Private AI-RAN 在 Physical AI 時代的角色、面向 6G 的 AI 原生感測與意圖驅動代理系統、AI-RAN 商業化及 O-RAN PlugFest 實測經驗、具推理能力的網路與代理協作分析、ISAC 基地台的整合應用，以及由大型語言模型驅動的應用啟用與服務品質最佳化。講師並從電信營運、學術研究、測試驗證、網路分析與系統整合等不同角度分享實務觀察。',
-                introduction_en: 'The seminar focused on “Commercialization and Industrial Applications of AI-RAN: Development Opportunities in the O-RAN Ecosystem.” Experts from Taiwan and Japan examined the technical evolution, industrial applications, and commercialization paths emerging from the deeper integration of artificial intelligence and mobile networks. Beginning with Physical AI, AI-native radio access networks, and open O-RAN architecture, the program extended to 6G, integrated sensing and communication (ISAC), agentic AI, autonomous networks, and private networks.\n\nThe six sessions covered Private AI-RAN in the era of Physical AI; AI-native sensing and intent-driven agentic systems for 6G; AI-RAN commercialization and lessons from O-RAN PlugFest; reasoning networks and agent-orchestrated analytics; ISAC-enabled base stations; and LLM-driven application activation and QoS optimization. Speakers contributed perspectives from telecommunications operations, academic research, testing and validation, network analytics, and systems integration.',
-                summary_zh: '會議交流顯示，AI-RAN 正由技術探索逐步走向實際部署與商業應用；未來網路也將朝向 AI 原生、意圖驅動與高度自主化發展。O-RAN 的開放架構有助於多供應商整合、測試驗證與創新服務落地，ISAC 則使基地台從通訊設備進一步成為感測、運算與智慧服務平台。產業競爭的核心，將由單純追求傳輸效能，擴展至人工智慧、軟體、資料與跨領域整合能力。',
-                summary_en: 'The discussions highlighted that AI-RAN is progressing from technical exploration toward deployment and commercial use, while future networks are becoming AI-native, intent-driven, and increasingly autonomous. Open O-RAN architecture will remain important for multi-vendor integration, validation, and service innovation. ISAC can further transform base stations into sensing, computing, and intelligent service platforms. Industry competitiveness will therefore depend not only on transmission performance, but also on capabilities in AI, software, data, and cross-domain integration.',
+                introduction_zh: '本屆研討會以「AI-RAN 之商業化與產業應用：O-RAN 生態系的發展機會」為主軸，邀集臺灣與日本產學研專家，從企業專網、AI 原生無線接取網路及 O-RAN 驗證，延伸至 6G、整合感測與通訊（ISAC）、代理式 AI 與自主服務品質管理，共同探討技術演進、場域驗證及商業化路徑。',
+                introduction_en: 'The seminar brought together experts from Taiwan and Japan to examine the commercialization of AI-RAN and the O-RAN ecosystem. The program connected private networks, AI-native radio access networks, and O-RAN validation with 6G, integrated sensing and communication (ISAC), agentic AI, and autonomous quality-of-service management.',
+                summary_zh: '本次研討會共吸引 54 位產學研代表及 20 家企業與機構出席。六場專題由企業專網、O-RAN 測試驗證及 AI 原生網路管理，延伸至整合感測與通訊（ISAC）及自主服務品質保障，形成從架構、驗證到商業應用的完整議題鏈。\n\n在 Physical AI 與企業專網方面，會議指出實體場域重視的不只是平均延遲，更包含延遲穩定度、時間同步與異質設備協作。Private AI-RAN 若要規模化落地，需整合 MEC、數位分身與 AI 平台，並透過 O-RAN 開放介面串聯不同供應商的軟硬體能力。\n\n在商業化與測試驗證方面，O-RAN PlugFest 與 OTIC 經驗顯示，AI-RAN 已進入效能、能耗及多營運商共享等實測階段。跨實驗室結果亦提醒，伺服器核心、即時設定及硬體平台都會影響量測，因此一致的測試方法與可追溯數據，是降低部署風險的重要基礎。\n\n在自主網路與跨域應用方面，意圖驅動及多代理系統可協助網路感知、規劃、分析與最佳化，但現階段仍須保留人工核准、安全護欄、工具權限與完整執行紀錄。ISAC 則讓基地台由通訊設備進一步成為感測與運算節點，可延伸至無人機、智慧交通、工業巡檢、高齡照護及安全監控等場域。\n\n問卷共回收 29 份有效樣本，六場專題平均為 4.80 分；174 筆場次評分中，169 筆為 4 分或 5 分，占 97.1%。與會者對議題與講者內容給予高度肯定，後續可持續推動 AI-RAN 效能與能耗、O-RAN 互通、ISAC 驗證及自主網路安全等主題交流，並優先改善投影尺寸、簡報字級與後排閱讀性。',
+                summary_en: 'The seminar brought together 54 representatives from 20 companies and institutions. Six sessions formed a complete path from architecture and validation to commercial applications, covering private networks, O-RAN testing, AI-native network management, integrated sensing and communication (ISAC), and autonomous quality-of-service assurance.\n\nFor Physical AI and private networks, speakers emphasized that real-world deployments depend not only on low average latency, but also on stable latency, time synchronization, and coordination among heterogeneous devices. Scaling Private AI-RAN will require the integration of MEC, digital twins, and AI platforms, supported by open O-RAN interfaces that combine the strengths of multiple vendors.\n\nO-RAN PlugFest and OTIC experience showed that AI-RAN has moved into practical validation of performance, energy consumption, and multi-operator sharing. Cross-laboratory comparisons also demonstrated that server kernels, real-time settings, and hardware platforms can affect results, making consistent test methods and traceable evidence essential for reducing deployment risk.\n\nIntent-driven and multi-agent systems can support network sensing, planning, analysis, and optimization, but human approval, safety guardrails, tool permissions, and complete execution records remain necessary. ISAC can also transform base stations into sensing and computing nodes for drones, smart transportation, industrial inspection, elder care, and security monitoring.\n\nA total of 29 valid questionnaires were collected. The six sessions received an average score of 4.80 out of 5, and 169 of 174 ratings, or 97.1%, were either 4 or 5. Participants responded very positively to the topics and speakers. Future exchanges can focus on AI-RAN performance and energy use, O-RAN interoperability, ISAC validation, and autonomous-network safety, while presentation screen size, slide typography, and rear-seat readability should be improved.',
                 speakers: [
                     { name_zh: '增山大史 Daishi Mashiyama', name_en: 'Daishi Mashiyama', organization_zh: 'NTT東日本株式会社（NTT EAST, Inc.）', organization_en: 'NTT EAST, Inc.', title_zh: '擔當部長', title_en: 'Executive Manager', photo: 'assets/speakers/daishi-masuyama.png' },
                     { name_zh: '呂政修', name_en: 'Cheng-Hsiu Lu', organization_zh: '國立臺灣科技大學 電資學院', organization_en: 'National Taiwan University of Science and Technology', title_zh: '院長', title_en: 'Dean', photo: 'assets/speakers/cheng-hsiu-lu.png' },
@@ -6921,6 +6940,12 @@ body.archive-mode .footer-col:last-child {
 
         // 載入網站資料
         async function loadSiteData() {
+            if (ARCHIVE_ONLY) {
+                await loadAllData();
+                showLoading(false);
+                return;
+            }
+
             const staleSettings = readApiCache('getSettings', Infinity);
             if (staleSettings && staleSettings.success && staleSettings.data) {
                 siteData.settings = normalizeSettings(staleSettings.data);
