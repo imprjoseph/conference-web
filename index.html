@@ -5827,6 +5827,33 @@ body.archive-mode .archive-summary-copy p {
     text-align: justify;
 }
 
+body.archive-mode .archive-home-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 38px;
+    padding-top: 28px;
+    border-top: 1px solid #e3ebf0;
+}
+
+body.archive-mode .archive-home-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 44px;
+    padding: 10px 18px;
+    border: 1px solid #0b6f69;
+    border-radius: 5px;
+    color: #0b6f69;
+    font-size: 15px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+body.archive-mode .archive-home-button:hover {
+    background: #0b6f69;
+    color: #fff;
+}
+
 body.archive-mode .archive-empty {
     padding: 18px;
     border: 1px dashed #c8d5dd;
@@ -6526,6 +6553,7 @@ body.archive-mode .footer-col:last-child {
                 photos: [
                     { url: 'assets/archive/2026/group-photo.jpg', caption_zh: '與會貴賓與講師大合照', caption_en: 'Group photo with guests and speakers', featured: true },
                     { url: 'assets/archive/2026/networking.jpg', caption_zh: '產業交流與技術展示現場', caption_en: 'Industry networking and technology showcase', wide: true },
+                    { url: 'assets/archive/2026/director-ding-remarks.jpg', caption_zh: '丁所長開幕致詞', caption_en: 'Opening remarks by Director Ding' },
                     { url: 'assets/archive/2026/daishi-mashiyama.jpg', caption_zh: '增山大史專題分享', caption_en: 'Presentation by Daishi Mashiyama' },
                     { url: 'assets/archive/2026/cheng-hsiu-lu.jpg', caption_zh: '呂政修專題分享', caption_en: 'Presentation by Cheng-Hsiu Lu' },
                     { url: 'assets/archive/2026/chang-yi-wu.jpg', caption_zh: '吳長益專題分享', caption_en: 'Presentation by Chang-Yi Wu' },
@@ -8245,18 +8273,14 @@ body.archive-mode .footer-col:last-child {
                         <div class="archive-detail-body">
                             <nav class="archive-detail-nav" aria-label="${isZh ? '會議資料分類' : 'Conference detail sections'}">
                                 <a href="#${eventKey}-introduction">${isZh ? '會議簡介' : 'Introduction'}</a>
-                                <a href="#${eventKey}-summary">${isZh ? '會議摘要' : 'Summary'}</a>
                                 <a href="#${eventKey}-speakers">${isZh ? '講師' : 'Speakers'}</a>
                                 <a href="#${eventKey}-agenda">${isZh ? '議程' : 'Agenda'}</a>
+                                <a href="#${eventKey}-summary">${isZh ? '會議摘要' : 'Summary'}</a>
                                 <a href="#${eventKey}-photos">${isZh ? '照片' : 'Photos'}</a>
                             </nav>
                             <section class="archive-detail-section" id="${eventKey}-introduction">
                                 <h4>${isZh ? '會議簡介' : 'Conference Introduction'}</h4>
                                 <div class="archive-summary-copy">${introductionHtml}</div>
-                            </section>
-                            <section class="archive-detail-section" id="${eventKey}-summary">
-                                <h4>${isZh ? '會議摘要' : 'Conference Summary'}</h4>
-                                <div class="archive-summary-copy">${summaryHtml}</div>
                             </section>
                             <section class="archive-detail-section" id="${eventKey}-speakers">
                                 <h4>${isZh ? '講師' : 'Speakers'}</h4>
@@ -8266,10 +8290,20 @@ body.archive-mode .footer-col:last-child {
                                 <h4>${isZh ? '議程' : 'Agenda'}</h4>
                                 ${agendaHtml}
                             </section>
+                            <section class="archive-detail-section" id="${eventKey}-summary">
+                                <h4>${isZh ? '會議摘要' : 'Conference Summary'}</h4>
+                                <div class="archive-summary-copy">${summaryHtml}</div>
+                            </section>
                             <section class="archive-detail-section" id="${eventKey}-photos">
                                 <h4>${isZh ? '照片與視覺資料' : 'Photos & Visuals'}</h4>
                                 ${photosHtml}
                             </section>
+                            <div class="archive-home-row">
+                                <a class="archive-home-button" href="#past-events-section">
+                                    <i class="fas fa-arrow-up" aria-hidden="true"></i>
+                                    ${isZh ? '返回首頁' : 'Back to overview'}
+                                </a>
+                            </div>
                         </div>
                     </details>
                 </div>
